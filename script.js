@@ -6,9 +6,10 @@ var renderer;
 
 // Benchmarking
 var stats;
+var statsDelay = 1.25; // in seconds
 var fps;
 var deltas = [];
-var deltaSize = 400;
+var deltaSize = 150;
 var quality = 1;
 var latest = 0;
 
@@ -105,8 +106,8 @@ function render() {
 
     latest += delta;
 
-    if (latest > 5) {
-        latest -= 5;
+    if (latest > statsDelay) {
+        latest -= statsDelay;
         const statsDiv = document.getElementById('benchmarking');
         statsDiv.innerHTML = `${Math.floor(elapsed)} sec | ${renderer.info.render.triangles} triangles | ${fps} FPS | PixelRatio:${window.devicePixelRatio}`;
     }
