@@ -14,7 +14,7 @@ var latest = 0;
 
 // 3D
 // Wave configuration
-var gridSize = 40;
+var gridSize = 100;
 var cubeSize = 10;
 var wavespeed = 1;
 var wavewidth = 75;
@@ -36,9 +36,9 @@ function init() {
 
     // ---------------- CAMERA ----------------
 
-    camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
-    camera.position.set(-(gridSize * objects_margin) / 2, (gridSize * objects_margin), -(gridSize * objects_margin) / 2);
-    camera.lookAt(new THREE.Vector3((gridSize * objects_margin) / 2, 0, (gridSize * objects_margin) / 2));
+    camera = new THREE.PerspectiveCamera(66, window.innerWidth / window.innerHeight, 1, 10000);
+    camera.position.set(0, (gridSize * objects_margin), -(gridSize * objects_margin));
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
     scene.add(camera);
 
     // ---------------- LIGHTS ----------------
@@ -52,13 +52,13 @@ function init() {
     // ---------------- 3D CUBE ----------------
 
     for (var x = 0; x < gridSize; x++) {
-        for (var y = 0; y < gridSize; y++) {
+        for (var z = 0; z < gridSize; z++) {
             const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
             const material = new THREE.MeshPhongMaterial({ color: 0x00ffff });
             const cube = new THREE.Mesh(geometry, material);
-            cube.position.x = x * objects_margin; // POSITION X
+            cube.position.x = x * objects_margin - (gridSize * objects_margin) / 2; // POSITION X
             cube.position.y = 0;
-            cube.position.z = y * objects_margin; //POSITION Y
+            cube.position.z = z * objects_margin - (gridSize * objects_margin) / 2; //POSITION Z
             scene.add(cube);
             waveobjects.push(cube);
         }
@@ -87,11 +87,11 @@ function render() {
     fps = Math.floor(deltas.length / deltas.reduce((a, b) => a + b));
 
     for (var i = 0; i < waveobjects.length; i++) {
-        waveobjects[i].rotation.x += 0.2 * delta;
-        waveobjects[i].rotation.y += 0.45 * delta;
+        waveobjects[i].rotation.x += 0.3 * delta;
+        waveobjects[i].rotation.y += 0.5 * delta;
         waveobjects[i].position.y =
             Math.cos(
-                (elapsed + waveobjects[i].position.x / wavewidth + waveobjects[i].position.z / wavewidth) * wavespeed
+                (elapsed + waveobjects[i].position.x / wavewidth * 1.2 + waveobjects[i].position.z / wavewidth) * wavespeed
             ) * waveheight;
     }
 
