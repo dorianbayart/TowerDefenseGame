@@ -14,7 +14,7 @@ var latest = 0;
 
 // 3D
 // Wave configuration
-var gridSize = 100;
+var gridSize = 75;
 var cubeSize = 10;
 var wavespeed = 1;
 var wavewidth = 75;
@@ -36,7 +36,11 @@ function init() {
 
     // ---------------- CAMERA ----------------
 
-    camera = new THREE.PerspectiveCamera(66, window.innerWidth / window.innerHeight, 1, 10000);
+    if (window.innerWidth > window.innerHeight) {
+        camera = new THREE.PerspectiveCamera(40 * window.devicePixelRatio * window.innerHeight/850, window.innerWidth / window.innerHeight, 1, 10000);
+    } else {
+        camera = new THREE.PerspectiveCamera(40 * window.devicePixelRatio * window.innerWidth/450, window.innerWidth / window.innerHeight, 1, 10000);
+    }
     camera.position.set(0, (gridSize * objects_margin), -(gridSize * objects_margin));
     camera.lookAt(new THREE.Vector3(0, 0, 0));
     scene.add(camera);
@@ -46,7 +50,7 @@ function init() {
     var ambientLight = new THREE.AmbientLight(0xcccccc, 0.2);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.85);
     scene.add(directionalLight);
 
     // ---------------- 3D CUBE ----------------
@@ -104,7 +108,7 @@ function render() {
     if (latest > 5) {
         latest -= 5;
         const statsDiv = document.getElementById('benchmarking');
-        statsDiv.innerHTML = `${Math.floor(elapsed)} sec | ${renderer.info.render.triangles} triangles | ${fps} FPS`;
+        statsDiv.innerHTML = `${Math.floor(elapsed)} sec | ${renderer.info.render.triangles} triangles | ${fps} FPS | PixelRatio:${window.devicePixelRatio}`;
     }
 }
 
