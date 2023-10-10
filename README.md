@@ -21,3 +21,8 @@ Lihts and reflection on objects.
 
 Camera moves around the scene.
 [Live here.](https://dorianbayart.github.io/three.js/camera/)
+
+## Maze
+
+A maze generator.
+[Live here.](https://dorianbayart.github.io/three.js/maze/)
