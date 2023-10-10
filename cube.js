@@ -8,7 +8,6 @@ var renderer;
 var cube;
 
 // Benchmarking
-var stats;
 var fps;
 var deltas = [];
 var deltaSize = 400;
@@ -48,19 +47,12 @@ function init() {
     cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
-    // ---------------- BENCHMARKING ----------------
-    stats = new Stats();
-    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild(stats.dom);
-
     // ---------------- STARTING THE RENDER LOOP ----------------
 
     render();
 }
 
 function render() {
-    stats.begin();
-
     requestAnimationFrame(render); // we are calling render() again,  to loop
 
     var delta = clock.getDelta();
@@ -70,16 +62,11 @@ function render() {
     deltas = deltas.slice(-deltaSize);
     fps = Math.floor(deltas.length / deltas.reduce((a, b) => (a + b)));
 
-
-
-
     // rotating the cube each render tick
     cube.rotation.x += .2 * delta;
     cube.rotation.y += .45 * delta;
 
     renderer.render(scene, camera); // We are rendering the 3D world
-
-    stats.end();
 
     latest += delta;
 
