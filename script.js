@@ -15,8 +15,8 @@ var latest = 0;
 
 // 3D
 // Wave configuration
-var gridSize = 75;
-var cubeSize = 10;
+var gridSize = 50;
+var cubeSize = 5;
 var wavespeed = 1;
 var wavewidth = 75;
 var waveheight = 25;
@@ -58,7 +58,7 @@ function init() {
 
     for (var x = 0; x < gridSize; x++) {
         for (var z = 0; z < gridSize; z++) {
-            const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+            const geometry = new THREE.SphereGeometry(cubeSize, 8, 8);
             const material = new THREE.MeshPhongMaterial({ color: 0x00ffff });
             const cube = new THREE.Mesh(geometry, material);
             cube.position.x = x * objects_margin - (gridSize * objects_margin) / 2; // POSITION X
@@ -82,8 +82,6 @@ function init() {
 function render() {
     stats.begin();
 
-    requestAnimationFrame(render); // we are calling render() again,  to loop
-
     var delta = clock.getDelta();
     var elapsed = clock.elapsedTime;
 
@@ -92,8 +90,8 @@ function render() {
     fps = Math.floor(deltas.length / deltas.reduce((a, b) => a + b));
 
     for (var i = 0; i < waveobjects.length; i++) {
-        waveobjects[i].rotation.x += 0.3 * delta;
-        waveobjects[i].rotation.y += 0.5 * delta;
+        // waveobjects[i].rotation.x += 0.3 * delta;
+        // waveobjects[i].rotation.y += 0.5 * delta;
         waveobjects[i].position.y =
             Math.cos(
                 (elapsed + waveobjects[i].position.x / wavewidth * 1.2 + waveobjects[i].position.z / wavewidth) * wavespeed
@@ -111,6 +109,8 @@ function render() {
         const statsDiv = document.getElementById('benchmarking');
         statsDiv.innerHTML = `${Math.floor(elapsed)} sec | ${renderer.info.render.triangles} triangles | ${fps} FPS | PixelRatio:${window.devicePixelRatio}`;
     }
+
+    requestAnimationFrame(render); // we are calling render() again,  to loop
 }
 
 init();
