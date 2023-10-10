@@ -91,7 +91,7 @@ function render() {
     for (var i = 0; i < waveobjects.length; i++) {
         // waveobjects[i].rotation.x += 0.3 * delta;
         // waveobjects[i].rotation.y += 0.5 * delta;
-        waveobjects[i].position.y =
+        waveobjects[i].position.y +=
             Math.cos(
                 (elapsed + (waveobjects[i].position.x / wavewidth) * 1.2 + waveobjects[i].position.z / wavewidth) *
                     wavespeed
