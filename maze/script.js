@@ -8,24 +8,27 @@ var renderer;
 
 // Benchmarking
 var displayStats = true;
-var statsDelay = 2.25; // in seconds
+var statsDelay = 1.25; // in seconds
 var fps;
 var deltas = [];
 var deltaSize = 280;
 var quality = 1;
 var latest = 0;
 
+// Maze
+var mazeSize = {
+    width: 25,
+    height: 20,
+};
+var maze = [];
+
 // 3D
 // Grid
-var gridSize = 25;
-var polygonSize = 8;
+var gridSize = mazeSize.width > mazeSize.height ? mazeSize.width : mazeSize.height;
+var polygonSize = 10;
 var elevation = 5;
-var objects_margin = 10;
-var wavespeed = 1;
-var wavewidth = gridSize * 4;
-var waveheight = polygonSize / 4;
-// Array
-var waveobjects = new Array();
+var objects_margin = polygonSize;
+
 // Lights
 var directionalLight1;
 var directionalLight2;
@@ -45,21 +48,25 @@ function init() {
 
     if (window.innerWidth > window.innerHeight) {
         camera = new THREE.PerspectiveCamera(
-            (30 * window.devicePixelRatio * window.innerHeight) / 850,
+            getFov(),
             window.innerWidth / window.innerHeight,
             1,
-            10000
+            1000
         );
     } else {
         camera = new THREE.PerspectiveCamera(
-            (30 * window.devicePixelRatio * window.innerWidth) / 450,
+            getFov(),
             window.innerWidth / window.innerHeight,
             1,
-            10000
+            1000
         );
     }
-    camera.position.set(-(gridSize * objects_margin), gridSize * objects_margin, -(gridSize * objects_margin));
-    camera.lookAt(new THREE.Vector3(-(gridSize * objects_margin) / 8, 0, -(gridSize * objects_margin) / 8));
+    camera.position.set(
+        -(gridSize * objects_margin) * Math.cos(0),
+        gridSize * objects_margin,
+        -(gridSize * objects_margin) * Math.sin(0)
+    );
+    camera.lookAt(new THREE.Vector3(0, -2 * polygonSize, 0));
     scene.add(camera);
 
     // ---------------- LIGHTS ----------------
@@ -74,10 +81,13 @@ function init() {
     directionalLight2.position.y = 2 * polygonSize;
     scene.add(directionalLight2);
 
+    // ---------------- Maze Generator ------------
+    mazeGenerator();
+
     // ---------------- 3D POLYGON ----------------
 
-    for (var x = 0; x < gridSize; x++) {
-        for (var z = 0; z < gridSize; z++) {
+    for (var x = 0; x < mazeSize.width; x++) {
+        for (var z = 0; z < mazeSize.height; z++) {
             const geometry = new THREE.BoxGeometry(polygonSize, polygonSize, polygonSize);
             const material = new THREE.MeshPhongMaterial({
                 color: 'deepskyblue',
@@ -85,17 +95,17 @@ function init() {
                 shininess: 200,
             });
             const polygon = new THREE.Mesh(geometry, material);
-            polygon.position.x = x * objects_margin - (gridSize * objects_margin) / 2 + polygonSize / 2; // POSITION X
-            // polygon.position.y = (Math.random() * polygonSize) / 2;
-            polygon.position.z = z * objects_margin - (gridSize * objects_margin) / 2 + polygonSize / 2; // POSITION Z
-            polygon.rotation.x = toRadians(90);
+            polygon.position.x = x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2; // POSITION X
+            polygon.position.z = z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2; // POSITION Z
+            polygon.scale.y = 0.5 + 0.5 * maze[x][z];
+            polygon.position.y = (polygon.scale.y * polygonSize) / 2;
             scene.add(polygon);
-            waveobjects.push(polygon);
         }
     }
 
-    // ---------------- STARTING THE RENDER LOOP ----------------
+    window.addEventListener('resize', onResize);
 
+    // ---------------- STARTING THE RENDER LOOP ----------------
     render();
 }
 
@@ -105,21 +115,18 @@ function render() {
     var delta = clock.getDelta();
     var elapsed = clock.elapsedTime;
 
-    for (var i = 0; i < waveobjects.length; i++) {
-        //waveobjects[i].rotation.x += delta / 3;
-        //waveobjects[i].rotation.y += delta / 4;
-        waveobjects[i].position.y =
-            Math.cos(
-                (elapsed + (waveobjects[i].position.x / wavewidth) * 4 + waveobjects[i].position.z / wavewidth) *
-                    wavespeed
-            ) * waveheight;
-    }
+    directionalLight1.position.x = -((Math.cos(elapsed / 3) * (gridSize * objects_margin)) / 3);
+    directionalLight1.position.z = (Math.sin(elapsed / 3) * (gridSize * objects_margin)) / 3;
 
-    directionalLight1.position.x = -((Math.cos(elapsed / 4) * (gridSize * objects_margin)) / 3);
-    directionalLight1.position.z = (Math.sin(elapsed / 4) * (gridSize * objects_margin)) / 3;
+    directionalLight2.position.x = (Math.cos(elapsed / 3) * (gridSize * objects_margin)) / 3;
+    directionalLight2.position.z = -(Math.sin(elapsed / 3) * (gridSize * objects_margin)) / 3;
 
-    directionalLight2.position.x = ((Math.cos(elapsed / 4) * (gridSize * objects_margin)) / 3);
-    directionalLight2.position.z = -(Math.sin(elapsed / 4) * (gridSize * objects_margin)) / 3;
+    // camera.position.set(
+    //     -(gridSize * objects_margin) * Math.sin(elapsed / 10),
+    //     gridSize * objects_margin,
+    //     -(gridSize * objects_margin) * Math.cos(elapsed / 10)
+    // );
+    // camera.lookAt(new THREE.Vector3(0, -2 * polygonSize, 0));
 
     renderer.render(scene, camera); // We are rendering the 3D world
 
@@ -139,5 +146,31 @@ function render() {
         }
     }
 }
+
+function onResize() {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.fov = getFov();
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+}
+
+const getFov = () => {
+    if (window.innerWidth > window.innerHeight) {
+        return (66 * window.devicePixelRatio * window.innerHeight) / window.innerWidth;
+    } else {
+        return (66 * window.devicePixelRatio * window.innerWidth) / window.innerHeight;
+    }
+};
+
+const mazeGenerator = () => {
+    for (var x = 0; x < mazeSize.width; x++) {
+        maze[x] = [];
+        for (var z = 0; z < mazeSize.height; z++) {
+            maze[x][z] = Math.random() < 0.2 ? 0 : 1;
+        }
+    }
+
+    console.log(maze);
+};
 
 init();

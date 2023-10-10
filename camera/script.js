@@ -17,17 +17,18 @@ var latest = 0;
 
 // 3D
 // Grid
-var gridSize = 25;
-var polygonSize = 8;
+var gridSize = 40;
+var polygonSize = 10;
 var elevation = 5;
-var objects_margin = 10;
+var objects_margin = polygonSize;
 var wavespeed = 1;
 var wavewidth = gridSize * 4;
 var waveheight = polygonSize * 2;
 // Array
 var waveobjects = new Array();
-// Light
-var directionalLight;
+// Lights
+var directionalLight1;
+var directionalLight2;
 
 function init() {
     scene = new THREE.Scene();
@@ -66,9 +67,12 @@ function init() {
     var ambientLight = new THREE.AmbientLight(0xcccccc, 0.25);
     scene.add(ambientLight);
 
-    directionalLight = new THREE.PointLight(0xffffff, 10000);
-    directionalLight.position.y = 2 * polygonSize;
-    scene.add(directionalLight);
+    directionalLight1 = new THREE.PointLight(0xffffff, 10000);
+    directionalLight1.position.y = 2 * polygonSize;
+    scene.add(directionalLight1);
+    directionalLight2 = new THREE.PointLight(0xffffff, 10000);
+    directionalLight2.position.y = 2 * polygonSize;
+    scene.add(directionalLight2);
 
     // ---------------- 3D POLYGON ----------------
 
@@ -104,17 +108,21 @@ function render() {
     for (var i = 0; i < waveobjects.length; i++) {
         //waveobjects[i].rotation.x += delta / 3;
         //waveobjects[i].rotation.y += delta / 4;
-        waveobjects[i].position.y =
-            Math.cos(
-                (elapsed + (waveobjects[i].position.x / wavewidth) * 4 + waveobjects[i].position.z / wavewidth) *
-                    wavespeed
-            ) * waveheight;
+        const elapsedCoef = Math.cos(
+            (elapsed + (waveobjects[i].position.x / wavewidth) * 4 + waveobjects[i].position.z / wavewidth) *
+            wavespeed
+        )*.66 + 1.2;
+        waveobjects[i].position.y = elapsedCoef * polygonSize / 2;
+        waveobjects[i].scale.z = elapsedCoef;
     }
 
-    directionalLight.position.x = -((Math.cos(elapsed / 4) * (gridSize * objects_margin)) / 3);
-    directionalLight.position.z = (Math.sin(elapsed / 4) * (gridSize * objects_margin)) / 3;
+    directionalLight1.position.x = -((Math.cos(elapsed / 3) * (gridSize * objects_margin)) / 3);
+    directionalLight1.position.z = (Math.sin(elapsed / 3) * (gridSize * objects_margin)) / 3;
 
-    camera.position.set(-(gridSize * objects_margin) * Math.cos(elapsed/8), gridSize * objects_margin, -(gridSize * objects_margin) * Math.sin(elapsed/8));
+    directionalLight2.position.x = ((Math.cos(elapsed / 3) * (gridSize * objects_margin)) / 3);
+    directionalLight2.position.z = -(Math.sin(elapsed / 3) * (gridSize * objects_margin)) / 3;
+
+    camera.position.set(-(gridSize * objects_margin) * Math.sin(elapsed/10), gridSize * objects_margin, -(gridSize * objects_margin) * Math.cos(elapsed/10));
     camera.lookAt(new THREE.Vector3(0, -2*polygonSize, 0));
 
     renderer.render(scene, camera); // We are rendering the 3D world
