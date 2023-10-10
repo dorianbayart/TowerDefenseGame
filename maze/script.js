@@ -8,7 +8,7 @@ var renderer;
 
 // Benchmarking
 var displayStats = true;
-var statsDelay = 1.25; // in seconds
+var statsDelay = 3.25; // in seconds
 var fps;
 var deltas = [];
 var deltaSize = 280;
@@ -18,7 +18,7 @@ var latest = 0;
 // Maze
 var mazeSize = {
     width: 25,
-    height: 20,
+    height: 25,
 };
 var maze = [];
 
@@ -47,26 +47,12 @@ function init() {
     // ---------------- CAMERA ----------------
 
     if (window.innerWidth > window.innerHeight) {
-        camera = new THREE.PerspectiveCamera(
-            getFov(),
-            window.innerWidth / window.innerHeight,
-            1,
-            1000
-        );
+        camera = new THREE.PerspectiveCamera(getFov(), window.innerWidth / window.innerHeight, 1, 1000);
     } else {
-        camera = new THREE.PerspectiveCamera(
-            getFov(),
-            window.innerWidth / window.innerHeight,
-            1,
-            1000
-        );
+        camera = new THREE.PerspectiveCamera(getFov(), window.innerWidth / window.innerHeight, 1, 1000);
     }
-    camera.position.set(
-        -(gridSize * objects_margin) * Math.cos(0),
-        gridSize * objects_margin,
-        -(gridSize * objects_margin) * Math.sin(0)
-    );
-    camera.lookAt(new THREE.Vector3(0, -2 * polygonSize, 0));
+    camera.position.set(-((gridSize*1.25) * objects_margin)/2, gridSize * objects_margin, 0);
+    camera.lookAt(new THREE.Vector3(0, -4 * polygonSize, 0));
     scene.add(camera);
 
     // ---------------- LIGHTS ----------------
@@ -121,13 +107,6 @@ function render() {
     directionalLight2.position.x = (Math.cos(elapsed / 3) * (gridSize * objects_margin)) / 3;
     directionalLight2.position.z = -(Math.sin(elapsed / 3) * (gridSize * objects_margin)) / 3;
 
-    // camera.position.set(
-    //     -(gridSize * objects_margin) * Math.sin(elapsed / 10),
-    //     gridSize * objects_margin,
-    //     -(gridSize * objects_margin) * Math.cos(elapsed / 10)
-    // );
-    // camera.lookAt(new THREE.Vector3(0, -2 * polygonSize, 0));
-
     renderer.render(scene, camera); // We are rendering the 3D world
 
     if (displayStats) {
@@ -147,7 +126,7 @@ function render() {
     }
 }
 
-function onResize() {
+const onResize = () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.fov = getFov();
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -155,10 +134,13 @@ function onResize() {
 }
 
 const getFov = () => {
+    var fov = 0;
     if (window.innerWidth > window.innerHeight) {
-        return (66 * window.devicePixelRatio * window.innerHeight) / window.innerWidth;
+        fov = (75 * window.innerHeight) / window.innerWidth
+        return fov > 48 ? fov : 48;
     } else {
-        return (66 * window.devicePixelRatio * window.innerWidth) / window.innerHeight;
+        fov = 33 + (60 * window.devicePixelRatio * window.innerWidth) / window.innerHeight;
+        return fov < 100 ? fov : 100;
     }
 };
 

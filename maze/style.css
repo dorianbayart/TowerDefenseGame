@@ -1,13 +1,15 @@
+* {
+    touch-action: none;
+}
+
 body {
     margin: 0;
     padding: 0;
-    touch-action: none;
 }
 
 canvas {
     width: 100%;
     height: 100%;
-    touch-action: none;
 }
 
 #benchmarking {
