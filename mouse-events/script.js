@@ -1,5 +1,10 @@
 'use strict';
 
+var COLOR = {
+    GREEN: new THREE.Color('green'),
+    RED: new THREE.Color('red'),
+};
+
 // Basic Threejs variables
 var scene;
 var clock;
@@ -33,6 +38,14 @@ var objects_margin = polygonSize;
 var directionalLight1;
 var directionalLight2;
 
+// RAYCASTER
+var raycaster;
+var mouse = new THREE.Vector2();
+var clickableObjs = new Array();
+
+// Game objs
+var cursor;
+
 async function init() {
     scene = new THREE.Scene();
     clock = new THREE.Clock();
@@ -47,9 +60,19 @@ async function init() {
     // ---------------- CAMERA ----------------
 
     if (window.innerWidth > window.innerHeight) {
-        camera = new THREE.PerspectiveCamera(getFov(), window.innerWidth / window.innerHeight, 1, gridSize*polygonSize*getFov());
+        camera = new THREE.PerspectiveCamera(
+            getFov(),
+            window.innerWidth / window.innerHeight,
+            1,
+            gridSize * polygonSize * getFov()
+        );
     } else {
-        camera = new THREE.PerspectiveCamera(getFov(), window.innerWidth / window.innerHeight, 1, gridSize*polygonSize*getFov());
+        camera = new THREE.PerspectiveCamera(
+            getFov(),
+            window.innerWidth / window.innerHeight,
+            1,
+            gridSize * polygonSize * getFov()
+        );
     }
     camera.position.set(-(gridSize * 1.25 * objects_margin) / 2, gridSize * objects_margin, 0);
     camera.lookAt(new THREE.Vector3(0, -4 * polygonSize, 0));
@@ -101,6 +124,17 @@ async function init() {
         }
     }
 
+    const cursor_material = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0, color: 0xc0392b });
+    const cursor_geometry = new THREE.BoxGeometry(10, 1, 10);
+    cursor = new THREE.Mesh(cursor_geometry, cursor_material);
+    scene.add(cursor);
+
+    raycaster = new THREE.Raycaster();
+
+    // ---------------- EVENTS ----------------
+    document.addEventListener('pointerdown', onMouseDown, false);
+    document.addEventListener('pointerup', onMouseUp, false);
+    document.addEventListener('pointermove', onMouseMove, false);
     window.addEventListener('resize', onResize);
 
     // ---------------- STARTING THE RENDER LOOP ----------------
@@ -178,7 +212,6 @@ const updatePolygon = (cell) => {
 };
 
 const mazeGenerator = async () => {
-    const startTime = Date.now();
     const entrance = Math.floor(Math.random() * (mazeSize.width - 4)) + 2;
     const exit = Math.floor(Math.random() * (mazeSize.width - 4)) + 2;
 
@@ -197,7 +230,16 @@ const mazeGenerator = async () => {
     maze[mazeSize.height - 3][exit].type = 0;
     updatePolygon(maze[mazeSize.height - 3][exit]);
 
-    console.log(maze, Date.now() - startTime);
+    for (var x = 0; x < mazeSize.width; x++) {
+        for (var z = 0; z < mazeSize.height; z++) {
+            if (maze[x][z].type > 3) {
+                maze[x][z].type = 1;
+            }
+            if (maze[x][z].type === 1) {
+                clickableObjs.push(maze[x][z].polygon);
+            }
+        }
+    }
 };
 
 const recursiveGeneratorCell = async (x, z) => {
@@ -241,7 +283,45 @@ const recursiveGeneratorCell = async (x, z) => {
 
         cells.splice(alea, 1);
     }
+};
 
+const onMouseUp = (event) => {
+    cursor.material.emissive.g = 0;
+    cursor.material.color = COLOR.GREEN;
+};
+
+const onMouseDown = (event) => {
+    event.preventDefault();
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    var intersects = raycaster.intersectObjects(clickableObjs);
+
+    if (intersects.length > 0) {
+        cursor.material.color = COLOR.RED;
+    }
+};
+
+const onMouseMove = (event) => {
+    event.preventDefault();
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    var intersects = raycaster.intersectObjects(clickableObjs);
+
+    if (intersects.length > 0) {
+        var selectedBloc = intersects[0].object;
+        cursor.position.set(
+            selectedBloc.position.x,
+            selectedBloc.position.y + polygonSize / 2,
+            selectedBloc.position.z
+        );
+        cursor.material.opacity = 0.5;
+    } else {
+        cursor.material.opacity = 0;
+    }
 };
 
 init();

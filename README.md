@@ -26,3 +26,8 @@ Camera moves around the scene.
 
 A maze generator.
 [Live here.](https://dorianbayart.github.io/three.js/maze/)
+
+## 06. Mouse Events
+
+Detects mouse events to do action on the maze.
+[Live here.](https://dorianbayart.github.io/three.js/mouse-events/)
