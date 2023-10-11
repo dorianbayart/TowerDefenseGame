@@ -31,3 +31,8 @@ A maze generator.
 
 Detects mouse events to do action on the maze.
 [Live here.](https://dorianbayart.github.io/three.js/mouse-events/)
+
+## 07. Mobs
+
+Mobs are coming !
+[Live here.](https://dorianbayart.github.io/three.js/mouse-events/)
