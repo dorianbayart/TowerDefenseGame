@@ -35,4 +35,4 @@ Detects mouse events to do action on the maze.
 ## 07. Mobs
 
 Mobs are coming !
-[Live here.](https://dorianbayart.github.io/three.js/mouse-events/)
+[Live here.](https://dorianbayart.github.io/three.js/mobs/)
