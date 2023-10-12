@@ -82,28 +82,27 @@ async function init() {
 
     // ---------------- LIGHTS ----------------
 
-    var ambientLight = new THREE.AmbientLight(0xcccccc, 0.5);
+    var ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
     scene.add(ambientLight);
 
-    directionalLight1 = new THREE.PointLight(0xffffff, 250);
+    directionalLight1 = new THREE.PointLight(0xffffff, 5 * gridSize);
     directionalLight1.position.y = 5 * polygonSize;
     scene.add(directionalLight1);
-    directionalLight2 = new THREE.PointLight(0xffffff, 250);
+    directionalLight2 = new THREE.PointLight(0xffffff, 5 * gridSize);
     directionalLight2.position.y = 5 * polygonSize;
     scene.add(directionalLight2);
-    scene.add(new THREE.DirectionalLight(0xffffff, 0.5));
+    scene.add(new THREE.DirectionalLight(0xffffff, 2.5));
 
     // MAZE MESH
     const material = new THREE.MeshPhongMaterial({
         color: COLOR.GRAY,
-        side: THREE.DoubleSide,
         shininess: 150,
     });
     const geometry = new THREE.BoxGeometry(polygonSize, polygonSize, polygonSize);
     wall_mesh = new THREE.Mesh(geometry, material);
 
     // MOB MESH
-    const mob_material = new THREE.MeshLambertMaterial({ color: 'indigo' });
+    const mob_material = new THREE.MeshLambertMaterial({ color: COLOR.BLUE });
     const mob_geometry = new THREE.BoxGeometry(polygonSize / 2, polygonSize / 2, polygonSize / 2);
     mob_mesh = new THREE.Mesh(mob_geometry, mob_material);
     mob_mesh.position.y = polygonSize / 2;

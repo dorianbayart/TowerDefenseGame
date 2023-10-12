@@ -1,17 +1,25 @@
 'use strict';
 
 var COLOR = {
-    DARKGRAY: 'dimgray',
-    GREEN: 'seagreen',
-    GRAY: 'gray',
-    LIGHTGRAY: 'lightgray',
-    RED: 'firebrick'
+  BLUE: 'cornflowerblue',
+  DARKGRAY: 'dimgray',
+  GREEN: 'mediumseagreen',
+  GRAY: 'gray',
+  INDIGO: 'mediumslateblue',
+  LAVENDER: 'lavender',
+  LIGHTGRAY: 'silver',
+  RED: 'crimson',
+  SALMON: 'lightsalmon'
 }
 
 var THREE_COLOR = {
-    DARKGRAY: new THREE.Color(COLOR.DARKGRAY),
-    GREEN: new THREE.Color(COLOR.GREEN),
-    GRAY: new THREE.Color(COLOR.GRAY),
-    LIGHTGRAY: new THREE.Color(COLOR.LIGHTGRAY),
-    RED: new THREE.Color(COLOR.RED),
+  BLUE: new THREE.Color(COLOR.BLUE),
+  DARKGRAY: new THREE.Color(COLOR.DARKGRAY),
+  GREEN: new THREE.Color(COLOR.GREEN),
+  GRAY: new THREE.Color(COLOR.GRAY),
+  INDIGO: new THREE.Color(COLOR.INDIGO),
+  LAVENDER: new THREE.Color(COLOR.LAVENDER),
+  LIGHTGRAY: new THREE.Color(COLOR.LIGHTGRAY),
+  RED: new THREE.Color(COLOR.RED),
+  SALMON: new THREE.Color(COLOR.SALMON),
 };

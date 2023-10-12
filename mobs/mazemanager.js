@@ -20,7 +20,7 @@ class Cell {
         if (this.type < 2) {
             this.mesh.scale.y = 0.05 + 0.95 * this.type;
             var newMaterial = this.mesh.material.clone();
-            newMaterial.color = this.type === 0 ? THREE_COLOR.DARKGRAY : THREE_COLOR.LIGHTGRAY;
+            newMaterial.color = this.type === 0 ? THREE_COLOR.GRAY : THREE_COLOR.LIGHTGRAY;
             this.mesh.material = newMaterial;
         } else {
             if (this.type === 2) {
