@@ -17,8 +17,8 @@ var latest = 0;
 
 // Maze
 var mazeSize = {
-    width: 20,
-    height: 20,
+    width: 25,
+    height: 25,
 };
 var maze;
 var mazePaths;
@@ -45,7 +45,7 @@ var clickableObjs = new Array();
 
 // Game objs
 var cursor;
-var polygon_mesh;
+var wall_mesh;
 var mob_mesh;
 
 async function init() {
@@ -82,37 +82,16 @@ async function init() {
 
     // ---------------- LIGHTS ----------------
 
-    var ambientLight = new THREE.AmbientLight(0xcccccc, 0.25);
+    var ambientLight = new THREE.AmbientLight(0xcccccc, 0.5);
     scene.add(ambientLight);
 
-    directionalLight1 = new THREE.PointLight(0xffffff, 150);
+    directionalLight1 = new THREE.PointLight(0xffffff, 250);
     directionalLight1.position.y = 5 * polygonSize;
     scene.add(directionalLight1);
-    directionalLight2 = new THREE.PointLight(0xffffff, 150);
+    directionalLight2 = new THREE.PointLight(0xffffff, 250);
     directionalLight2.position.y = 5 * polygonSize;
     scene.add(directionalLight2);
-    scene.add(new THREE.DirectionalLight(0xffffff, 0.15));
-
-    // ---------------- 3D POLYGON ----------------
-
-    // for (var x = 0; x < mazeSize.width; x++) {
-    //     for (var z = 0; z < mazeSize.height; z++) {
-    //         const geometry = new THREE.BoxGeometry(polygonSize, polygonSize, polygonSize);
-    //         const material = new THREE.MeshPhongMaterial({
-    //             color: COLOR.GRAY,
-    //             side: THREE.DoubleSide,
-    //             shininess: 150,
-    //         });
-    //         const polygon = new THREE.Mesh(geometry, material);
-    //         polygon.position.x = x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2; // POSITION X
-    //         polygon.position.z = z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2; // POSITION Z
-
-    //         polygon.position.y = (polygon.scale.y * polygonSize) / 2;
-
-    //         maze[x][z].polygon = polygon
-    //         scene.add(polygon);
-    //     }
-    // }
+    scene.add(new THREE.DirectionalLight(0xffffff, 0.5));
 
     // MAZE MESH
     const material = new THREE.MeshPhongMaterial({
@@ -121,10 +100,7 @@ async function init() {
         shininess: 150,
     });
     const geometry = new THREE.BoxGeometry(polygonSize, polygonSize, polygonSize);
-    polygon_mesh = new THREE.Mesh(geometry, material);
-    // polygon_mesh.position.x = x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2; // POSITION X
-    // polygon_mesh.position.z = z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2; // POSITION Z
-    // polygon_mesh.position.y = (polygon_mesh.scale.y * polygonSize) / 2;
+    wall_mesh = new THREE.Mesh(geometry, material);
 
     // MOB MESH
     const mob_material = new THREE.MeshLambertMaterial({ color: 'indigo' });

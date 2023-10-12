@@ -11,8 +11,7 @@ TYPE
 class Cell {
     constructor(x, z) {
         this.type = 1;
-        // this.mesh = undefined;
-        this.mesh = polygon_mesh.clone();
+        this.mesh = wall_mesh.clone();
         this.mesh.position.x = x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2;
         this.mesh.position.z = z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2;
     }
@@ -20,33 +19,24 @@ class Cell {
     updatePolygon = () => {
         if (this.type < 2) {
             this.mesh.scale.y = 0.05 + 0.95 * this.type;
-            // this.mesh.material.color = this.mesh.material.color.clone();
-            // this.mesh.material.color = this.type === 0 ? THREE_COLOR.DARKGRAY : THREE_COLOR.LIGHTGRAY;
             var newMaterial = this.mesh.material.clone();
             newMaterial.color = this.type === 0 ? THREE_COLOR.DARKGRAY : THREE_COLOR.LIGHTGRAY;
             this.mesh.material = newMaterial;
         } else {
             if (this.type === 2) {
                 // entrance
-                //cell.mesh.scale.y = 0.85;
                 var newMaterial = this.mesh.material.clone();
                 newMaterial.color = THREE_COLOR.GREEN;
-                // this.mesh.material.color = THREE_COLOR.GREEN;
                 newMaterial.opacity = 0.5;
                 newMaterial.transparent = true;
                 this.mesh.material = newMaterial;
             } else if (this.type === 3) {
                 // exit
-                //cell.mesh.scale.y = 0.85;
                 var newMaterial = this.mesh.material.clone();
                 newMaterial.color = THREE_COLOR.RED;
                 newMaterial.opacity = 0.5;
                 newMaterial.transparent = true;
                 this.mesh.material = newMaterial;
-                // this.mesh.material.color = this.mesh.material.color.clone();
-                // this.mesh.material.color = THREE_COLOR.RED;
-                // this.mesh.material.opacity = 0.5;
-                // this.mesh.material.transparent = true;
             }
         }
         this.mesh.position.y = (this.mesh.scale.y * polygonSize) / 2;
@@ -64,33 +54,14 @@ const mazeGenerator = () => {
         maze[x] = new Array();
         for (var z = 0; z < mazeSize.height; z++) {
             var cell = new Cell(x, z);
-            // cell.mesh = polygon_mesh.clone();
-            // cell.mesh.position.x = x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2;
-            // cell.mesh.position.z = z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2;
-            // mesh.position.x = x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2; // POSITION X
-            // mesh.position.z = z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2; // POSITION Z
-            // mesh.position.y = (mesh.scale.y * polygonSize) / 2;
+
             let type = z + x * mazeSize.height;
             if (x === 0 || x === mazeSize.width - 1 || z === 0 || z === mazeSize.height - 1) {
                 type = 1;
             }
             cell.type = (x === 0 || x === mazeSize.width - 1 || z === 0 || z === mazeSize.height - 1) ? 1 : z + x * mazeSize.height;
-            // if (x === 0 || x === mazeSize.width - 1 || z === 0 || z === mazeSize.height - 1) {
-            //     maze[x][z] = {
-            //         type: 1,
-            //         polygon: mesh,
-            //     };
-            // } else {
-            //     maze[x][z] = {
-            //         type: z + x * mazeSize.height,
-            //         polygon: mesh,
-            //     };
-            // }
-
-            //cell.mesh = mesh;
 
             maze[x][z] = cell;
-
             scene.add(cell.mesh);
         }
     }
@@ -100,10 +71,6 @@ const mazeGenerator = () => {
     entrance = { x: 0, z: entranceZ };
 
     maze[0][entranceZ].type = 2;
-    //updatePolygon(maze[0][entranceZ]);
-
-    //maze[1][entranceZ].type = 0;
-    //updatePolygon(maze[1][entranceZ]);
 
     // Generate the Maze
     recursiveGeneratorCell(0, entranceZ);
@@ -119,18 +86,11 @@ const mazeGenerator = () => {
     }
 
     maze[exit.x][exit.z].type = 3;
-    //updatePolygon(maze[mazeSize.height - 1][exit.z]);
-
-    //maze[mazeSize.height - 2][exit.z].type = 0;
-    //updatePolygon(maze[mazeSize.height - 2][exitZ]);
-    //maze[mazeSize.height - 3][exit.z].type = 0;
-    //updatePolygon(maze[mazeSize.height - 3][exitZ]);
 
     for (var x = 0; x < mazeSize.width; x++) {
         for (var z = 0; z < mazeSize.height; z++) {
             if (maze[x][z].type > 3) {
                 maze[x][z].type = 1;
-                // updatePolygon(maze[x][z]);
             }
             if (maze[x][z].type === 1) {
                 clickableObjs.push(maze[x][z].mesh);
@@ -138,13 +98,6 @@ const mazeGenerator = () => {
             maze[x][z].updatePolygon();
         }
     }
-
-    // entrance = { x: 0, z: maze[0].findIndex((c) => c.type === 2) };
-    // exit = { x: maze.length - 1, z: maze[maze.length - 1].findIndex((c) => c.type === 3) };
-
-    // if (!mazePaths.has(cellUUID(exit))) {
-    //     mazeGenerator();
-    // }
 };
 
 const recursiveGeneratorCell = (x, z) => {
@@ -167,11 +120,9 @@ const recursiveGeneratorCell = (x, z) => {
             maze[xToTest + (xToTest - x)][z]?.type !== 0
         ) {
             maze[xToTest][z].type = 0;
-            //updatePolygon(maze[xToTest][z]);
             recursiveGeneratorCell(xToTest, z);
         } else if (z === zToTest) {
             maze[xToTest][z].type = 1;
-            //updatePolygon(maze[xToTest][z]);
         } else if (
             x === xToTest &&
             maze[x - 1][zToTest].type !== 0 &&
@@ -179,11 +130,9 @@ const recursiveGeneratorCell = (x, z) => {
             maze[x][zToTest + (zToTest - x)]?.type !== 0
         ) {
             maze[x][zToTest].type = 0;
-            //updatePolygon(maze[x][zToTest]);
             recursiveGeneratorCell(x, zToTest);
         } else if (x === xToTest) {
             maze[x][zToTest].type = 1;
-            //updatePolygon(maze[x][zToTest]);
         }
 
         cells.splice(alea, 1);
