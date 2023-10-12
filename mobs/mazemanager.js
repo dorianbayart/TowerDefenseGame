@@ -11,6 +11,7 @@ TYPE
 class Cell {
     constructor(x, z) {
         this.type = 1;
+        // this.mesh = undefined;
         this.mesh = polygon_mesh.clone();
         this.mesh.position.x = x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2;
         this.mesh.position.z = z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2;
@@ -19,20 +20,33 @@ class Cell {
     updatePolygon = () => {
         if (this.type < 2) {
             this.mesh.scale.y = 0.05 + 0.95 * this.type;
-            this.mesh.material.color = this.type === 0 ? THREE_COLOR.DARKGRAY : THREE_COLOR.LIGHTGRAY;
+            // this.mesh.material.color = this.mesh.material.color.clone();
+            // this.mesh.material.color = this.type === 0 ? THREE_COLOR.DARKGRAY : THREE_COLOR.LIGHTGRAY;
+            var newMaterial = this.mesh.material.clone();
+            newMaterial.color = this.type === 0 ? THREE_COLOR.DARKGRAY : THREE_COLOR.LIGHTGRAY;
+            this.mesh.material = newMaterial;
         } else {
             if (this.type === 2) {
                 // entrance
                 //cell.mesh.scale.y = 0.85;
-                this.mesh.material.color = THREE_COLOR.GREEN;
-                this.mesh.material.opacity = 0.5;
-                this.mesh.material.transparent = true;
+                var newMaterial = this.mesh.material.clone();
+                newMaterial.color = THREE_COLOR.GREEN;
+                // this.mesh.material.color = THREE_COLOR.GREEN;
+                newMaterial.opacity = 0.5;
+                newMaterial.transparent = true;
+                this.mesh.material = newMaterial;
             } else if (this.type === 3) {
                 // exit
                 //cell.mesh.scale.y = 0.85;
-                this.mesh.material.color = THREE_COLOR.RED;
-                this.mesh.material.opacity = 0.5;
-                this.mesh.material.transparent = true;
+                var newMaterial = this.mesh.material.clone();
+                newMaterial.color = THREE_COLOR.RED;
+                newMaterial.opacity = 0.5;
+                newMaterial.transparent = true;
+                this.mesh.material = newMaterial;
+                // this.mesh.material.color = this.mesh.material.color.clone();
+                // this.mesh.material.color = THREE_COLOR.RED;
+                // this.mesh.material.opacity = 0.5;
+                // this.mesh.material.transparent = true;
             }
         }
         this.mesh.position.y = (this.mesh.scale.y * polygonSize) / 2;
@@ -45,13 +59,14 @@ class Maze {
 
 const mazeGenerator = () => {
     maze = new Array();
-    console.log('mazeGenerator');
 
     for (var x = 0; x < mazeSize.width; x++) {
         maze[x] = new Array();
         for (var z = 0; z < mazeSize.height; z++) {
             var cell = new Cell(x, z);
-            //const mesh = polygon_mesh.clone();
+            // cell.mesh = polygon_mesh.clone();
+            // cell.mesh.position.x = x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2;
+            // cell.mesh.position.z = z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2;
             // mesh.position.x = x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2; // POSITION X
             // mesh.position.z = z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2; // POSITION Z
             // mesh.position.y = (mesh.scale.y * polygonSize) / 2;
