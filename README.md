@@ -1,6 +1,8 @@
 # three.js
 
-Description: Few simple experimentations using the Three.js library to draw 3D canvas.
+Description: Few simple experimentations using the Three.js library.
+
+Note: Each chapter is based on the code of the previous chapter.
 
 ## 01. Hello World - Cube
 

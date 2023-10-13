@@ -48,12 +48,21 @@ class Maze {
 }
 
 const mazeGenerator = () => {
+    if (maze && maze.length) {
+        for (var x = 0; x < mazeSize.width; x++) {
+            for (var z = 0; z < mazeSize.height; z++) {
+                const cell = maze[x][z];
+                scene.remove(cell.mesh);
+            }
+        }
+    }
+
     maze = new Array();
 
     for (var x = 0; x < mazeSize.width; x++) {
         maze[x] = new Array();
         for (var z = 0; z < mazeSize.height; z++) {
-            var cell = new Cell(x, z);
+            const cell = new Cell(x, z);
 
             let type = z + x * mazeSize.height;
             if (x === 0 || x === mazeSize.width - 1 || z === 0 || z === mazeSize.height - 1) {
@@ -79,10 +88,19 @@ const mazeGenerator = () => {
     mazePaths = new Map();
     mazeSolver(mazePaths);
 
-    // Define Exit position
+    // Search an exit with a long path
+    // TODO: allow the exit to be everywhere - search for the longest path all over the maze
     exit = { x: maze.length - 1, z: Math.floor(Math.random() * (mazeSize.width - 4)) + 2 };
-    while (!mazePaths.has(cellUUID({ x: mazeSize.width - 2, z: exit.z }))) {
-        exit.z = Math.floor(Math.random() * (mazeSize.width - 4)) + 2;
+    for (var z = 0; z < mazeSize.height; z++) {
+        const potentialExit = { x: maze.length - 1, z: z };
+        if (mazePaths.get(cellUUID({ x: exit.x - 1, z: exit.z })) < mazePaths.get(cellUUID({ x: potentialExit.x - 1, z: potentialExit.z }))) {
+            exit = potentialExit;
+        }
+    }
+
+    // If the exit has no path to, generate another maze
+    if (!mazePaths.has(cellUUID({ x: exit.x - 1, z: exit.z }))) {
+        mazeGenerator();
     }
 
     maze[exit.x][exit.z].type = 3;
