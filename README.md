@@ -38,3 +38,8 @@ Detects mouse events to do action on the maze.
 
 Mobs are coming !
 [Live here.](https://dorianbayart.github.io/three.js/mobs/)
+
+## 08. Towers
+
+Build towers on the map.
+[Live here.](https://dorianbayart.github.io/three.js/towers/)
