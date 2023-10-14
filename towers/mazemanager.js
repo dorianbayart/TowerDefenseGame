@@ -71,7 +71,6 @@ const mazeGenerator = () => {
             cell.type = (x === 0 || x === mazeSize.width - 1 || z === 0 || z === mazeSize.height - 1) ? 1 : z + x * mazeSize.height;
 
             maze[x][z] = cell;
-            scene.add(cell.mesh);
         }
     }
 
@@ -112,6 +111,9 @@ const mazeGenerator = () => {
             }
             if (maze[x][z].type === 1) {
                 clickableObjs.push(maze[x][z].mesh);
+            }
+            if(maze[x][z].type > 0) {
+              scene.add(maze[x][z].mesh);
             }
             maze[x][z].updatePolygon();
         }

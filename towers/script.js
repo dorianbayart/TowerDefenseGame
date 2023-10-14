@@ -17,8 +17,8 @@ var latest = 0;
 
 // Maze
 var mazeSize = {
-    width: 25,
-    height: 25,
+    width: 20,
+    height: 20,
 };
 var maze;
 var mazePaths;
@@ -48,6 +48,7 @@ var cursorValid = false;
 // Game objs
 var cursor;
 var mob_mesh;
+var range_mesh;
 var tower_mesh;
 var wall_mesh;
 
@@ -115,6 +116,11 @@ async function init() {
     const tower_geometry = new THREE.BoxGeometry(0.5, polygonSize * 3 / 2, 0.5);
     tower_mesh = new THREE.Mesh(tower_geometry, tower_material);
 
+    // RANGE TOWER MESH
+    const range_material = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0.5, color: COLOR.BROWN });
+    const range_geometry = new THREE.CylinderGeometry( 2.5, 2.5, 0.25, 24, 1 );
+    range_mesh = new THREE.Mesh(range_geometry, range_material);
+
     // CURSOR
     const cursor_material = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0, color: COLOR.GREEN });
     const cursor_geometry = new THREE.BoxGeometry(polygonSize, polygonSize / 10, polygonSize);
@@ -132,11 +138,17 @@ async function init() {
         scene.add(tmpTower);
         towerManager.addTower(tmpTower);
         towerManager.newTowerMeshToCreate = undefined;
+        var tmpRangeTower = towerManager.rangeTowerToDisplay;
+        scene.remove(tmpRangeTower);
+        towerManager.rangeTowerToDisplay = undefined;
         createTowerGui_close();
     });
     document.getElementById('buttonno').addEventListener('click', function (e) {
         e.stopPropagation();
         towerManager.newTowerMeshToCreate = undefined;
+        var tmpRangeTower = towerManager.rangeTowerToDisplay;
+        scene.remove(tmpRangeTower);
+        towerManager.rangeTowerToDisplay = undefined;
         createTowerGui_close();
     });
     document.getElementById('buttondelete').addEventListener('click', function (e) {
@@ -145,11 +157,17 @@ async function init() {
         scene.remove(towerManager.selectedTower.mesh);
         infoTowerGui_close();
         towerManager.selectedTower = undefined;
+        var tmpRangeTower = towerManager.rangeTowerToDisplay;
+        scene.remove(tmpRangeTower);
+        towerManager.rangeTowerToDisplay = undefined;
     });
     document.getElementById('buttonclose').addEventListener('click', function (e) {
         e.stopPropagation();
         infoTowerGui_close();
         towerManager.selectedTower = undefined;
+        var tmpRangeTower = towerManager.rangeTowerToDisplay;
+        scene.remove(tmpRangeTower);
+        towerManager.rangeTowerToDisplay = undefined;
     });
 
     // ---------------- Maze Generator ------------
@@ -157,7 +175,12 @@ async function init() {
 
     // ---------------- Mobs Manager --------------
     mobsManager = new MobsManager();
-    setInterval(() => mobsManager.createMob(mob_mesh, scene), 3000);
+    setInterval(
+      () => {
+        var elapsed = clock.elapsedTime;
+        mobsManager.createMob(mob_mesh, scene, elapsed);
+      }, 5000
+    );
 
     towerManager = new TowerManager();
 
@@ -178,6 +201,7 @@ function render() {
     directionalLight2.position.z = -(Math.sin(elapsed / 3) * (gridSize * objects_margin)) / 3;
 
     mobsManager.updateMobsPosition(delta, scene);
+    towerManager.updateTowers(delta, scene);
 
     renderer.render(scene, camera); // We are rendering the 3D world
 
@@ -193,7 +217,7 @@ function render() {
             const statsDiv = document.getElementById('benchmarking');
             statsDiv.innerHTML = `${Math.floor(elapsed)} sec | ${
                 renderer.info.render.triangles
-            } triangles | ${fps} FPS | PixelRatio:${window.devicePixelRatio}`;
+            } triangles | ${fps} FPS | PixelRatio:${window.devicePixelRatio} | HP:${Math.ceil(elapsed/10)}`;
         }
     }
 }

@@ -21,17 +21,32 @@ const onMouseUp = (event) => {
     towerManager.newTowerMeshToCreate = undefined;
     towerManager.selectedTower = undefined;
 
+    if(towerManager.rangeTowerToDisplay) {
+      var tmpRangeTower = towerManager.rangeTowerToDisplay;
+      scene.remove(tmpRangeTower);
+      towerManager.rangeTowerToDisplay = undefined;
+    }
+
     if (cursorValid) {
         var checkTower = towerManager.getTowerAtPosition(cursor.position.x, cursor.position.z);
 
         if (checkTower === null) {
             var newtower = tower_mesh.clone();
-            newtower.position.set(cursor.position.x, 1, cursor.position.z);
+            newtower.position.set(cursor.position.x, polygonSize, cursor.position.z);
             towerManager.newTowerMeshToCreate = newtower;
+            var rangeTower = range_mesh.clone();
+            rangeTower.position.set(cursor.position.x, polygonSize, cursor.position.z);
+            towerManager.rangeTowerToDisplay = rangeTower;
+            scene.add(rangeTower);
             infoTowerGui_close();
             createTowerGui_open();
         } else {
             towerManager.selectedTower = checkTower;
+            var rangeTower = range_mesh.clone();
+            rangeTower.position.set(cursor.position.x, polygonSize, cursor.position.z);
+            //rangeTower.
+            towerManager.rangeTowerToDisplay = rangeTower;
+            scene.add(rangeTower);
             createTowerGui_close();
             infoTowerGui_open(checkTower.mesh.position.x, checkTower.mesh.position.z);
         }

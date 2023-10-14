@@ -6,17 +6,36 @@ class mapPosition {
 }
 
 class Mob {
-    constructor(cell) {
+    constructor(cell, hp) {
         let speed = 1;
         if (Math.random() > 0.85) speed += 0.5;
         if (Math.random() > 0.85) speed += 1;
 
         this.mesh = undefined;
-        this.hp = 10;
+        this.hp = hp;
         this.speed = speed;
+        this.speedReduction = 0;
         this.currentCell = cell;
         this.targetCell = new mapPosition(cell.x - 1, cell.z);
         this.readyForNextStep = false;
+    }
+
+    isAlive() {
+      return this.hp > 0;
+    }
+
+    isUnderAttack(hpReduction, speedReduction = 0, scene) {
+      this.hp -= hpReduction;
+      if(this.speedReduction > 0){
+        this.speedReduction = speedReduction;
+        this.speed -= this.speedReduction;
+      }
+
+      if(this.hp <= 0) {
+        var mobstodelete = new Array();
+        mobstodelete.push(this);
+        mobsManager.deleteMobs(mobstodelete, scene);
+      }
     }
 
     updatePosition(delta) {
@@ -72,8 +91,8 @@ class MobsManager {
         this.mobArray = new Array();
     }
 
-    createMob(basemesh, scene) {
-        var tmpmob = new Mob(exit);
+    createMob(basemesh, scene, elapsedTime) {
+        var tmpmob = new Mob(exit, Math.ceil(elapsedTime/10));
         tmpmob.mesh = basemesh.clone();
 
         tmpmob.mesh.scale.x = 1 / tmpmob.speed;
