@@ -5,10 +5,13 @@ var scene;
 var clock;
 var camera;
 var renderer;
+var scenePixi;
+var rendererPixi;
 
 // Benchmarking
 var displayStats = true;
-var statsDelay = 3.25; // in seconds
+var statsToDisplay;
+var statsDelay = .25; // in seconds
 var fps;
 var deltas = [];
 var deltaSize = 280;
@@ -56,12 +59,32 @@ async function init() {
     scene = new THREE.Scene();
     clock = new THREE.Clock();
 
-    // ---------------- RENDERER ----------------
+    let canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    // ---------------- RENDERER ----------------
+    renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas});
     renderer.setPixelRatio(window.devicePixelRatio * quality);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement); // we add the HTML element to the HTML page
+
+    scenePixi = new PIXI.Container();
+    rendererPixi = new PIXI.Renderer({
+    	width: window.innerWidth,
+    	height: window.innerHeight,
+    	view: canvas,
+      context: renderer.context,
+    	transparent: true,
+    	autoDensity : true,
+    	antialias : true,
+    	autoResize : true,
+    	resolution: window.devicePixelRatio * quality,
+    });
+
+    // ---------------- 2D -----------------
+    statsToDisplay = new PIXI.Text('', { fontFamily: 'monospace', fontSize: 12, fill: 'lightgreen', align: 'left' });
+    statsToDisplay.position.set(5, 2);
+    scenePixi.addChild(statsToDisplay);
+
 
     // ---------------- CAMERA ----------------
 
@@ -203,21 +226,22 @@ function render() {
     mobsManager.updateMobsPosition(delta, scene);
     towerManager.updateTowers(delta, scene);
 
+    renderer.resetState();
     renderer.render(scene, camera); // We are rendering the 3D world
+
+    rendererPixi.reset();
+    rendererPixi.render(scenePixi, {clear: false}); // Rendering the 2D scene without erasing the 3D world
 
     if (displayStats) {
         deltas.push(delta);
         deltas = deltas.slice(-deltaSize);
-        fps = Math.floor(deltas.length / deltas.reduce((a, b) => a + b));
+        fps = Math.round(10 * deltas.length / deltas.reduce((a, b) => a + b)) / 10;
 
         latest += delta;
 
         if (latest > statsDelay) {
             latest -= statsDelay;
-            const statsDiv = document.getElementById('benchmarking');
-            statsDiv.innerHTML = `${Math.floor(elapsed)} sec | ${
-                renderer.info.render.triangles
-            } triangles | ${fps} FPS | PixelRatio:${window.devicePixelRatio} | HP:${Math.ceil(elapsed/10)}`;
+            statsToDisplay.text = `${Math.floor(elapsed)} sec | ${renderer.info.render.triangles} triangles | ${fps} FPS | PixelRatio:${window.devicePixelRatio} | HP:${Math.ceil(elapsed/10)}`;
         }
     }
 }
