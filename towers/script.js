@@ -86,7 +86,7 @@ async function init() {
 
     // ---------------- 2D -----------------
     statsToDisplay = new PIXI.Text('', { fontFamily: 'monospace', fontSize: 12, fill: 'lightgreen', align: 'left' });
-    statsToDisplay.position.set(5, window.innerHeight - statsToDisplay.style.fontSize);
+    statsToDisplay.position.set(5, window.innerHeight - statsToDisplay.style.fontSize - 5);
     scenePixi.addChild(statsToDisplay);
 
     gameInfosToDisplay = new PIXI.Text('', { fontFamily: 'monospace', fontSize: 12, fill: 'lightgreen', align: 'left' });
@@ -173,7 +173,7 @@ async function init() {
         scene.remove(tmpRangeTower);
         towerManager.rangeTowerToDisplay = undefined;
         createTowerGui_close();
-        gameManager.game.updateMoney(cost);
+        gameManager.game.updateMoney(-cost);
     });
     document.getElementById('buttonno').addEventListener('click', function (e) {
         e.stopPropagation();

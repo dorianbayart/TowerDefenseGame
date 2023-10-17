@@ -99,7 +99,7 @@ class MobsManager {
     }
 
     createMob(basemesh, scene, elapsedTime) {
-        var tmpmob = new Mob(exit, Math.ceil(1 + Math.pow(gameManager.game.score, 1.5)/10));
+        var tmpmob = new Mob(exit, Math.floor(1 + Math.pow(gameManager.game.score, 1.4)/10));
         tmpmob.mesh = basemesh.clone();
 
         tmpmob.mesh.scale.x = 1 / tmpmob.speed;
