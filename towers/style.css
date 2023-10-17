@@ -1,13 +1,14 @@
-* {
-  touch-action: none;
-  cursor: crosshair;
-  margin: 0;
-  padding: 0;
-}
 
+html,
+body,
 canvas {
   width: 100%;
   height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  touch-action: none;
+  cursor: crosshair;
 }
 
 /* UI */

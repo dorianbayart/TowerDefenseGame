@@ -31,15 +31,17 @@ const onMouseUp = (event) => {
         var checkTower = towerManager.getTowerAtPosition(cursor.position.x, cursor.position.z);
 
         if (checkTower === null) {
-            var newtower = towerMesh.clone();
-            newtower.position.set(cursor.position.x, polygonSize, cursor.position.z);
-            towerManager.newTowerMeshToCreate = newtower;
+          if(Tower.DEFAULT_COST <= gameManager.game.money) {
+            var newTower = towerMesh.clone();
+            newTower.position.set(cursor.position.x, polygonSize, cursor.position.z);
+            towerManager.newTowerMeshToCreate = newTower;
             var rangeTower = rangeMesh.clone();
             rangeTower.position.set(cursor.position.x, polygonSize, cursor.position.z);
             towerManager.rangeTowerToDisplay = rangeTower;
             scene.add(rangeTower);
             infoTowerGui_close();
             createTowerGui_open();
+          }
         } else {
             towerManager.selectedTower = checkTower;
             var rangeTower = rangeMesh.clone();

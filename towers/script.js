@@ -29,8 +29,12 @@ var entrance;
 var exit;
 
 // Managers
+var gameManager;
 var mobsManager;
 var towerManager;
+
+// Gameplay
+var gameInfosToDisplay;
 
 // 3D
 // Grid
@@ -82,8 +86,12 @@ async function init() {
 
     // ---------------- 2D -----------------
     statsToDisplay = new PIXI.Text('', { fontFamily: 'monospace', fontSize: 12, fill: 'lightgreen', align: 'left' });
-    statsToDisplay.position.set(5, 2);
+    statsToDisplay.position.set(5, window.innerHeight - statsToDisplay.style.fontSize);
     scenePixi.addChild(statsToDisplay);
+
+    gameInfosToDisplay = new PIXI.Text('', { fontFamily: 'monospace', fontSize: 12, fill: 'lightgreen', align: 'left' });
+    gameInfosToDisplay.position.set(5, 2);
+    scenePixi.addChild(gameInfosToDisplay);
 
 
     // ---------------- CAMERA ----------------
@@ -159,12 +167,13 @@ async function init() {
         e.stopPropagation();
         var tmpTower = towerManager.newTowerMeshToCreate;
         scene.add(tmpTower);
-        towerManager.addTower(tmpTower);
+        const cost = towerManager.addTower(tmpTower);
         towerManager.newTowerMeshToCreate = undefined;
         var tmpRangeTower = towerManager.rangeTowerToDisplay;
         scene.remove(tmpRangeTower);
         towerManager.rangeTowerToDisplay = undefined;
         createTowerGui_close();
+        gameManager.game.updateMoney(cost);
     });
     document.getElementById('buttonno').addEventListener('click', function (e) {
         e.stopPropagation();
@@ -196,15 +205,9 @@ async function init() {
     // ---------------- Maze Generator ------------
     mazeGenerator();
 
-    // ---------------- Mobs Manager --------------
+    // ---------------- Managers --------------
+    gameManager = new GameManager();
     mobsManager = new MobsManager();
-    setInterval(
-      () => {
-        var elapsed = clock.elapsedTime;
-        mobsManager.createMob(mobMesh, scene, elapsed);
-      }, 5000
-    );
-
     towerManager = new TowerManager();
 
     // ---------------- STARTING THE RENDER LOOP ----------------
@@ -223,6 +226,7 @@ function render() {
     directionalLight2.position.x = (Math.cos(elapsed / 3) * (gridSize * objectsMargin)) / 3;
     directionalLight2.position.z = -(Math.sin(elapsed / 3) * (gridSize * objectsMargin)) / 3;
 
+    gameManager.updateGameInfos();
     mobsManager.updateMobsPosition(delta, scene);
     towerManager.updateTowers(delta, scene);
 

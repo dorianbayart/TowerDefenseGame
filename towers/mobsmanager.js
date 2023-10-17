@@ -13,6 +13,7 @@ class Mob {
 
         this.mesh = undefined;
         this.hp = hp;
+        this.initialHp = hp;
         this.speed = speed;
         this.speedReduction = 0;
         this.currentCell = cell;
@@ -22,6 +23,10 @@ class Mob {
 
     isAlive() {
       return this.hp > 0;
+    }
+
+    isAtEntrance() {
+      return this.currentCell.x === entrance.x && this.currentCell.z === entrance.z;
     }
 
     isUnderAttack(hpReduction, speedReduction = 0, scene) {
@@ -35,6 +40,8 @@ class Mob {
         var mobstodelete = new Array();
         mobstodelete.push(this);
         mobsManager.deleteMobs(mobstodelete, scene);
+        gameManager.game.updateScore(1);
+        gameManager.game.updateMoney(Math.ceil(1 + this.initialHp/8));
       }
     }
 
@@ -92,7 +99,7 @@ class MobsManager {
     }
 
     createMob(basemesh, scene, elapsedTime) {
-        var tmpmob = new Mob(exit, Math.ceil(elapsedTime/10));
+        var tmpmob = new Mob(exit, Math.ceil(1 + Math.pow(gameManager.game.score, 1.5)/10));
         tmpmob.mesh = basemesh.clone();
 
         tmpmob.mesh.scale.x = 1 / tmpmob.speed;
@@ -145,6 +152,9 @@ class MobsManager {
                 if (!this.mobArray[i].targetCell) {
                     // if invalid target, we delete this mob - end of path or invalid
                     mobstodelete.push(this.mobArray[i]);
+                    if(this.mobArray[i].isAtEntrance()) { // player loses 1 life
+                      gameManager.game.updateLives(1);
+                    }
                 }
             }
 

@@ -11,10 +11,11 @@ class TowerManager {
         this.rangeTowerToDisplay = undefined;
     }
 
-    addTower(newtowermesh) {
-        var newtower = new Tower();
-        newtower.mesh = newtowermesh;
-        this.towerArray.push(newtower);
+    addTower(newTowerMesh) {
+        var newTower = new Tower();
+        newTower.mesh = newTowerMesh;
+        this.towerArray.push(newTower);
+        return newTower.cost;
     }
 
     deleteTower(towerObj) {
@@ -50,12 +51,18 @@ class TowerManager {
 }
 
 class Tower {
-    constructor() {
+  static DEFAULT_POWER = 1;
+  static DEFAULT_SPEED = 1;
+  static DEFAULT_RANGE = 2.5;
+  static DEFAULT_COST = 5;
+
+    constructor(power, speed, range, cost) {
         this.mesh = undefined;
 
-        this.power = 1;
-        this.speed = 1;
-        this.range = 2.5;
+        this.power = power ?? Tower.DEFAULT_POWER;
+        this.speed = speed ?? Tower.DEFAULT_SPEED;
+        this.range = range ?? Tower.DEFAULT_RANGE;
+        this.cost = cost ?? Tower.DEFAULT_COST;
 
         this.target = undefined; // instance of Mob
         this.elapsedTimeSinceLastAttack = 0;
