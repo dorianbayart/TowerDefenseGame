@@ -11,9 +11,9 @@ TYPE
 class Cell {
     constructor(x, z) {
         this.type = 1;
-        this.mesh = wall_mesh.clone();
-        this.mesh.position.x = x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2;
-        this.mesh.position.z = z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2;
+        this.mesh = wallMesh.clone();
+        this.mesh.position.x = x * objectsMargin - (mazeSize.width * objectsMargin) / 2 + polygonSize / 2;
+        this.mesh.position.z = z * objectsMargin - (mazeSize.height * objectsMargin) / 2 + polygonSize / 2;
     }
 
     updatePolygon = () => {

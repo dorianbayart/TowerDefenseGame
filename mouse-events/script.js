@@ -32,7 +32,7 @@ var maze = [];
 var gridSize = mazeSize.width > mazeSize.height ? mazeSize.width : mazeSize.height;
 var polygonSize = 10;
 var elevation = 5;
-var objects_margin = polygonSize;
+var objectsMargin = polygonSize;
 
 // Lights
 var directionalLight1;
@@ -74,7 +74,7 @@ async function init() {
             gridSize * polygonSize * getFov()
         );
     }
-    camera.position.set(-(gridSize * 1.25 * objects_margin) / 2, gridSize * objects_margin, 0);
+    camera.position.set(-(gridSize * 1.25 * objectsMargin) / 2, gridSize * objectsMargin, 0);
     camera.lookAt(new THREE.Vector3(0, -4 * polygonSize, 0));
     scene.add(camera);
 
@@ -103,8 +103,8 @@ async function init() {
                 shininess: 200,
             });
             const polygon = new THREE.Mesh(geometry, material);
-            polygon.position.x = x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2; // POSITION X
-            polygon.position.z = z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2; // POSITION Z
+            polygon.position.x = x * objectsMargin - (mazeSize.width * objectsMargin) / 2 + polygonSize / 2; // POSITION X
+            polygon.position.z = z * objectsMargin - (mazeSize.height * objectsMargin) / 2 + polygonSize / 2; // POSITION Z
 
             polygon.position.y = (polygon.scale.y * polygonSize) / 2;
 
@@ -124,9 +124,9 @@ async function init() {
         }
     }
 
-    const cursor_material = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0, color: 0xc0392b });
-    const cursor_geometry = new THREE.BoxGeometry(10, 1, 10);
-    cursor = new THREE.Mesh(cursor_geometry, cursor_material);
+    const cursorMaterial = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0, color: 0xc0392b });
+    const cursorGeometry = new THREE.BoxGeometry(10, 1, 10);
+    cursor = new THREE.Mesh(cursorGeometry, cursorMaterial);
     scene.add(cursor);
 
     raycaster = new THREE.Raycaster();
@@ -150,11 +150,11 @@ function render() {
     var delta = clock.getDelta();
     var elapsed = clock.elapsedTime;
 
-    directionalLight1.position.x = -((Math.cos(elapsed / 3) * (gridSize * objects_margin)) / 3);
-    directionalLight1.position.z = (Math.sin(elapsed / 3) * (gridSize * objects_margin)) / 3;
+    directionalLight1.position.x = -((Math.cos(elapsed / 3) * (gridSize * objectsMargin)) / 3);
+    directionalLight1.position.z = (Math.sin(elapsed / 3) * (gridSize * objectsMargin)) / 3;
 
-    directionalLight2.position.x = (Math.cos(elapsed / 3) * (gridSize * objects_margin)) / 3;
-    directionalLight2.position.z = -(Math.sin(elapsed / 3) * (gridSize * objects_margin)) / 3;
+    directionalLight2.position.x = (Math.cos(elapsed / 3) * (gridSize * objectsMargin)) / 3;
+    directionalLight2.position.z = -(Math.sin(elapsed / 3) * (gridSize * objectsMargin)) / 3;
 
     renderer.render(scene, camera); // We are rendering the 3D world
 

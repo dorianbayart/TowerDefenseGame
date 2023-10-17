@@ -36,7 +36,7 @@ var towerManager;
 // Grid
 var gridSize = mazeSize.width > mazeSize.height ? mazeSize.width : mazeSize.height;
 var polygonSize = 1;
-var objects_margin = polygonSize;
+var objectsMargin = polygonSize;
 
 // Lights
 var directionalLight1;
@@ -50,10 +50,10 @@ var cursorValid = false;
 
 // Game objs
 var cursor;
-var mob_mesh;
-var range_mesh;
-var tower_mesh;
-var wall_mesh;
+var mobMesh;
+var rangeMesh;
+var towerMesh;
+var wallMesh;
 
 async function init() {
     scene = new THREE.Scene();
@@ -103,7 +103,7 @@ async function init() {
             gridSize * polygonSize * getFov()
         );
     }
-    camera.position.set(-(gridSize * 1.25 * objects_margin) / 2, gridSize * objects_margin, 0);
+    camera.position.set(-(gridSize * 1.25 * objectsMargin) / 2, gridSize * objectsMargin, 0);
     camera.lookAt(new THREE.Vector3(0, -4 * polygonSize, 0));
     scene.add(camera);
 
@@ -121,33 +121,33 @@ async function init() {
     scene.add(new THREE.DirectionalLight(0xffffff, 2.5));
 
     // MAZE MESH
-    const maze_material = new THREE.MeshPhongMaterial({
+    const mazeMaterial = new THREE.MeshPhongMaterial({
         color: COLOR.GRAY,
         shininess: 150,
     });
     const geometry = new THREE.BoxGeometry(polygonSize, polygonSize, polygonSize);
-    wall_mesh = new THREE.Mesh(geometry, maze_material);
+    wallMesh = new THREE.Mesh(geometry, mazeMaterial);
 
     // MOB MESH
-    const mob_material = new THREE.MeshLambertMaterial({ color: COLOR.BLUE });
-    const mob_geometry = new THREE.BoxGeometry(polygonSize / 2, polygonSize / 2, polygonSize / 2);
-    mob_mesh = new THREE.Mesh(mob_geometry, mob_material);
-    mob_mesh.position.y = polygonSize / 2;
+    const mobMaterial = new THREE.MeshLambertMaterial({ color: COLOR.BLUE });
+    const mobGeometry = new THREE.BoxGeometry(polygonSize / 2, polygonSize / 2, polygonSize / 2);
+    mobMesh = new THREE.Mesh(mobGeometry, mobMaterial);
+    mobMesh.position.y = polygonSize / 2;
 
     // TOWER MESH
-    const tower_material = new THREE.MeshLambertMaterial({ color: COLOR.BROWN });
-    const tower_geometry = new THREE.BoxGeometry(0.5, polygonSize * 3 / 2, 0.5);
-    tower_mesh = new THREE.Mesh(tower_geometry, tower_material);
+    const towerMaterial = new THREE.MeshLambertMaterial({ color: COLOR.BROWN });
+    const towerGeometry = new THREE.BoxGeometry(0.5, polygonSize * 3 / 2, 0.5);
+    towerMesh = new THREE.Mesh(towerGeometry, towerMaterial);
 
     // RANGE TOWER MESH
-    const range_material = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0.5, color: COLOR.BROWN });
-    const range_geometry = new THREE.CylinderGeometry( 2.5, 2.5, 0.25, 24, 1 );
-    range_mesh = new THREE.Mesh(range_geometry, range_material);
+    const rangeMaterial = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0.5, color: COLOR.BROWN });
+    const rangeGeometry = new THREE.CylinderGeometry( 2.5, 2.5, 0.25, 24, 1 );
+    rangeMesh = new THREE.Mesh(rangeGeometry, rangeMaterial);
 
     // CURSOR
-    const cursor_material = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0, color: COLOR.GREEN });
-    const cursor_geometry = new THREE.BoxGeometry(polygonSize, polygonSize / 10, polygonSize);
-    cursor = new THREE.Mesh(cursor_geometry, cursor_material);
+    const cursorMaterial = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0, color: COLOR.GREEN });
+    const cursorGeometry = new THREE.BoxGeometry(polygonSize, polygonSize / 10, polygonSize);
+    cursor = new THREE.Mesh(cursorGeometry, cursorMaterial);
     scene.add(cursor);
 
     // ---------------- EVENTS ----------------
@@ -201,7 +201,7 @@ async function init() {
     setInterval(
       () => {
         var elapsed = clock.elapsedTime;
-        mobsManager.createMob(mob_mesh, scene, elapsed);
+        mobsManager.createMob(mobMesh, scene, elapsed);
       }, 5000
     );
 
@@ -217,11 +217,11 @@ function render() {
     var delta = clock.getDelta();
     var elapsed = clock.elapsedTime;
 
-    directionalLight1.position.x = -((Math.cos(elapsed / 3) * (gridSize * objects_margin)) / 3);
-    directionalLight1.position.z = (Math.sin(elapsed / 3) * (gridSize * objects_margin)) / 3;
+    directionalLight1.position.x = -((Math.cos(elapsed / 3) * (gridSize * objectsMargin)) / 3);
+    directionalLight1.position.z = (Math.sin(elapsed / 3) * (gridSize * objectsMargin)) / 3;
 
-    directionalLight2.position.x = (Math.cos(elapsed / 3) * (gridSize * objects_margin)) / 3;
-    directionalLight2.position.z = -(Math.sin(elapsed / 3) * (gridSize * objects_margin)) / 3;
+    directionalLight2.position.x = (Math.cos(elapsed / 3) * (gridSize * objectsMargin)) / 3;
+    directionalLight2.position.z = -(Math.sin(elapsed / 3) * (gridSize * objectsMargin)) / 3;
 
     mobsManager.updateMobsPosition(delta, scene);
     towerManager.updateTowers(delta, scene);
@@ -241,7 +241,7 @@ function render() {
 
         if (latest > statsDelay) {
             latest -= statsDelay;
-            statsToDisplay.text = `${Math.floor(elapsed)} sec | ${renderer.info.render.triangles} triangles | ${fps} FPS | PixelRatio:${window.devicePixelRatio} | HP:${Math.ceil(elapsed/10)}`;
+            statsToDisplay.text = `${Math.floor(elapsed)}s | ${renderer.info.render.triangles}tri | ${fps}FPS | PixelRatio:${Math.round(window.devicePixelRatio*100)/100} | HP:${Math.ceil(elapsed/10)}`;
         }
     }
 }

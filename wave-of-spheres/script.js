@@ -20,7 +20,7 @@ var polygonSize = 8;
 var wavespeed = 1;
 var wavewidth = 75;
 var waveheight = polygonSize * 2;
-var objects_margin = 15;
+var objectsMargin = 15;
 //Array
 var waveobjects = new Array();
 
@@ -52,7 +52,7 @@ function init() {
             10000
         );
     }
-    camera.position.set(0, gridSize * objects_margin, -(gridSize * objects_margin));
+    camera.position.set(0, gridSize * objectsMargin, -(gridSize * objectsMargin));
     camera.lookAt(new THREE.Vector3(0, 0, 0));
     scene.add(camera);
 
@@ -71,9 +71,9 @@ function init() {
             const geometry = new THREE.SphereGeometry(polygonSize, 12, 12);
             const material = new THREE.MeshPhongMaterial({ color: 0x00ffff });
             const polygon = new THREE.Mesh(geometry, material);
-            polygon.position.x = x * objects_margin - (gridSize * objects_margin) / 2; // POSITION X
+            polygon.position.x = x * objectsMargin - (gridSize * objectsMargin) / 2; // POSITION X
             polygon.position.y = 0;
-            polygon.position.z = z * objects_margin - (gridSize * objects_margin) / 2; //POSITION Z
+            polygon.position.z = z * objectsMargin - (gridSize * objectsMargin) / 2; //POSITION Z
             scene.add(polygon);
             waveobjects.push(polygon);
         }

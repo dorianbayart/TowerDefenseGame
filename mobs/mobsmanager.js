@@ -27,9 +27,9 @@ class Mob {
         var is_X_ok = false;
         var is_Z_ok = false;
         var convertedpositiontarget_x =
-            this.targetCell.x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2;
+            this.targetCell.x * objectsMargin - (mazeSize.width * objectsMargin) / 2 + polygonSize / 2;
         var convertedpositiontarget_z =
-            this.targetCell.z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2;
+            this.targetCell.z * objectsMargin - (mazeSize.height * objectsMargin) / 2 + polygonSize / 2;
 
         // --------- Z AXIS -----------
         if (this.mesh.position.z < convertedpositiontarget_z) {
@@ -81,10 +81,10 @@ class MobsManager {
         tmpmob.mesh.scale.z = 1 / tmpmob.speed;
 
         tmpmob.mesh.position.x =
-            tmpmob.currentCell.x * objects_margin - (mazeSize.width * objects_margin) / 2 + polygonSize / 2;
+            tmpmob.currentCell.x * objectsMargin - (mazeSize.width * objectsMargin) / 2 + polygonSize / 2;
         tmpmob.mesh.position.y = tmpmob.mesh.position.y;
         tmpmob.mesh.position.z =
-            tmpmob.currentCell.z * objects_margin - (mazeSize.height * objects_margin) / 2 + polygonSize / 2;
+            tmpmob.currentCell.z * objectsMargin - (mazeSize.height * objectsMargin) / 2 + polygonSize / 2;
 
         this.mobArray.push(tmpmob);
         scene.add(tmpmob.mesh);

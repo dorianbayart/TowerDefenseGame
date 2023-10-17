@@ -32,7 +32,7 @@ var mobsManager;
 // Grid
 var gridSize = mazeSize.width > mazeSize.height ? mazeSize.width : mazeSize.height;
 var polygonSize = 1;
-var objects_margin = polygonSize;
+var objectsMargin = polygonSize;
 
 // Lights
 var directionalLight1;
@@ -45,8 +45,8 @@ var clickableObjs = new Array();
 
 // Game objs
 var cursor;
-var wall_mesh;
-var mob_mesh;
+var wallMesh;
+var mobMesh;
 
 async function init() {
     scene = new THREE.Scene();
@@ -76,7 +76,7 @@ async function init() {
             gridSize * polygonSize * getFov()
         );
     }
-    camera.position.set(-(gridSize * 1.25 * objects_margin) / 2, gridSize * objects_margin, 0);
+    camera.position.set(-(gridSize * 1.25 * objectsMargin) / 2, gridSize * objectsMargin, 0);
     camera.lookAt(new THREE.Vector3(0, -4 * polygonSize, 0));
     scene.add(camera);
 
@@ -99,18 +99,18 @@ async function init() {
         shininess: 150,
     });
     const geometry = new THREE.BoxGeometry(polygonSize, polygonSize, polygonSize);
-    wall_mesh = new THREE.Mesh(geometry, material);
+    wallMesh = new THREE.Mesh(geometry, material);
 
     // MOB MESH
-    const mob_material = new THREE.MeshLambertMaterial({ color: COLOR.BLUE });
-    const mob_geometry = new THREE.BoxGeometry(polygonSize / 2, polygonSize / 2, polygonSize / 2);
-    mob_mesh = new THREE.Mesh(mob_geometry, mob_material);
-    mob_mesh.position.y = polygonSize / 2;
+    const mobMaterial = new THREE.MeshLambertMaterial({ color: COLOR.BLUE });
+    const mobGeometry = new THREE.BoxGeometry(polygonSize / 2, polygonSize / 2, polygonSize / 2);
+    mobMesh = new THREE.Mesh(mobGeometry, mobMaterial);
+    mobMesh.position.y = polygonSize / 2;
 
     // CURSOR
-    const cursor_material = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0, color: COLOR.GREEN });
-    const cursor_geometry = new THREE.BoxGeometry(polygonSize, polygonSize / 10, polygonSize);
-    cursor = new THREE.Mesh(cursor_geometry, cursor_material);
+    const cursorMaterial = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0, color: COLOR.GREEN });
+    const cursorGeometry = new THREE.BoxGeometry(polygonSize, polygonSize / 10, polygonSize);
+    cursor = new THREE.Mesh(cursorGeometry, cursorMaterial);
     scene.add(cursor);
 
     // ---------------- EVENTS ----------------
@@ -124,7 +124,7 @@ async function init() {
 
     // ---------------- Mobs Manager --------------
     mobsManager = new MobsManager();
-    setInterval(() => mobsManager.createMob(mob_mesh, scene), 3000);
+    setInterval(() => mobsManager.createMob(mobMesh, scene), 3000);
 
     // ---------------- STARTING THE RENDER LOOP ----------------
     render();
@@ -136,11 +136,11 @@ function render() {
     var delta = clock.getDelta();
     var elapsed = clock.elapsedTime;
 
-    directionalLight1.position.x = -((Math.cos(elapsed / 3) * (gridSize * objects_margin)) / 3);
-    directionalLight1.position.z = (Math.sin(elapsed / 3) * (gridSize * objects_margin)) / 3;
+    directionalLight1.position.x = -((Math.cos(elapsed / 3) * (gridSize * objectsMargin)) / 3);
+    directionalLight1.position.z = (Math.sin(elapsed / 3) * (gridSize * objectsMargin)) / 3;
 
-    directionalLight2.position.x = (Math.cos(elapsed / 3) * (gridSize * objects_margin)) / 3;
-    directionalLight2.position.z = -(Math.sin(elapsed / 3) * (gridSize * objects_margin)) / 3;
+    directionalLight2.position.x = (Math.cos(elapsed / 3) * (gridSize * objectsMargin)) / 3;
+    directionalLight2.position.z = -(Math.sin(elapsed / 3) * (gridSize * objectsMargin)) / 3;
 
     mobsManager.updateMobsPosition(delta, scene);
 

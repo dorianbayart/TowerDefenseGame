@@ -31,10 +31,10 @@ const onMouseUp = (event) => {
         var checkTower = towerManager.getTowerAtPosition(cursor.position.x, cursor.position.z);
 
         if (checkTower === null) {
-            var newtower = tower_mesh.clone();
+            var newtower = towerMesh.clone();
             newtower.position.set(cursor.position.x, polygonSize, cursor.position.z);
             towerManager.newTowerMeshToCreate = newtower;
-            var rangeTower = range_mesh.clone();
+            var rangeTower = rangeMesh.clone();
             rangeTower.position.set(cursor.position.x, polygonSize, cursor.position.z);
             towerManager.rangeTowerToDisplay = rangeTower;
             scene.add(rangeTower);
@@ -42,7 +42,7 @@ const onMouseUp = (event) => {
             createTowerGui_open();
         } else {
             towerManager.selectedTower = checkTower;
-            var rangeTower = range_mesh.clone();
+            var rangeTower = rangeMesh.clone();
             rangeTower.position.set(cursor.position.x, polygonSize, cursor.position.z);
             //rangeTower.
             towerManager.rangeTowerToDisplay = rangeTower;
