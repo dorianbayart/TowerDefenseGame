@@ -46,9 +46,10 @@ Display text with Pixi.js library (directly on the canvas)
 Add a bit of 'gameplay': money + score + remaining lives  
 [Live here.](https://dorianbayart.github.io/three.js/towers/)
 
-## 09. Missiles (TODO)
+## 09. Missiles
 
-Missiles are flying through the map !
+Missiles are flying through the map !  
+[Live here.](https://dorianbayart.github.io/three.js/missiles/)
 
 ## 10. Rotate the map with mouse (TODO)
 
