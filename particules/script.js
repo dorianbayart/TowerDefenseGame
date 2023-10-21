@@ -7,11 +7,13 @@ var camera;
 var renderer;
 var scenePixi;
 var rendererPixi;
+var delta;
+var elapsed;
 
 // Benchmarking
 var displayStats = true;
 var statsToDisplay;
-var statsDelay = .25; // in seconds
+var statsDelay = .5; // in seconds
 var fps;
 var deltas = [];
 var deltaSize = 280;
@@ -37,6 +39,7 @@ var towerManager;
 
 // Gameplay
 var gameInfosToDisplay;
+var hpToDisplay;
 
 // 3D
 // Grid
@@ -64,7 +67,7 @@ var wallMesh;
 
 // Ammo.js
 var physicsUniverse, tmpTransformation;
-var rigidBody_List = new Array();
+var rigidBodyList = new Array();
 
 function init() {
     scene = new THREE.Scene();
@@ -286,7 +289,7 @@ const linkPhysics = (mesh, mass, rotQuaternion, inertia) => {
   physicsUniverse.addRigidBody( RBody );
 
   mesh.userData.physicsBody = RBody;
-  rigidBody_List.push(mesh);
+  rigidBodyList.push(mesh);
 }
 
 const deleteFromUniverse = (mesh) => {
@@ -294,25 +297,26 @@ const deleteFromUniverse = (mesh) => {
   scene.remove(mesh);
 
   // delete from Physics Universe
-  const index = rigidBody_List.indexOf(mesh);
+  const index = rigidBodyList.indexOf(mesh);
   if(index > -1) {
-    rigidBody_List.splice(index, 1);
+    rigidBodyList.splice(index, 1);
     physicsUniverse.removeRigidBody(mesh.userData.physicsBody);
   }
 }
 
 const updatePhysicsUniverse = (deltaTime) => {
     physicsUniverse.stepSimulation( deltaTime, 10 );
+    let Graphics_Obj, Physics_Obj, motionState, new_pos, new_qua;
 
-    for ( let i = 0; i < rigidBody_List.length; i++ ) {
-      let Graphics_Obj = rigidBody_List[ i ];
-      let Physics_Obj = Graphics_Obj.userData.physicsBody;
+    for ( let i = 0; i < rigidBodyList.length; i++ ) {
+      Graphics_Obj = rigidBodyList[ i ];
+      Physics_Obj = Graphics_Obj.userData.physicsBody;
 
-      let motionState = Physics_Obj.getMotionState();
+      motionState = Physics_Obj.getMotionState();
       if ( motionState ) {
           motionState.getWorldTransform( tmpTransformation );
-          let new_pos = tmpTransformation.getOrigin();
-          let new_qua = tmpTransformation.getRotation();
+          new_pos = tmpTransformation.getOrigin();
+          new_qua = tmpTransformation.getRotation();
           Graphics_Obj.position.set( new_pos.x(), new_pos.y(), new_pos.z() );
           Graphics_Obj.quaternion.set( new_qua.x(), new_qua.y(), new_qua.z(), new_qua.w() );
       }
@@ -322,8 +326,8 @@ const updatePhysicsUniverse = (deltaTime) => {
 function render() {
     requestAnimationFrame(render); // we are calling render() again,  to loop
 
-    var delta = clock.getDelta();
-    var elapsed = clock.elapsedTime;
+    delta = clock.getDelta();
+    elapsed = clock.elapsedTime;
 
     directionalLight1.position.x = -((Math.cos(elapsed / 3) * (gridSize * objectsMargin)) / 3);
     directionalLight1.position.z = (Math.sin(elapsed / 3) * (gridSize * objectsMargin)) / 3;
@@ -352,11 +356,11 @@ function render() {
 
         latest += delta;
 
-        const hp = mobsManager.mobArray[mobsManager.mobArray.length-1]?.initialHp;
+        hpToDisplay = mobsManager.mobArray[mobsManager.mobArray.length-1]?.initialHp;
 
         if (latest > statsDelay) {
             latest -= statsDelay;
-            statsToDisplay.text = `${Math.floor(elapsed)}s | ${renderer.info.render.triangles}tri | PhysicObjects:${rigidBody_List.length} | ${fps}FPS | PixelRatio:${Math.round(window.devicePixelRatio*100)/100} | HP:${hp}`;
+            statsToDisplay.text = `${Math.floor(elapsed)}s | ${renderer.info.render.triangles}tri | PhysicObjects:${rigidBodyList.length} | ${fps}FPS | PixelRatio:${Math.round(window.devicePixelRatio*100)/100} | HP:${hpToDisplay}`;
         }
     }
 }
