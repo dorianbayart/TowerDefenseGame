@@ -53,7 +53,7 @@ Missiles are flying through the map !
 
 ## 10. Particules
 
-Add particules effet on missile explosion.  
+Add particules effect on missile explosion.  
 Add physics (Ammo.js)  
 [Live here.](https://dorianbayart.github.io/three.js/particules/)
 
