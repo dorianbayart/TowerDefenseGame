@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Particules</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+        <link rel="stylesheet" href="style.css">
+
+
+        <script defer src="../public/three.min.js"></script>
+        <script defer src="../public/pixi.min.js"></script>
+        <script defer src="../public/ammo.js"></script>
+
+
+        <script defer src="constants.js"></script>
+        <script defer src="types.js"></script>
+        <script defer src="helpers.js"></script>
+        <script defer src="gamemanager.js"></script>
+        <script defer src="missilesmanager.js"></script>
+        <script defer src="mobsmanager.js"></script>
+        <script defer src="towermanager.js"></script>
+        <script defer src="mazemanager.js"></script>
+        <script defer src="gui.js"></script>
+        <script defer src="script.js"></script>
+
+
+
+    </head>
+
+    <body>
+        <div id="benchmarking"></div>
+
+        <!-- CREATE MENU -->
+        <div id="createTowerDiv" class="popupdiv">
+            <h2 style="text-align : center;">Create Tower ?</h2>
+            <div style="display:flex;  align-items: center; justify-content: center;">
+                <button class="buttonYesNo buttonno" id="buttonno">No</button>
+                <div style="width : 5%"></div>
+                <button class="buttonYesNo buttonyes" id="buttonyes">Yes</button>
+            </div>
+        </div>
+
+        <!-- TOWER INFO MENU -->
+        <div id="TowerInfoDiv" class="popupdiv">
+            <h2 style="text-align : center;">Selected Tower Info</h2>
+            <p>Position : <span id="posXinfo">NULL</span> / <span id="posZinfo">NULL</span></p>
+            </br>
+            <div style="display:flex;  align-items: center; justify-content: center;">
+                <button class="buttonYesNo buttonno" id="buttondelete">Delete Tower</button>
+                <div style="width : 5%"></div>
+                <button class="buttonYesNo buttonyes" id="buttonclose">Close</button>
+            </div>
+        </div>
+    </body>
+
+</html>

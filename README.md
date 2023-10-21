@@ -51,6 +51,12 @@ Add a bit of 'gameplay': money + score + remaining lives
 Missiles are flying through the map !  
 [Live here.](https://dorianbayart.github.io/three.js/missiles/)
 
+## 10. Particules
+
+Add particules effet on missile explosion.  
+Add physics (Ammo.js)  
+[Live here.](https://dorianbayart.github.io/three.js/particules/)
+
 ## 10. Rotate the map with mouse (TODO)
 
 Zoom in/out  
