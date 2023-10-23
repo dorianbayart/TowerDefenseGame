@@ -12,8 +12,8 @@ var PARTICULE_TYPES = {
     lifespan: 2,
     explodeEffet: 1,
     number: {
-      min: 4,
-      max: 10
+      min: 3,
+      max: 8
     },
     size: 0.1,
     mesh: undefined,
