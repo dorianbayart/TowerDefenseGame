@@ -1,5 +1,10 @@
 'use strict';
 
+const btBoxShape = (x, y, z) => {
+    boxShape.setLocalScaling(btVector(x, y, z));
+    return boxShape;
+}
+
 const btVector = (x, y, z) => {
     vector.setValue(x, y, z);
     return vector;
