@@ -367,7 +367,9 @@ function render() {
 
         latest += delta;
 
-        hpToDisplay = mobsManager.mobArray[mobsManager.mobArray.length-1]?.initialHp;
+        if(mobsManager.mobArray.length) {
+          hpToDisplay = mobsManager.mobArray[mobsManager.mobArray.length-1]?.initialHp;
+        }
 
         if (latest > statsDelay) {
             latest -= statsDelay;
