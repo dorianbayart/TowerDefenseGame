@@ -13,7 +13,7 @@ var elapsed;
 // Benchmarking
 var displayStats = true;
 var statsToDisplay;
-var statsDelay = .5; // in seconds
+var statsDelay = .75; // in seconds
 var fps;
 var deltas = [];
 var deltaSize = 280;
@@ -258,7 +258,7 @@ const initPhysicsUniverse = () => {
     var overlappingPairCache  = new Ammo.btDbvtBroadphase();
     var solver = new Ammo.btSequentialImpulseConstraintSolver();
     physicsUniverse = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-    physicsUniverse.setGravity(new Ammo.btVector3(0, -1, 0));
+    physicsUniverse.setGravity(new Ammo.btVector3(0, -3, 0));
 }
 
 const linkPhysics = (mesh, mass, rotQuaternion, inertia) => {
@@ -369,7 +369,7 @@ function render() {
 
         if (latest > statsDelay) {
             latest -= statsDelay;
-            statsToDisplay.text = `${Math.floor(elapsed)}s | ${renderer.info.render.triangles}tri | PhysicObjects:${rigidBodyList.length} | ${fps}FPS | PixelRatio:${Math.round(window.devicePixelRatio*100)/100} | HP:${hpToDisplay}`;
+            statsToDisplay.text = `${Math.floor(elapsed)}s | ${renderer.info.render.triangles}tri | PhysicsObj:${rigidBodyList.length}(${physicsUniverse.getPairCache().getNumOverlappingPairs()}) | ${fps}FPS | PixelRatio:${Math.round(window.devicePixelRatio*100)/100} | HP:${hpToDisplay}`;
         }
     }
 }
