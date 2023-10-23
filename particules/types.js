@@ -13,18 +13,18 @@ var MISSILE_TYPES = {
 
 var PARTICULE_TYPES = {
   NORMAL: {
-    lifespan: 10,
-    explodeEffet: 1,
+    lifespan: 1.5,
+    explodeEffet: 0.75,
     number: {
-      min: 15,
-      max: 40
+      min: 4,
+      max: 10
     },
     size: 0.1,
     mesh: undefined,
   },
   ROCKET: {
-    lifespan: 1,
-    explodeEffet: 2.5,
+    lifespan: 2,
+    explodeEffet: 1.5,
     number: {
       min: 8,
       max: 15
