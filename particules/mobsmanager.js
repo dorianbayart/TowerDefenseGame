@@ -98,7 +98,7 @@ class MobsManager {
         this.mobArray = new Array();
     }
 
-    createMob(basemesh, scene, elapsedTime) {
+    createMob(basemesh, scene) {
         var tmpmob = new Mob(exit, Math.floor(1 + Math.pow(gameManager.game.score, 1.4)/10));
         tmpmob.mesh = basemesh.clone();
 

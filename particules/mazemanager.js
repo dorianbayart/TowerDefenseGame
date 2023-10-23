@@ -116,7 +116,7 @@ const mazeGenerator = () => {
             }
             if(maze[x][z].type > 0) {
               scene.add(maze[x][z].mesh);
-              linkPhysics(maze[x][z].mesh, 0);
+              linkPhysicsObject(maze[x][z].mesh, 0);
             }
         }
     }

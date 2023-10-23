@@ -13,7 +13,7 @@ class Particule {
   }
 
   isDead() {
-    return this.lifespan <= 0;
+    return this.lifespan <= 0 || this.mesh.position.y < 0;
   }
 
   update(delta) {
@@ -29,20 +29,20 @@ class ParticulesManager {
   createExplosion(type, position) {
     const particulesNumber = Math.round(Math.random()*(PARTICULE_TYPES[type].number.max - PARTICULE_TYPES[type].number.min) + PARTICULE_TYPES[type].number.min);
     for(var i = 0; i < particulesNumber; i++) {
-      var particule = new Particule(PARTICULE_TYPES[type].lifespan * 0.2 + Math.random()*PARTICULE_TYPES[type].lifespan * 0.8);
+      var particule = new Particule(PARTICULE_TYPES[type].lifespan * 0.4 + Math.random()*PARTICULE_TYPES[type].lifespan * 1.6);
       particule.mesh = PARTICULE_TYPES[type].mesh.clone();
-      particule.mesh.position.x = position.x + (2*Math.random() - 1) * polygonSize/10;
-      particule.mesh.position.y = position.y + (2*Math.random() - 1) * polygonSize/10;
-      particule.mesh.position.z = position.z + (2*Math.random() - 1) * polygonSize/10;
+      particule.mesh.position.x = position.x + (2*Math.random() - 1) * polygonSize/5;
+      particule.mesh.position.y = position.y + polygonSize/5;
+      particule.mesh.position.z = position.z + (2*Math.random() - 1) * polygonSize/5;
 
       scene.add(particule.mesh);
-      linkPhysics(
+      linkPhysicsParticule(
         particule.mesh,
         0.05,
-        null,
+        { x: Math.random(), y: Math.random(), z: Math.random(), w: Math.random() },
         {
           x: (2*Math.random() - 1) * PARTICULE_TYPES[type].explodeEffet,
-          y: Math.random() * PARTICULE_TYPES[type].explodeEffet * 2,
+          y: Math.random() * PARTICULE_TYPES[type].explodeEffet * 3,
           z: (2*Math.random() - 1) * PARTICULE_TYPES[type].explodeEffet
         }
       );

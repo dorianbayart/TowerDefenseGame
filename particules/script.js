@@ -13,7 +13,9 @@ var elapsed;
 // Benchmarking
 var displayStats = true;
 var statsToDisplay;
-var statsDelay = .75; // in seconds
+var statsDelay = .5; // in seconds
+var particulesNumber = 0;
+var initialRigidBodyNumber = 0;
 var fps;
 var deltas = [];
 var deltaSize = 280;
@@ -68,7 +70,7 @@ var wallMesh;
 // Ammo.js
 var physicsUniverse, tmpTransformation;
 var rigidBodyList = new Array();
-var quaternion, vector, transform;
+var boxShape, quaternion, vector, transform;
 
 function init() {
     scene = new THREE.Scene();
@@ -140,11 +142,12 @@ function init() {
     scene.add(new THREE.DirectionalLight(0xffffff, 2.5));
 
     // GROUND MESH
-    const groundGeometry = new THREE.BoxGeometry(polygonSize*mazeSize.width, 0.01, polygonSize*mazeSize.height);
-    const groundMaterial = new THREE.MeshPhongMaterial( {color: COLOR.BLACK, side : THREE.DoubleSide} );
+    const groundGeometry = new THREE.BoxGeometry(polygonSize*mazeSize.width, 0.05, polygonSize*mazeSize.height);
+    const groundMaterial = new THREE.MeshPhongMaterial( {color: COLOR.BLACK} );
     groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
+    groundMesh.position.y = -groundMesh.geometry.parameters.height / 2
     groundMesh.rotation.x = Math.PI / 2;
-    linkPhysics(groundMesh, 0);
+    linkPhysicsObject(groundMesh);
     scene.add(groundMesh);
 
     // MAZE MESH
@@ -152,7 +155,7 @@ function init() {
         color: COLOR.GRAY,
         shininess: 150,
     });
-    const mazeGeometry = new THREE.BoxGeometry(polygonSize, polygonSize, polygonSize);
+    const mazeGeometry = new THREE.BoxGeometry(polygonSize, polygonSize*.4, polygonSize);
     wallMesh = new THREE.Mesh(mazeGeometry, mazeMaterial);
 
     // MOB MESH
@@ -242,6 +245,8 @@ function init() {
 
     // ---------------- STARTING THE RENDER LOOP ----------------
     render();
+
+    initialRigidBodyNumber = rigidBodyList.length;
 }
 
 const ammoStart = () => {
@@ -258,6 +263,7 @@ const initPhysicsUniverse = () => {
     vector = new Ammo.btVector3();
     transform = new Ammo.btTransform();
     transform.setIdentity();
+    boxShape = new Ammo.btBoxShape( vector );
 
     var collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
     var dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration);
@@ -267,20 +273,40 @@ const initPhysicsUniverse = () => {
     physicsUniverse.setGravity(btVector(0, -3, 0));
 }
 
-const linkPhysics = (mesh, mass, tmpQuaternion, inertia) => {
+const linkPhysicsObject = (mesh, mass = 0, tmpQuaternion = {x: 0, y: 0, z: 0, w: 1}, inertia = {x: 0, y: 0, z: 0}) => {
+  const t = new Ammo.btTransform();
+  t.setIdentity();
+  t.setOrigin(btVector(mesh.position.x, mesh.position.y, mesh.position.z));
+  t.setRotation(btQuaternion(tmpQuaternion.x, tmpQuaternion.y, tmpQuaternion.z, tmpQuaternion.w));
+  const defaultMotionState = new Ammo.btDefaultMotionState( t );
+
+  const structColShape = new Ammo.btBoxShape( btVector(mesh.geometry.parameters.width*0.5, mesh.geometry.parameters.height, mesh.geometry.parameters.depth*0.5) );
+  const localInertia = btVector( inertia.x, inertia.y, inertia.z );
+  structColShape.setMargin( 0.001 );
+  structColShape.calculateLocalInertia( mass, localInertia );
+
+  let RBody_Info = new Ammo.btRigidBodyConstructionInfo( mass, defaultMotionState, structColShape, localInertia );
+  let RBody = new Ammo.btRigidBody( RBody_Info );
+
+  let velocity = btVector( inertia.x, inertia.y, inertia.z );
+  RBody.setLinearVelocity( velocity );
+  physicsUniverse.addRigidBody( RBody );
+
+  mesh.userData.physicsBody = RBody;
+  rigidBodyList.push(mesh);
+}
+
+const linkPhysicsParticule = (mesh, mass, tmpQuaternion, inertia) => {
   tmpQuaternion = tmpQuaternion ?? {x: 0, y: 0, z: 0, w: 1};
   inertia = inertia ?? {x: 0, y: 0, z: 0};
 
   btTransform(btVector(mesh.position.x, mesh.position.y, mesh.position.z), btQuaternion(tmpQuaternion.x, tmpQuaternion.y, tmpQuaternion.z, tmpQuaternion.w));
-  let defaultMotionState = new Ammo.btDefaultMotionState( transform );
+  const defaultMotionState = new Ammo.btDefaultMotionState( transform );
 
-  let structColShape = new Ammo.btBoxShape( btVector( mesh.geometry.parameters.width*0.5, mesh.geometry.parameters.height*0.5, mesh.geometry.parameters.depth*0.5 ) );
-  structColShape.setMargin( 0.01 );
-
-  let localInertia = btVector( inertia.x, inertia.y, inertia.z );
+  const structColShape = btBoxShape( mesh.geometry.parameters.width*0.5, mesh.geometry.parameters.height*0.5, mesh.geometry.parameters.depth*0.5 );
+  const localInertia = btVector( inertia.x, inertia.y, inertia.z );
+  structColShape.setMargin( 0.001 );
   structColShape.calculateLocalInertia( mass, localInertia );
-
-
 
   let RBody_Info = new Ammo.btRigidBodyConstructionInfo( mass, defaultMotionState, structColShape, localInertia );
   let RBody = new Ammo.btRigidBody( RBody_Info );
@@ -306,7 +332,7 @@ const deleteFromUniverse = (mesh) => {
       mesh.userData.physicsBody.getMotionState().__destroy__();
     }
     if(mesh.userData.physicsBody.getCollisionShape()) {
-      mesh.userData.physicsBody.getCollisionShape().__destroy__();
+      //mesh.userData.physicsBody.getCollisionShape().__destroy__();
     }
     mesh.userData.physicsBody.__destroy__();
     mesh.userData = null;
@@ -333,7 +359,7 @@ const updatePhysicsUniverse = (deltaTime) => {
     }
 }
 
-function render() {
+const render = async () => {
     requestAnimationFrame(render); // we are calling render() again,  to loop
 
     delta = clock.getDelta();
@@ -372,7 +398,8 @@ function render() {
 
         if (latest > statsDelay) {
             latest -= statsDelay;
-            statsToDisplay.text = `${Math.floor(elapsed)}s | ${renderer.info.render.triangles}tri | PhysicsObj:${rigidBodyList.length}(${physicsUniverse.getPairCache().getNumOverlappingPairs()}) | ${fps}FPS | PixelRatio:${Math.round(window.devicePixelRatio*100)/100} | HP:${hpToDisplay}`;
+            particulesNumber = rigidBodyList.length - initialRigidBodyNumber
+            statsToDisplay.text = `${Math.floor(elapsed)}s | ${renderer.info.render.triangles}tri | Particules:${particulesNumber}`+/*(${physicsUniverse.getPairCache().getNumOverlappingPairs()}:${Object.keys(boxShape.lB?.mB).length })*/` | ${fps}FPS | PixelRatio:${Math.round(window.devicePixelRatio*100)/100} | HP:${hpToDisplay}`;
         }
     }
 }
