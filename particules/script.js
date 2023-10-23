@@ -68,6 +68,7 @@ var wallMesh;
 // Ammo.js
 var physicsUniverse, tmpTransformation;
 var rigidBodyList = new Array();
+var quaternion, vector;
 
 function init() {
     scene = new THREE.Scene();
@@ -253,29 +254,31 @@ const ammoStart = () => {
 }
 
 const initPhysicsUniverse = () => {
+    quaternion = new Ammo.btQuaternion();
+    vector = new Ammo.btVector3();
+    
     var collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
     var dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration);
     var overlappingPairCache  = new Ammo.btDbvtBroadphase();
     var solver = new Ammo.btSequentialImpulseConstraintSolver();
     physicsUniverse = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-    physicsUniverse.setGravity(new Ammo.btVector3(0, -3, 0));
+    physicsUniverse.setGravity(btVector(0, -3, 0));
 }
 
-const linkPhysics = (mesh, mass, rotQuaternion, inertia) => {
-  let quaternion;
-  quaternion = rotQuaternion ?? {x: 0, y: 0, z: 0, w: 1};
+const linkPhysics = (mesh, mass, tmpQuaternion, inertia) => {
+  tmpQuaternion = tmpQuaternion ?? {x: 0, y: 0, z: 0, w: 1};
   inertia = inertia ?? {x: 0, y: 0, z: 0};
 
   let transform = new Ammo.btTransform();
   transform.setIdentity();
-  transform.setOrigin( new Ammo.btVector3( mesh.position.x, mesh.position.y, mesh.position.z ) );
-  transform.setRotation( new Ammo.btQuaternion( quaternion.x, quaternion.y, quaternion.z, quaternion.w ) );
+  transform.setOrigin( btVector( mesh.position.x, mesh.position.y, mesh.position.z ) );
+  transform.setRotation( btQuaternion( tmpQuaternion.x, tmpQuaternion.y, tmpQuaternion.z, tmpQuaternion.w ) );
   let defaultMotionState = new Ammo.btDefaultMotionState( transform );
 
-  let structColShape = new Ammo.btBoxShape( new Ammo.btVector3( mesh.geometry.parameters.width*0.5, mesh.geometry.parameters.height*0.5, mesh.geometry.parameters.depth*0.5 ) );
+  let structColShape = new Ammo.btBoxShape( btVector( mesh.geometry.parameters.width*0.5, mesh.geometry.parameters.height*0.5, mesh.geometry.parameters.depth*0.5 ) );
   structColShape.setMargin( 0.01 );
 
-  let localInertia = new Ammo.btVector3( inertia.x, inertia.y, inertia.z );
+  let localInertia = btVector( inertia.x, inertia.y, inertia.z );
   structColShape.calculateLocalInertia( mass, localInertia );
 
 
@@ -283,9 +286,8 @@ const linkPhysics = (mesh, mass, rotQuaternion, inertia) => {
   let RBody_Info = new Ammo.btRigidBodyConstructionInfo( mass, defaultMotionState, structColShape, localInertia );
   let RBody = new Ammo.btRigidBody( RBody_Info );
 
-  let velocity = new Ammo.btVector3( inertia.x, inertia.y, inertia.z );
+  let velocity = btVector( inertia.x, inertia.y, inertia.z );
   RBody.setLinearVelocity( velocity );
-  //RBody.setGravity( -1 );
   physicsUniverse.addRigidBody( RBody );
 
   mesh.userData.physicsBody = RBody;
