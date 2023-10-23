@@ -9,7 +9,7 @@ var MISSILE_TYPES = {
 
 var PARTICULE_TYPES = {
   NORMAL: {
-    lifespan: 2,
+    lifespan: 1,
     explodeEffet: 1,
     number: {
       min: 3,
