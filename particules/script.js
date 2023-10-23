@@ -301,6 +301,12 @@ const deleteFromUniverse = (mesh) => {
   if(index > -1) {
     rigidBodyList.splice(index, 1);
     physicsUniverse.removeRigidBody(mesh.userData.physicsBody);
+    if(mesh.userData.physicsBody.getMotionState()) {
+      mesh.userData.physicsBody.getMotionState().__destroy__();
+    }
+    if(mesh.userData.physicsBody.getCollisionShape()) {
+      mesh.userData.physicsBody.getCollisionShape().__destroy__();
+    }
     mesh.userData.physicsBody.__destroy__();
     mesh.userData = null;
     mesh = null;
