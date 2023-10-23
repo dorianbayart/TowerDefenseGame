@@ -1,7 +1,7 @@
 'use strict';
 
 const btVector = (x, y, z) => {
-    vetor.setValue(x, y, z);
+    vector.setValue(x, y, z);
     return vector;
 }
 
