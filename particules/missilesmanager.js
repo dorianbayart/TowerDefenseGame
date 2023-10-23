@@ -31,9 +31,9 @@ class ParticulesManager {
     for(var i = 0; i < particulesNumber; i++) {
       var particule = new Particule(PARTICULE_TYPES[type].lifespan * 0.2 + Math.random()*PARTICULE_TYPES[type].lifespan * 0.8);
       particule.mesh = PARTICULE_TYPES[type].mesh.clone();
-      particule.mesh.position.x = position.x;
-      particule.mesh.position.y = position.y;
-      particule.mesh.position.z = position.z;
+      particule.mesh.position.x = position.x + (2*Math.random() - 1) * polygonSize/10;
+      particule.mesh.position.y = position.y + (2*Math.random() - 1) * polygonSize/10;
+      particule.mesh.position.z = position.z + (2*Math.random() - 1) * polygonSize/10;
 
       scene.add(particule.mesh);
       linkPhysics(
@@ -42,7 +42,7 @@ class ParticulesManager {
         null,
         {
           x: (2*Math.random() - 1) * PARTICULE_TYPES[type].explodeEffet,
-          y: (Math.random()) * PARTICULE_TYPES[type].explodeEffet * 2,
+          y: Math.random() * PARTICULE_TYPES[type].explodeEffet * 2,
           z: (2*Math.random() - 1) * PARTICULE_TYPES[type].explodeEffet
         }
       );
