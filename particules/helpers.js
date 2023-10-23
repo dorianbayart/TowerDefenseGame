@@ -10,6 +10,12 @@ const btQuaternion = (x, y, z, w) => {
     return quaternion;
 }
 
+const btTransform = (vector, quaternion) => {
+  transform.setOrigin( vector );
+  transform.setRotation( quaternion );
+  return transform;
+}
+
 const toDegrees = (radians) => {
     return radians * (180 / Math.PI);
 };

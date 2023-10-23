@@ -68,7 +68,7 @@ var wallMesh;
 // Ammo.js
 var physicsUniverse, tmpTransformation;
 var rigidBodyList = new Array();
-var quaternion, vector;
+var quaternion, vector, transform;
 
 function init() {
     scene = new THREE.Scene();
@@ -256,7 +256,9 @@ const ammoStart = () => {
 const initPhysicsUniverse = () => {
     quaternion = new Ammo.btQuaternion();
     vector = new Ammo.btVector3();
-    
+    transform = new Ammo.btTransform();
+    transform.setIdentity();
+
     var collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
     var dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration);
     var overlappingPairCache  = new Ammo.btDbvtBroadphase();
@@ -269,10 +271,7 @@ const linkPhysics = (mesh, mass, tmpQuaternion, inertia) => {
   tmpQuaternion = tmpQuaternion ?? {x: 0, y: 0, z: 0, w: 1};
   inertia = inertia ?? {x: 0, y: 0, z: 0};
 
-  let transform = new Ammo.btTransform();
-  transform.setIdentity();
-  transform.setOrigin( btVector( mesh.position.x, mesh.position.y, mesh.position.z ) );
-  transform.setRotation( btQuaternion( tmpQuaternion.x, tmpQuaternion.y, tmpQuaternion.z, tmpQuaternion.w ) );
+  btTransform(btVector(mesh.position.x, mesh.position.y, mesh.position.z), btQuaternion(tmpQuaternion.x, tmpQuaternion.y, tmpQuaternion.z, tmpQuaternion.w));
   let defaultMotionState = new Ammo.btDefaultMotionState( transform );
 
   let structColShape = new Ammo.btBoxShape( btVector( mesh.geometry.parameters.width*0.5, mesh.geometry.parameters.height*0.5, mesh.geometry.parameters.depth*0.5 ) );
