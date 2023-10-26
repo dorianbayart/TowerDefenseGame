@@ -1,5 +1,24 @@
 'use strict';
 
+var TOWER_TYPES = {
+  NORMAL: {
+    mesh: undefined,
+    rangeMesh: undefined,
+    speed: 1,
+    power: 1,
+    range: 2.5,
+    cost: 5
+  },
+  ROCKET: {
+    mesh: undefined,
+    rangeMesh: undefined,
+    speed: 1.75,
+    power: 2,
+    range: 4,
+    cost: 10
+  }
+}
+
 var MISSILE_TYPES = {
   NORMAL: {
     mesh: undefined,

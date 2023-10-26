@@ -63,14 +63,14 @@ var cursorValid = false;
 var cursor;
 var groundMesh;
 var mobMesh;
-var rangeMesh;
-var towerMesh;
 var wallMesh;
 
 // Ammo.js
 var physicsUniverse, tmpTransformation;
 var rigidBodyList = new Array();
 var boxShape, quaternion, vector, transform;
+
+var threeQuaternion = new THREE.Quaternion();
 
 function init() {
     scene = new THREE.Scene();
@@ -166,22 +166,30 @@ function init() {
 
     // MISSILE MESH
     const missileMaterial = new THREE.MeshLambertMaterial({ color: COLOR.INDIGO });
-    const missileGeometry = new THREE.SphereGeometry(.12, 8, 8);
-    MISSILE_TYPES.NORMAL.mesh = new THREE.Mesh(missileGeometry, missileMaterial);
+    const missileGeometry_normal = new THREE.SphereGeometry(.12, 8, 8);
+    const missileGeometry_rocket = new THREE.CylinderGeometry(.1, .12, .25, 8, 1);
+    MISSILE_TYPES.NORMAL.mesh = new THREE.Mesh(missileGeometry_normal, missileMaterial);
+    MISSILE_TYPES.ROCKET.mesh = new THREE.Mesh(missileGeometry_rocket, missileMaterial);
 
     const particuleMaterial = new THREE.MeshPhongMaterial({ color: COLOR.INDIGO });
-    const particuleGeometry = new THREE.BoxGeometry(PARTICULE_TYPES.NORMAL.size, PARTICULE_TYPES.NORMAL.size, PARTICULE_TYPES.NORMAL.size);
-    PARTICULE_TYPES.NORMAL.mesh = new THREE.Mesh(particuleGeometry, particuleMaterial);
+    const particuleGeometry_normal = new THREE.BoxGeometry(PARTICULE_TYPES.NORMAL.size, PARTICULE_TYPES.NORMAL.size, PARTICULE_TYPES.NORMAL.size);
+    const particuleGeometry_rocket = new THREE.BoxGeometry(PARTICULE_TYPES.ROCKET.size, PARTICULE_TYPES.ROCKET.size, PARTICULE_TYPES.ROCKET.size);
+    PARTICULE_TYPES.NORMAL.mesh = new THREE.Mesh(particuleGeometry_normal, particuleMaterial);
+    PARTICULE_TYPES.ROCKET.mesh = new THREE.Mesh(particuleGeometry_rocket, particuleMaterial);
 
     // TOWER MESH
     const towerMaterial = new THREE.MeshLambertMaterial({ color: COLOR.BROWN });
-    const towerGeometry = new THREE.BoxGeometry(0.5, polygonSize, 0.5);
-    towerMesh = new THREE.Mesh(towerGeometry, towerMaterial);
+    const towerGeometry_normal = new THREE.BoxGeometry(.5, polygonSize * .75, .5);
+    const towerGeometry_rocket = new THREE.CylinderGeometry(.2, .3, polygonSize * .75, 10, 1);
+    TOWER_TYPES.NORMAL.mesh = new THREE.Mesh(towerGeometry_normal, towerMaterial);
+    TOWER_TYPES.ROCKET.mesh = new THREE.Mesh(towerGeometry_rocket, towerMaterial);
 
     // RANGE TOWER MESH
     const rangeMaterial = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0.5, color: COLOR.BROWN });
-    const rangeGeometry = new THREE.CylinderGeometry( 2.5, 2.5, 0.25, 24, 1 );
-    rangeMesh = new THREE.Mesh(rangeGeometry, rangeMaterial);
+    const rangeGeometry_normal = new THREE.CylinderGeometry( TOWER_TYPES.NORMAL.range, TOWER_TYPES.NORMAL.range, 0.05, 24, 1 );
+    const rangeGeometry_rocket = new THREE.CylinderGeometry( TOWER_TYPES.ROCKET.range, TOWER_TYPES.ROCKET.range, 0.05, 24, 1 );
+    TOWER_TYPES.NORMAL.rangeMesh = new THREE.Mesh(rangeGeometry_normal, rangeMaterial);
+    TOWER_TYPES.ROCKET.rangeMesh = new THREE.Mesh(rangeGeometry_rocket, rangeMaterial);
 
     // CURSOR
     const cursorMaterial = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0, color: COLOR.GREEN });
@@ -196,19 +204,16 @@ function init() {
     window.addEventListener('resize', onResize);
     document.getElementById('buttonyes').addEventListener('click', function (e) {
         e.stopPropagation();
-        var tmpTower = towerManager.newTowerMeshToCreate;
-        scene.add(tmpTower);
-        const cost = towerManager.addTower(tmpTower);
-        towerManager.newTowerMeshToCreate = undefined;
+        towerManager.addTower()
+
         var tmpRangeTower = towerManager.rangeTowerToDisplay;
         scene.remove(tmpRangeTower);
         towerManager.rangeTowerToDisplay = undefined;
         createTowerGui_close();
-        gameManager.game.updateMoney(-cost);
     });
     document.getElementById('buttonno').addEventListener('click', function (e) {
         e.stopPropagation();
-        towerManager.newTowerMeshToCreate = undefined;
+        towerManager.newTowerToCreate = undefined;
         var tmpRangeTower = towerManager.rangeTowerToDisplay;
         scene.remove(tmpRangeTower);
         towerManager.rangeTowerToDisplay = undefined;

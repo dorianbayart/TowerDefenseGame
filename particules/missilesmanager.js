@@ -77,9 +77,9 @@ class ParticulesManager {
 }
 
 class Missile {
-    constructor(mob, power, speed) {
+    constructor(type, mob, power, speed) {
         this.mesh = undefined;
-        this.type = 'NORMAL';
+        this.type = type ?? 'NORMAL';
 
         this.target = mob; // type Mob
 
@@ -95,7 +95,7 @@ class Missile {
       }
       const distance = Math.sqrt(vector.x*vector.x + vector.y*vector.y + vector.z*vector.z);
 
-      return distance <= this.mesh.geometry.parameters.radius;
+      return distance <= this.target.mesh.geometry.parameters.width / 2;
     }
 
     updatePosition(delta) {
@@ -115,6 +115,13 @@ class Missile {
         this.mesh.position.x += vector.x * factor;
         this.mesh.position.y += vector.y * factor;
         this.mesh.position.z += vector.z * factor;
+
+        if(this.type === 'ROCKET') {
+          this.mesh.quaternion.setFromUnitVectors(
+            this.mesh.up.normalize(),
+            (new THREE.Vector3(vector.x, vector.y, vector.z)).normalize()
+          );
+        }
     }
 }
 
@@ -124,8 +131,8 @@ class MissilesManager {
     }
 
     createMissile(type, position, target, power, scene) {
-        var missile = new Missile(target, power, type.speed);
-        missile.mesh = type.mesh.clone();
+        var missile = new Missile(type, target, power, MISSILE_TYPES[type].speed);
+        missile.mesh = MISSILE_TYPES[type].mesh.clone();
 
         missile.mesh.position.x = position.x;
         missile.mesh.position.y = position.y;

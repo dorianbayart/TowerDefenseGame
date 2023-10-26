@@ -6,16 +6,18 @@ class TowerManager {
         this.towerArray = new Array();
 
         // ---- Temporary variables ----
-        this.newTowerMeshToCreate = undefined;
+        this.newTowerToCreate = undefined;
         this.selectedTower = undefined;
         this.rangeTowerToDisplay = undefined;
     }
 
-    addTower(newTowerMesh) {
-        var newTower = new Tower();
-        newTower.mesh = newTowerMesh;
-        this.towerArray.push(newTower);
-        return newTower.cost;
+    addTower() {
+        const tower = towerManager.newTowerToCreate;
+        scene.add(tower.mesh);
+
+        this.towerArray.push(tower);
+        gameManager.game.updateMoney(-tower.cost);
+        towerManager.newTowerToCreate = undefined;
     }
 
     deleteTower(towerObj) {
@@ -56,13 +58,14 @@ class Tower {
   static DEFAULT_RANGE = 2.5;
   static DEFAULT_COST = 5;
 
-    constructor(power, speed, range, cost) {
-        this.mesh = undefined;
+    constructor(type, power, speed, range, cost) {
+        this.mesh = type ? TOWER_TYPES[type].mesh.clone() : undefined;
+        this.type = type ?? 'NORMAL';
 
-        this.power = power ?? Tower.DEFAULT_POWER;
-        this.speed = speed ?? Tower.DEFAULT_SPEED;
-        this.range = range ?? Tower.DEFAULT_RANGE;
-        this.cost = cost ?? Tower.DEFAULT_COST;
+        this.power = power ?? TOWER_TYPES[this.type].power;
+        this.speed = speed ?? TOWER_TYPES[this.type].speed;
+        this.range = range ?? TOWER_TYPES[this.type].range;
+        this.cost = cost ?? TOWER_TYPES[this.type].cost;
 
         this.target = undefined; // instance of Mob
         this.elapsedTimeSinceLastAttack = 0;
@@ -89,8 +92,8 @@ class Tower {
           x: this.mesh.position.x,
           y: this.mesh.position.y + this.mesh.geometry.parameters.height / 2,
           z: this.mesh.position.z
-        }
-        missilesManager.createMissile(MISSILE_TYPES.NORMAL, missilePosition, this.target, this.power, scene);
+        };
+        missilesManager.createMissile(this.type, missilePosition, this.target, this.power, scene);
         this.elapsedTimeSinceLastAttack = 0;
       }
     }

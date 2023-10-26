@@ -4,22 +4,26 @@ function createTowerGui_open() {
 function createTowerGui_close() {
     document.getElementById('createTowerDiv').style.display = 'none';
 }
-function infoTowerGui_open(tower_posx, tower_posz) {
-    document.getElementById('posXinfo').innerHTML = tower_posx;
-    document.getElementById('posZinfo').innerHTML = tower_posz;
+function infoTowerGui_open(speed, power, range) {
+    document.getElementById('speed').innerHTML = Math.round(1/speed * 10) / 10;
+    document.getElementById('power').innerHTML = power;
+    document.getElementById('range').innerHTML = range;
     document.getElementById('TowerInfoDiv').style.display = 'block';
 }
 function infoTowerGui_close() {
     document.getElementById('TowerInfoDiv').style.display = 'none';
-    document.getElementById('posXinfo').innerHTML = 'NULL';
-    document.getElementById('posZinfo').innerHTML = 'NULL';
+    document.getElementById('speed').innerHTML = 'NULL';
+    document.getElementById('power').innerHTML = 'NULL';
+    document.getElementById('range').innerHTML = 'NULL';
 }
 
 const onMouseUp = (event) => {
     cursor.material.emissive.g = 0;
     cursor.material.color = THREE_COLOR.GREEN;
-    towerManager.newTowerMeshToCreate = undefined;
+    towerManager.newTowerToCreate = undefined;
     towerManager.selectedTower = undefined;
+
+    const type = Object.keys(TOWER_TYPES)[Math.round(Math.random())];
 
     if(towerManager.rangeTowerToDisplay) {
       var tmpRangeTower = towerManager.rangeTowerToDisplay;
@@ -32,11 +36,11 @@ const onMouseUp = (event) => {
         const mazeMesh = maze[0][0].mesh;
 
         if (checkTower === null) {
-          if(Tower.DEFAULT_COST <= gameManager.game.money) {
-            var newTower = towerMesh.clone();
-            newTower.position.set(cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2 + towerMesh.geometry.parameters.height/2, cursor.position.z);
-            towerManager.newTowerMeshToCreate = newTower;
-            var rangeTower = rangeMesh.clone();
+          if(TOWER_TYPES[type].cost <= gameManager.game.money) {
+            var newTower = new Tower(type);
+            newTower.mesh.position.set(cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2 + newTower.mesh.geometry.parameters.height/2, cursor.position.z);
+            towerManager.newTowerToCreate = newTower;
+            var rangeTower = TOWER_TYPES[type].rangeMesh.clone();
             rangeTower.position.set(cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2, cursor.position.z);
             towerManager.rangeTowerToDisplay = rangeTower;
             scene.add(rangeTower);
@@ -45,12 +49,12 @@ const onMouseUp = (event) => {
           }
         } else {
             towerManager.selectedTower = checkTower;
-            var rangeTower = rangeMesh.clone();
+            var rangeTower = TOWER_TYPES[checkTower.type].rangeMesh.clone();
             rangeTower.position.set(cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2, cursor.position.z);
             towerManager.rangeTowerToDisplay = rangeTower;
             scene.add(rangeTower);
             createTowerGui_close();
-            infoTowerGui_open(checkTower.mesh.position.x, checkTower.mesh.position.z);
+            infoTowerGui_open(checkTower.speed, checkTower.power, checkTower.range);
         }
     }
 };
