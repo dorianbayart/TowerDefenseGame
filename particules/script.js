@@ -9,6 +9,7 @@ var scenePixi;
 var rendererPixi;
 var delta;
 var elapsed;
+const CAMERA_LOOKAT_VECTOR = new THREE.Vector3(0, -4 * polygonSize, 0);
 
 // Benchmarking
 var displayStats = true;
