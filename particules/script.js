@@ -137,19 +137,21 @@ function init() {
 
     directionalLight1 = new THREE.PointLight(0xffffff, 10 * gridSize);
     directionalLight1.position.y = 5 * polygonSize;
-    directionalLight1.castShadow = true
-    directionalLight1.shadow.mapSize.width = 2048
-    directionalLight1.shadow.mapSize.height = 2048
-    directionalLight1.shadow.camera.near = 0.5
-    directionalLight1.shadow.camera.far = 100
+    directionalLight1.castShadow = true;
+    directionalLight1.shadow.mapSize.width = 2048;
+    directionalLight1.shadow.mapSize.height = 2048;
+    directionalLight1.shadow.camera.near = 0.5;
+    directionalLight1.shadow.camera.far = 100;
+    directionalLight1.shadow.normalBias = 0.01;
     scene.add(directionalLight1);
     directionalLight2 = new THREE.PointLight(0xffffff, 10 * gridSize);
     directionalLight2.position.y = 5 * polygonSize;
-    directionalLight2.castShadow = true
-    directionalLight2.shadow.mapSize.width = 2048
-    directionalLight2.shadow.mapSize.height = 2048
-    directionalLight2.shadow.camera.near = 0.5
-    directionalLight2.shadow.camera.far = 100
+    directionalLight2.castShadow = true;
+    directionalLight2.shadow.mapSize.width = 2048;
+    directionalLight2.shadow.mapSize.height = 2048;
+    directionalLight2.shadow.camera.near = 0.5;
+    directionalLight2.shadow.camera.far = 100;
+    directionalLight2.shadow.normalBias = 0.01;
     scene.add(directionalLight2);
     // scene.add(new THREE.DirectionalLight(0xffffff, 2.5));
 
