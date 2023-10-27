@@ -83,6 +83,8 @@ function init() {
     renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas});
     renderer.setPixelRatio(window.devicePixelRatio * quality);
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
     scenePixi = new PIXI.Container();
     rendererPixi = new PIXI.Renderer({
@@ -130,20 +132,32 @@ function init() {
 
     // ---------------- LIGHTS ----------------
 
-    var ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
+    var ambientLight = new THREE.AmbientLight(0xcccccc, 0.25);
     scene.add(ambientLight);
 
-    directionalLight1 = new THREE.PointLight(0xffffff, 5 * gridSize);
+    directionalLight1 = new THREE.PointLight(0xffffff, gridSize / 2);
+    directionalLight1.decay = 1;
     directionalLight1.position.y = 5 * polygonSize;
+    directionalLight1.castShadow = true
+    directionalLight1.shadow.mapSize.width = 512
+    directionalLight1.shadow.mapSize.height = 512
+    directionalLight1.shadow.camera.near = 0.5
+    directionalLight1.shadow.camera.far = 100
     scene.add(directionalLight1);
-    directionalLight2 = new THREE.PointLight(0xffffff, 5 * gridSize);
+    directionalLight2 = new THREE.PointLight(0xffffff, gridSize / 2);
+    directionalLight2.decay = 1;
     directionalLight2.position.y = 5 * polygonSize;
+    directionalLight2.castShadow = true
+    directionalLight2.shadow.mapSize.width = 512
+    directionalLight2.shadow.mapSize.height = 512
+    directionalLight2.shadow.camera.near = 0.5
+    directionalLight2.shadow.camera.far = 100
     scene.add(directionalLight2);
     scene.add(new THREE.DirectionalLight(0xffffff, 2.5));
 
     // GROUND MESH
     const groundGeometry = new THREE.BoxGeometry(polygonSize*mazeSize.width, 0.05, polygonSize*mazeSize.height);
-    const groundMaterial = new THREE.MeshPhongMaterial( {color: COLOR.BLACK} );
+    const groundMaterial = new THREE.MeshLambertMaterial( {color: COLOR.BLACK, reflectivity: 1} );
     groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
     groundMesh.position.y = -groundMesh.geometry.parameters.height / 2
     groundMesh.rotation.x = Math.PI / 2;
@@ -151,8 +165,9 @@ function init() {
     scene.add(groundMesh);
 
     // MAZE MESH
-    const mazeMaterial = new THREE.MeshPhongMaterial({
+    const mazeMaterial = new THREE.MeshLambertMaterial({
         color: COLOR.GRAY,
+        reflectivity: 1,
         shininess: 150,
     });
     const mazeGeometry = new THREE.BoxGeometry(polygonSize, polygonSize*.4, polygonSize);
@@ -171,7 +186,7 @@ function init() {
     MISSILE_TYPES.NORMAL.mesh = new THREE.Mesh(missileGeometry_normal, missileMaterial);
     MISSILE_TYPES.ROCKET.mesh = new THREE.Mesh(missileGeometry_rocket, missileMaterial);
 
-    const particuleMaterial = new THREE.MeshPhongMaterial({ color: COLOR.INDIGO });
+    const particuleMaterial = new THREE.MeshLambertMaterial({ color: COLOR.INDIGO });
     const particuleGeometry_normal = new THREE.BoxGeometry(PARTICULE_TYPES.NORMAL.size, PARTICULE_TYPES.NORMAL.size, PARTICULE_TYPES.NORMAL.size);
     const particuleGeometry_rocket = new THREE.BoxGeometry(PARTICULE_TYPES.ROCKET.size, PARTICULE_TYPES.ROCKET.size, PARTICULE_TYPES.ROCKET.size);
     PARTICULE_TYPES.NORMAL.mesh = new THREE.Mesh(particuleGeometry_normal, particuleMaterial);
@@ -185,14 +200,14 @@ function init() {
     TOWER_TYPES.ROCKET.mesh = new THREE.Mesh(towerGeometry_rocket, towerMaterial);
 
     // RANGE TOWER MESH
-    const rangeMaterial = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0.5, color: COLOR.BROWN });
+    const rangeMaterial = new THREE.MeshNormalMaterial({ transparent: true, opacity: 0.5, color: COLOR.BROWN });
     const rangeGeometry_normal = new THREE.CylinderGeometry( TOWER_TYPES.NORMAL.range, TOWER_TYPES.NORMAL.range, 0.05, 24, 1 );
     const rangeGeometry_rocket = new THREE.CylinderGeometry( TOWER_TYPES.ROCKET.range, TOWER_TYPES.ROCKET.range, 0.05, 24, 1 );
     TOWER_TYPES.NORMAL.rangeMesh = new THREE.Mesh(rangeGeometry_normal, rangeMaterial);
     TOWER_TYPES.ROCKET.rangeMesh = new THREE.Mesh(rangeGeometry_rocket, rangeMaterial);
 
     // CURSOR
-    const cursorMaterial = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0, color: COLOR.GREEN });
+    const cursorMaterial = new THREE.MeshNormalMaterial({ transparent: true, opacity: 0, color: COLOR.GREEN });
     const cursorGeometry = new THREE.BoxGeometry(polygonSize, polygonSize / 10, polygonSize);
     cursor = new THREE.Mesh(cursorGeometry, cursorMaterial);
     scene.add(cursor);
