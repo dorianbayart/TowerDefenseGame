@@ -1,5 +1,7 @@
 'use strict';
 
+const CAMERA_LOOKAT_VECTOR = new THREE.Vector3(0, -4 * polygonSize, 0);
+
 var COLOR = {
   BLACK: '#181818',
   BLUE: 'cornflowerblue',
