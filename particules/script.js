@@ -9,7 +9,6 @@ var scenePixi;
 var rendererPixi;
 var delta;
 var elapsed;
-const CAMERA_LOOKAT_VECTOR = new THREE.Vector3(0, -4 * polygonSize, 0);
 
 // Benchmarking
 var displayStats = true;
@@ -72,6 +71,7 @@ var rigidBodyList = new Array();
 var boxShape, quaternion, vector, transform;
 
 var threeQuaternion = new THREE.Quaternion();
+const CAMERA_LOOKAT_VECTOR = new THREE.Vector3(0, -4 * polygonSize, 0);
 
 function init() {
     scene = new THREE.Scene();
