@@ -12,8 +12,8 @@ var TOWER_TYPES = {
   ROCKET: {
     mesh: undefined,
     rangeMesh: undefined,
-    speed: 1.75,
-    power: 2,
+    speed: 2.5,
+    power: 2.5,
     range: 4,
     cost: 10
   }
