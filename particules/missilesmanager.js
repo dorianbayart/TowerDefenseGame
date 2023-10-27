@@ -6,10 +6,13 @@ class missilePosition {
 }
 
 class Particule {
-  constructor(lifespan) {
-    this.mesh = undefined;
+  constructor(type = 'NORMAL') {
+    this.mesh = PARTICULE_TYPES[type].mesh.clone();
+    this.mesh.material = this.mesh.material.clone();
+    this.mesh.material.transparent = true;
 
-    this.lifespan = lifespan ?? 1;
+    this.lifespan = PARTICULE_TYPES[type].lifespan * 0.4 + Math.random()*PARTICULE_TYPES[type].lifespan * 1.6 ?? 1; // seconds
+    this.percentLifespan = 1; // percentage
   }
 
   isDead() {
@@ -17,7 +20,9 @@ class Particule {
   }
 
   update(delta) {
+    this.percentLifespan = this.percentLifespan * (this.lifespan - delta) / this.lifespan;
     this.lifespan -= delta;
+    this.mesh.material.opacity = this.percentLifespan;
   }
 }
 
@@ -29,8 +34,7 @@ class ParticulesManager {
   createExplosion(type, position) {
     const particulesNumber = Math.round(Math.random()*(PARTICULE_TYPES[type].number.max - PARTICULE_TYPES[type].number.min) + PARTICULE_TYPES[type].number.min);
     for(var i = 0; i < particulesNumber; i++) {
-      var particule = new Particule(PARTICULE_TYPES[type].lifespan * 0.4 + Math.random()*PARTICULE_TYPES[type].lifespan * 1.6);
-      particule.mesh = PARTICULE_TYPES[type].mesh.clone();
+      const particule = new Particule(type);
       particule.mesh.position.x = position.x + (2*Math.random() - 1) * polygonSize/5;
       particule.mesh.position.y = position.y + polygonSize/5;
       particule.mesh.position.z = position.z + (2*Math.random() - 1) * polygonSize/5;
