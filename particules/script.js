@@ -71,6 +71,8 @@ var rigidBodyList = new Array();
 var boxShape, quaternion, vector, transform;
 
 var threeQuaternion = new THREE.Quaternion();
+
+let cameraDistance = 12;
 const CAMERA_LOOKAT_VECTOR = new THREE.Vector3(0, -4 * polygonSize, 0);
 
 function init() {
@@ -410,8 +412,8 @@ const render = async () => {
     delta = clock.getDelta();
     elapsed = clock.elapsedTime;
 
-    camera.position.x = 10*Math.sin(elapsed/20);
-    camera.position.z = 10*Math.cos(elapsed/20);
+    camera.position.x = cameraDistance * Math.sin(elapsed/25);
+    camera.position.z = cameraDistance * Math.cos(elapsed/25);
     camera.lookAt(CAMERA_LOOKAT_VECTOR);
 
     directionalLight1.position.x = -((Math.cos(elapsed / 3) * (gridSize * objectsMargin)) / 3);
