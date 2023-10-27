@@ -127,7 +127,7 @@ function init() {
         );
     }
     camera.position.set(-(gridSize * 1.25 * objectsMargin) / 2, gridSize * objectsMargin, 0);
-    camera.lookAt(new THREE.Vector3(0, -4 * polygonSize, 0));
+    camera.lookAt(CAMERA_LOOKAT_VECTOR);
     scene.add(camera);
 
     // ---------------- LIGHTS ----------------
@@ -408,6 +408,10 @@ const render = async () => {
 
     delta = clock.getDelta();
     elapsed = clock.elapsedTime;
+
+    camera.position.x = 10*Math.sin(elapsed/20);
+    camera.position.z = 10*Math.cos(elapsed/20);
+    camera.lookAt(CAMERA_LOOKAT_VECTOR);
 
     directionalLight1.position.x = -((Math.cos(elapsed / 3) * (gridSize * objectsMargin)) / 3);
     directionalLight1.position.z = (Math.sin(elapsed / 3) * (gridSize * objectsMargin)) / 3;
