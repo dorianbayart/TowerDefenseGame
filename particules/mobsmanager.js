@@ -118,16 +118,20 @@ class MobsManager {
 
     getNextStep(currentCell) {
         const currentDistance = mazePaths.get(cellUUID(currentCell));
+        const positions = new Array();
         if (mazePaths.get(cellUUID({ x: currentCell.x, z: currentCell.z + 1 })) < currentDistance) {
-            return new mapPosition(currentCell.x, currentCell.z + 1);
-        } else if (mazePaths.get(cellUUID({ x: currentCell.x + 1, z: currentCell.z })) < currentDistance) {
-            return new mapPosition(currentCell.x + 1, currentCell.z);
-        } else if (mazePaths.get(cellUUID({ x: currentCell.x, z: currentCell.z - 1 })) < currentDistance) {
-            return new mapPosition(currentCell.x, currentCell.z - 1);
-        } else if (mazePaths.get(cellUUID({ x: currentCell.x - 1, z: currentCell.z })) < currentDistance) {
-            return new mapPosition(currentCell.x - 1, currentCell.z);
+            positions.push(new mapPosition(currentCell.x, currentCell.z + 1));
         }
-        return;
+        if (mazePaths.get(cellUUID({ x: currentCell.x + 1, z: currentCell.z })) < currentDistance) {
+            positions.push(new mapPosition(currentCell.x + 1, currentCell.z));
+        }
+        if (mazePaths.get(cellUUID({ x: currentCell.x, z: currentCell.z - 1 })) < currentDistance) {
+            positions.push(new mapPosition(currentCell.x, currentCell.z - 1));
+        }
+        if (mazePaths.get(cellUUID({ x: currentCell.x - 1, z: currentCell.z })) < currentDistance) {
+            positions.push(new mapPosition(currentCell.x - 1, currentCell.z));
+        }
+        return positions[Math.floor(Math.random()*positions.length)];
     }
 
     deleteMobs(mobstodelete_array, scene) {
