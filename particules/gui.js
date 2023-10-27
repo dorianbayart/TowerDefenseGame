@@ -56,6 +56,9 @@ const onMouseUp = (event) => {
             createTowerGui_close();
             infoTowerGui_open(checkTower.speed, checkTower.power, checkTower.range);
         }
+    } else {
+        createTowerGui_close();
+        infoTowerGui_close();
     }
 };
 
