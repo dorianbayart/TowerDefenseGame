@@ -1,7 +1,7 @@
 'use strict';
 
 var COLOR = {
-  BLACK: '#010101',
+  BLACK: '#181818',
   BLUE: 'cornflowerblue',
   BROWN: 'sienna',
   DARKGRAY: 'dimgray',
