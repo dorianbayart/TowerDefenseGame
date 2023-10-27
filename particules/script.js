@@ -159,7 +159,6 @@ function init() {
     groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
     groundMesh.position.y = -groundMesh.geometry.parameters.height / 2
     groundMesh.rotation.x = Math.PI / 2;
-    groundMesh.castShadow = true;
     groundMesh.receiveShadow = true;
     linkPhysicsObject(groundMesh);
     scene.add(groundMesh);
@@ -189,10 +188,10 @@ function init() {
     const missileGeometry_rocket = new THREE.CylinderGeometry(.1, .12, .25, 8, 1);
     MISSILE_TYPES.NORMAL.mesh = new THREE.Mesh(missileGeometry_normal, missileMaterial);
     MISSILE_TYPES.NORMAL.mesh.castShadow = true;
-    MISSILE_TYPES.NORMAL.mesh.receiveShadow = true;
+    // MISSILE_TYPES.NORMAL.mesh.receiveShadow = true;
     MISSILE_TYPES.ROCKET.mesh = new THREE.Mesh(missileGeometry_rocket, missileMaterial);
     MISSILE_TYPES.ROCKET.mesh.castShadow = true;
-    MISSILE_TYPES.ROCKET.mesh.receiveShadow = true;
+    // MISSILE_TYPES.ROCKET.mesh.receiveShadow = true;
     
 
     const particuleMaterial = new THREE.MeshLambertMaterial({ color: COLOR.INDIGO });
@@ -200,10 +199,10 @@ function init() {
     const particuleGeometry_rocket = new THREE.BoxGeometry(PARTICULE_TYPES.ROCKET.size, PARTICULE_TYPES.ROCKET.size, PARTICULE_TYPES.ROCKET.size);
     PARTICULE_TYPES.NORMAL.mesh = new THREE.Mesh(particuleGeometry_normal, particuleMaterial);
     PARTICULE_TYPES.NORMAL.mesh.castShadow = true;
-    PARTICULE_TYPES.NORMAL.mesh.receiveShadow = true;
+    // PARTICULE_TYPES.NORMAL.mesh.receiveShadow = true;
     PARTICULE_TYPES.ROCKET.mesh = new THREE.Mesh(particuleGeometry_rocket, particuleMaterial);
     PARTICULE_TYPES.ROCKET.mesh.castShadow = true;
-    PARTICULE_TYPES.ROCKET.mesh.receiveShadow = true;
+    // PARTICULE_TYPES.ROCKET.mesh.receiveShadow = true;
 
     // TOWER MESH
     const towerMaterial = new THREE.MeshLambertMaterial({ color: COLOR.BROWN });
@@ -221,17 +220,17 @@ function init() {
     const rangeGeometry_normal = new THREE.CylinderGeometry( TOWER_TYPES.NORMAL.range, TOWER_TYPES.NORMAL.range, 0.05, 24, 1 );
     const rangeGeometry_rocket = new THREE.CylinderGeometry( TOWER_TYPES.ROCKET.range, TOWER_TYPES.ROCKET.range, 0.05, 24, 1 );
     TOWER_TYPES.NORMAL.rangeMesh = new THREE.Mesh(rangeGeometry_normal, rangeMaterial);
-    TOWER_TYPES.NORMAL.rangeMesh.castShadow = true;
+    // TOWER_TYPES.NORMAL.rangeMesh.castShadow = true;
     TOWER_TYPES.NORMAL.rangeMesh.receiveShadow = true;
     TOWER_TYPES.ROCKET.rangeMesh = new THREE.Mesh(rangeGeometry_rocket, rangeMaterial);
-    TOWER_TYPES.ROCKET.rangeMesh.castShadow = true;
+    // TOWER_TYPES.ROCKET.rangeMesh.castShadow = true;
     TOWER_TYPES.ROCKET.rangeMesh.receiveShadow = true;
 
     // CURSOR
     const cursorMaterial = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0, color: COLOR.GREEN });
     const cursorGeometry = new THREE.BoxGeometry(polygonSize, polygonSize / 10, polygonSize);
     cursor = new THREE.Mesh(cursorGeometry, cursorMaterial);
-    cursor.castShadow = true;
+    // cursor.castShadow = true;
     cursor.receiveShadow = true;
     scene.add(cursor);
 
