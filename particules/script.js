@@ -18,14 +18,15 @@ var particulesNumber = 0;
 var initialRigidBodyNumber = 0;
 var fps;
 var deltas = [];
-var deltaSize = 280;
+var deltaSize = 200;
 var quality = 1;
 var latest = 0;
+var shadowMapSize = 512;
 
 // Maze
 var mazeSize = {
-    width: 20,
-    height: 20,
+    width: 14,
+    height: 14,
 };
 var maze;
 var mazePaths;
@@ -141,8 +142,8 @@ function init() {
     directionalLight1 = new THREE.PointLight(0xffffff, 10 * gridSize);
     directionalLight1.position.y = 5 * polygonSize;
     directionalLight1.castShadow = true;
-    directionalLight1.shadow.mapSize.width = 2048;
-    directionalLight1.shadow.mapSize.height = 2048;
+    directionalLight1.shadow.mapSize.width = shadowMapSize;
+    directionalLight1.shadow.mapSize.height = shadowMapSize;
     directionalLight1.shadow.camera.near = 0.5;
     directionalLight1.shadow.camera.far = 100;
     directionalLight1.shadow.normalBias = 0.01;
@@ -150,8 +151,8 @@ function init() {
     directionalLight2 = new THREE.PointLight(0xffffff, 10 * gridSize);
     directionalLight2.position.y = 5 * polygonSize;
     directionalLight2.castShadow = true;
-    directionalLight2.shadow.mapSize.width = 2048;
-    directionalLight2.shadow.mapSize.height = 2048;
+    directionalLight2.shadow.mapSize.width = shadowMapSize;
+    directionalLight2.shadow.mapSize.height = shadowMapSize;
     directionalLight2.shadow.camera.near = 0.5;
     directionalLight2.shadow.camera.far = 100;
     directionalLight2.shadow.normalBias = 0.01;
@@ -197,7 +198,7 @@ function init() {
     MISSILE_TYPES.ROCKET.mesh = new THREE.Mesh(missileGeometry_rocket, missileMaterial);
     MISSILE_TYPES.ROCKET.mesh.castShadow = true;
     // MISSILE_TYPES.ROCKET.mesh.receiveShadow = true;
-    
+
 
     const particuleMaterial = new THREE.MeshLambertMaterial({ color: COLOR.INDIGO });
     const particuleGeometry_normal = new THREE.BoxGeometry(PARTICULE_TYPES.NORMAL.size, PARTICULE_TYPES.NORMAL.size, PARTICULE_TYPES.NORMAL.size);
