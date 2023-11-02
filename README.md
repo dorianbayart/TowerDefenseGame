@@ -51,18 +51,21 @@ Add a bit of 'gameplay': money + score + remaining lives
 Missiles are flying through the map !  
 [Live here.](https://dorianbayart.github.io/three.js/missiles/)
 
-## 10. Particules
+## 10. Particules (Ammo.js)
 
 Add particules effect on missile explosion.  
 Add physics (Ammo.js)  
+Add shadows  
 [Live here.](https://dorianbayart.github.io/three.js/particules/)
 
-## 10. Rotate the map with mouse (TODO)
+## 11. Rotate the map with mouse (OrbitControls)
 
+Huge update to use modules
 Zoom in/out  
 Rotate the map
+[Live here.](https://dorianbayart.github.io/three.js/controls/)
 
-## 11. Towers can be updated (TODO)
+## 12. Towers can be updated (TODO)
 
 Add different tower types (+ missiles):
 - normal
@@ -73,7 +76,7 @@ Add different tower types (+ missiles):
 
 A tower can be updated (improve GUI)
 
-## 12. Add predefined levels (TODO)
+## 13. Add predefined levels (TODO)
 
 Create predefined levels (Beginner / Intermediate):
 - map
