@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-// import { OrbitControls } from 'orbit-controls';
+import { OrbitControls } from 'orbit-controls';
 
 import { objectsMargin, mazeSize, COLOR, THREE_COLOR } from './constants.js';
 import { MISSILE_TYPES, PARTICULE_TYPES, TOWER_TYPES } from './types.js';
@@ -22,6 +22,7 @@ var scenePixi;
 var rendererPixi;
 var delta;
 var elapsed;
+var controls;
 
 // Benchmarking
 var displayStats = true;
@@ -34,7 +35,7 @@ var deltas = [];
 var deltaSize = 200;
 var quality = 1;
 var latest = 0;
-var shadowMapSize = 512;
+var shadowMapSize = 768;
 
 
 // Gameplay
@@ -45,7 +46,7 @@ var directionalLight1;
 var directionalLight2;
 
 let cameraDistance = 12;
-const CAMERA_LOOKAT_VECTOR = new THREE.Vector3(0, -4, 0);
+const CAMERA_LOOKAT_VECTOR = new THREE.Vector3(0, 0, 0);
 
 function init() {
     g.scene = new THREE.Scene();
@@ -57,7 +58,7 @@ function init() {
     // ---------------- RENDERER ----------------
     renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas});
     renderer.setPixelRatio(window.devicePixelRatio * quality);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth, window.innerHeight, false);
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
@@ -68,15 +69,16 @@ function init() {
     	view: canvas,
       context: renderer.context,
     	transparent: true,
-    	autoDensity : true,
-    	antialias : true,
-    	autoResize : true,
+    	autoDensity: true,
+    	antialias: true,
+    	autoResize: true,
     	resolution: window.devicePixelRatio * quality,
     });
 
+
     // ---------------- 2D -----------------
     statsToDisplay = new PIXI.Text('', { fontFamily: 'monospace', fontSize: 12, fill: 'lightgreen', align: 'left' });
-    statsToDisplay.position.set(5, window.innerHeight - statsToDisplay.style.fontSize - 5);
+    statsToDisplay.position.set(5, window.innerHeight - 2*statsToDisplay.style.fontSize - 5);
     scenePixi.addChild(statsToDisplay);
 
     g.gui.gameInfosToDisplay = new PIXI.Text('', { fontFamily: 'monospace', fontSize: 12, fill: 'lightgreen', align: 'left' });
@@ -101,9 +103,14 @@ function init() {
             mazeSize * getFov()
         );
     }
-    g.camera.position.set(-(mazeSize * 1.25 * objectsMargin) / 2, mazeSize * objectsMargin, 0);
+    g.camera.position.set(-(mazeSize * 1.5 * objectsMargin) / 2, mazeSize * objectsMargin, 0);
     g.camera.lookAt(CAMERA_LOOKAT_VECTOR);
     g.scene.add(g.camera);
+
+    controls = new OrbitControls( g.camera, renderer.domElement );
+    controls.target.set( 0, 0, 0 );
+    //controls.autoRotate = true;
+    controls.autoRotateSpeed = .75;
 
     // ---------------- LIGHTS ----------------
 
@@ -131,7 +138,7 @@ function init() {
     // g.scene.add(new THREE.DirectionalLight(0xffffff, 2.5));
 
     // GROUND MESH
-    const groundGeometry = new THREE.BoxGeometry(mazeSize, 0.05, mazeSize);
+    const groundGeometry = new THREE.BoxGeometry(mazeSize, 0.075, mazeSize);
     const groundMaterial = new THREE.MeshLambertMaterial( {color: COLOR.BLACK, reflectivity: 1} );
     g.meshes.groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
     g.meshes.groundMesh.position.y = -g.meshes.groundMesh.geometry.parameters.height / 2
@@ -146,7 +153,7 @@ function init() {
         reflectivity: 1,
         // shininess: 150
     });
-    const mazeGeometry = new THREE.BoxGeometry(1, .4, 1);
+    const mazeGeometry = new THREE.BoxGeometry(1, .5, 1);
     g.meshes.wallMesh = new THREE.Mesh(mazeGeometry, mazeMaterial);
     g.meshes.wallMesh.castShadow = true;
     g.meshes.wallMesh.receiveShadow = true;
@@ -157,12 +164,12 @@ function init() {
     g.meshes.mobMesh = new THREE.Mesh(mobGeometry, mobMaterial);
     g.meshes.mobMesh.castShadow = true;
     g.meshes.mobMesh.receiveShadow = true;
-    g.meshes.mobMesh.position.y = 1 / 2;
+    g.meshes.mobMesh.position.y = g.meshes.mobMesh.geometry.parameters.height / 2;
 
     // MISSILE MESH
     const missileMaterial = new THREE.MeshLambertMaterial({ color: COLOR.INDIGO });
-    const missileGeometry_normal = new THREE.SphereGeometry(.12, 8, 8);
-    const missileGeometry_rocket = new THREE.CylinderGeometry(.1, .12, .25, 8, 1);
+    const missileGeometry_normal = new THREE.SphereGeometry(.12, 6, 6);
+    const missileGeometry_rocket = new THREE.CylinderGeometry(.1, .12, .25, 6, 1);
     MISSILE_TYPES.NORMAL.mesh = new THREE.Mesh(missileGeometry_normal, missileMaterial);
     MISSILE_TYPES.NORMAL.mesh.castShadow = true;
     // MISSILE_TYPES.NORMAL.mesh.receiveShadow = true;
@@ -184,7 +191,7 @@ function init() {
     // TOWER MESH
     const towerMaterial = new THREE.MeshLambertMaterial({ color: COLOR.BROWN });
     const towerGeometry_normal = new THREE.BoxGeometry(.5, .75, .5);
-    const towerGeometry_rocket = new THREE.CylinderGeometry(.2, .3, .75, 10, 1);
+    const towerGeometry_rocket = new THREE.CylinderGeometry(.2, .3, .75, 12, 1);
     TOWER_TYPES.NORMAL.mesh = new THREE.Mesh(towerGeometry_normal, towerMaterial);
     TOWER_TYPES.NORMAL.mesh.castShadow = true;
     TOWER_TYPES.NORMAL.mesh.receiveShadow = true;
@@ -281,9 +288,10 @@ const render = async () => {
     delta = g.gameManager.clock.getDelta();
     elapsed = g.gameManager.clock.elapsedTime;
 
-    g.camera.position.x = cameraDistance * Math.sin(elapsed/25);
-    g.camera.position.z = cameraDistance * Math.cos(elapsed/25);
-    g.camera.lookAt(CAMERA_LOOKAT_VECTOR);
+    // g.camera.position.x = cameraDistance * Math.sin(elapsed/25);
+    // g.camera.position.z = cameraDistance * Math.cos(elapsed/25);
+    // g.camera.lookAt(CAMERA_LOOKAT_VECTOR);
+    controls.update(delta);
 
     directionalLight1.position.x = -((Math.cos(elapsed / 3) * (mazeSize * objectsMargin)) / 3);
     directionalLight1.position.z = (Math.sin(elapsed / 3) * (mazeSize * objectsMargin)) / 3;
@@ -319,16 +327,19 @@ const render = async () => {
         if (latest > statsDelay) {
             latest -= statsDelay;
             particulesNumber = g.universeManager.rigidBodyList.length - initialRigidBodyNumber
-            statsToDisplay.text = `${Math.floor(elapsed)}s | ${renderer.info.render.triangles}tri | Particules:${particulesNumber}`+/*(${physicsUniverse.getPairCache().getNumOverlappingPairs()}:${Object.keys(boxShape.lB?.mB).length })*/` | ${fps}FPS | PixelRatio:${Math.round(window.devicePixelRatio*100)/100} | HP:${hpToDisplay}`;
+            statsToDisplay.text = `${Math.floor(elapsed)}s | HP:${hpToDisplay} | ${renderer.info.render.triangles}tri | Particules:${particulesNumber}\n${fps}FPS | ${Math.round(window.innerWidth*window.devicePixelRatio*quality*100)/100}x${Math.round(window.innerHeight*window.devicePixelRatio*quality*100)/100} | PixelRatio:${Math.round(window.devicePixelRatio*100)/100}`;
         }
     }
 }
 
 const onResize = () => {
+    renderer.setPixelRatio(window.devicePixelRatio * quality);
     renderer.setSize(window.innerWidth, window.innerHeight);
     g.camera.fov = getFov();
     g.camera.aspect = window.innerWidth / window.innerHeight;
     g.camera.updateProjectionMatrix();
+
+    statsToDisplay.position.set(5, window.innerHeight - 2*statsToDisplay.style.fontSize - 5);
 };
 
 const getFov = () => {

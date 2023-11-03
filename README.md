@@ -1,69 +1,69 @@
-# three.js
+# Three.js - Experimentations
 
-Description: Few simple experimentations using the Three.js library.
+Description: Few simple experimentations using the Three.js library.  
 
-Note: Each chapter is based on the code of the previous chapter.
+Note: Each chapter is based on the code of the previous chapter.  
 
 ## 01. Hello World - Cube
 
 Draw and rotate a simple cube.  
-[Live here.](https://dorianbayart.github.io/three.js/hello-world-cube/)
+[Live here.](https://dorianbayart.github.io/three.js/hello-world-cube/)  
 
 ## 02. Wave of Spheres
 
 Animate a grid of spheres.  
-[Live here.](https://dorianbayart.github.io/three.js/wave-of-spheres/)
+[Live here.](https://dorianbayart.github.io/three.js/wave-of-spheres/)  
 
 ## 03. Lights
 
 Lihts and reflection on objects.  
-[Live here.](https://dorianbayart.github.io/three.js/lights/)
+[Live here.](https://dorianbayart.github.io/three.js/lights/)  
 
 ## 04. Camera
 
 Camera moves around the scene.  
-[Live here.](https://dorianbayart.github.io/three.js/camera/)
+[Live here.](https://dorianbayart.github.io/three.js/camera/)  
 
 ## 05. Maze
 
 A maze generator.  
-[Live here.](https://dorianbayart.github.io/three.js/maze/)
+[Live here.](https://dorianbayart.github.io/three.js/maze/)  
 
 ## 06. Mouse Events
 
 Detects mouse events to do action on the maze.  
-[Live here.](https://dorianbayart.github.io/three.js/mouse-events/)
+[Live here.](https://dorianbayart.github.io/three.js/mouse-events/)  
 
 ## 07. Mobs
 
 Mobs are coming !  
-[Live here.](https://dorianbayart.github.io/three.js/mobs/)
+[Live here.](https://dorianbayart.github.io/three.js/mobs/)  
 
 ## 08. Towers
 
 Build towers on the map.  
 Display text with Pixi.js library (directly on the canvas)  
 Add a bit of 'gameplay': money + score + remaining lives  
-[Live here.](https://dorianbayart.github.io/three.js/towers/)
+[Live here.](https://dorianbayart.github.io/three.js/towers/)  
 
 ## 09. Missiles
 
 Missiles are flying through the map !  
-[Live here.](https://dorianbayart.github.io/three.js/missiles/)
+[Live here.](https://dorianbayart.github.io/three.js/missiles/)  
 
 ## 10. Particules (Ammo.js)
 
 Add particules effect on missile explosion.  
 Add physics (Ammo.js)  
 Add shadows  
-[Live here.](https://dorianbayart.github.io/three.js/particules/)
+[Live here.](https://dorianbayart.github.io/three.js/particules/)  
 
 ## 11. Rotate the map with mouse (OrbitControls)
 
-Huge update to use modules
+Huge update to use modules  
 Zoom in/out  
-Rotate the map
-[Live here.](https://dorianbayart.github.io/three.js/controls/)
+Rotate the map  
+[Live here.](https://dorianbayart.github.io/three.js/controls/)  
 
 ## 12. Towers can be updated (TODO)
 

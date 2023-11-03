@@ -50,7 +50,7 @@ export class UniverseManager {
     t.setRotation(btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w));
     const defaultMotionState = new Ammo.btDefaultMotionState( t );
 
-    const structColShape = new Ammo.btBoxShape( btVector(mesh.geometry.parameters.width*0.5, mesh.geometry.parameters.height, mesh.geometry.parameters.depth*0.5) );
+    const structColShape = new Ammo.btBoxShape( btVector(mesh.geometry.parameters.width*0.5, mesh.geometry.parameters.height*0.6, mesh.geometry.parameters.depth*0.5) );
     const localInertia = btVector( inertia.x, inertia.y, inertia.z );
     structColShape.setMargin( 0.001 );
     structColShape.calculateLocalInertia( mass, localInertia );
@@ -75,7 +75,7 @@ export class UniverseManager {
       btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w))
     );
 
-    const structColShape = btBoxShape( mesh.geometry.parameters.width*0.5, mesh.geometry.parameters.height*0.5, mesh.geometry.parameters.depth*0.5 );
+    const structColShape = btBoxShape( mesh.geometry.parameters.width*0.75, mesh.geometry.parameters.height*0.75, mesh.geometry.parameters.depth*0.75 );
     const localInertia = btVector( inertia.x, inertia.y, inertia.z );
     structColShape.setMargin( 0.001 );
     structColShape.calculateLocalInertia( mass, localInertia );

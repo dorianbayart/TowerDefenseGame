@@ -36,7 +36,7 @@ export class Cell {
             }
         }
         this.mesh.material = newMaterial;
-        this.mesh.position.y = this.mesh.scale.y / 2;
+        this.mesh.position.y = this.mesh.geometry.parameters.height * this.mesh.scale.y / 2;
     };
 };
 
