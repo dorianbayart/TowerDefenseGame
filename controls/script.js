@@ -109,6 +109,11 @@ function init() {
 
     controls = new OrbitControls( g.camera, renderer.domElement );
     controls.target.set( 0, 0, 0 );
+    controls.zoomSpeed = 0.5;
+    controls.minDistance = 4;
+    controls.maxDistance = 20;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
     //controls.autoRotate = true;
     controls.autoRotateSpeed = .75;
 
