@@ -43,7 +43,7 @@ export class TowerManager {
           const x = g.mobsManager.mobArray[j].mesh.position.x - this.towerArray[i].mesh.position.x;
           const z = g.mobsManager.mobArray[j].mesh.position.z - this.towerArray[i].mesh.position.z;
           const distance = Math.sqrt(x*x + z*z);
-          if((!this.towerArray[i].target || distance < this.towerArray[i].getTargetDistance) && distance < this.towerArray[i].range) {
+          if((!this.towerArray[i].target || distance < this.towerArray[i].getTargetDistance()) && distance < this.towerArray[i].range) {
             this.towerArray[i].target = g.mobsManager.mobArray[j];
           }
         }
