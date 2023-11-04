@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'orbit-controls';
+import { MapControls } from 'map-controls';
 
 import { objectsMargin, mazeSize, COLOR, THREE_COLOR } from './constants.js';
 import { MISSILE_TYPES, PARTICULE_TYPES, TOWER_TYPES } from './types.js';
@@ -27,7 +27,7 @@ var controls;
 // Benchmarking
 var displayStats = true;
 var statsToDisplay;
-var statsDelay = .5; // in seconds
+var statsDelay = .75; // in seconds
 var particulesNumber = 0;
 var initialRigidBodyNumber = 0;
 var fps;
@@ -107,9 +107,9 @@ function init() {
     g.camera.lookAt(CAMERA_LOOKAT_VECTOR);
     g.scene.add(g.camera);
 
-    controls = new OrbitControls( g.camera, renderer.domElement );
+    controls = new MapControls( g.camera, renderer.domElement );
     controls.target.set( 0, 0, 0 );
-    controls.zoomSpeed = 0.5;
+    controls.zoomSpeed = 0.75;
     controls.minDistance = 4;
     controls.maxDistance = 20;
     controls.enableDamping = true;
@@ -332,7 +332,7 @@ const render = async () => {
         if (latest > statsDelay) {
             latest -= statsDelay;
             particulesNumber = g.universeManager.rigidBodyList.length - initialRigidBodyNumber
-            statsToDisplay.text = `${Math.floor(elapsed)}s | HP:${hpToDisplay} | ${renderer.info.render.triangles}tri | Particules:${particulesNumber}\n${fps}FPS | ${Math.round(window.innerWidth*window.devicePixelRatio*quality*100)/100}x${Math.round(window.innerHeight*window.devicePixelRatio*quality*100)/100} | PixelRatio:${Math.round(window.devicePixelRatio*100)/100}`;
+            statsToDisplay.text = `${Math.floor(elapsed)}s | HP:${hpToDisplay} | ${renderer.info.render.triangles}tri | Particules:${particulesNumber}\n${Math.round(window.innerWidth*window.devicePixelRatio*quality*100)/100}x${Math.round(window.innerHeight*window.devicePixelRatio*quality*100)/100} | PixelRatio:${Math.round(window.devicePixelRatio*100)/100} | ${fps}FPS`;
         }
     }
 }
