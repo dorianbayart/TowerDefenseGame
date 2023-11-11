@@ -5,7 +5,8 @@ export const TOWER_TYPES = {
     speed: 1,
     power: 1,
     range: 2.5,
-    cost: 5
+    cost: 5,
+    timeToBuild: 3,
   },
   ROCKET: {
     mesh: undefined,
@@ -13,7 +14,8 @@ export const TOWER_TYPES = {
     speed: 2.5,
     power: 2.5,
     range: 4,
-    cost: 10
+    cost: 10,
+    timeToBuild: 5,
   }
 }
 

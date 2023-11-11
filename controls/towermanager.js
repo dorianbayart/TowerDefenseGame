@@ -39,16 +39,20 @@ export class TowerManager {
 
     updateTowers(delta) {
       for (var i = 0; i < this.towerArray.length; i++) {
-        for (var j = 0; j < g.mobsManager.mobArray.length; j++) {
-          const x = g.mobsManager.mobArray[j].mesh.position.x - this.towerArray[i].mesh.position.x;
-          const z = g.mobsManager.mobArray[j].mesh.position.z - this.towerArray[i].mesh.position.z;
-          const distance = Math.sqrt(x*x + z*z);
-          if((!this.towerArray[i].target || distance < this.towerArray[i].getTargetDistance()) && distance < this.towerArray[i].range) {
-            this.towerArray[i].target = g.mobsManager.mobArray[j];
+        if(this.towerArray[i].isBuilding) {
+          this.towerArray[i].updateBuilding(delta);
+        } else {
+          for (var j = 0; j < g.mobsManager.mobArray.length; j++) {
+            const x = g.mobsManager.mobArray[j].mesh.position.x - this.towerArray[i].mesh.position.x;
+            const z = g.mobsManager.mobArray[j].mesh.position.z - this.towerArray[i].mesh.position.z;
+            const distance = Math.sqrt(x*x + z*z);
+            if((!this.towerArray[i].target || distance < this.towerArray[i].getTargetDistance()) && distance < this.towerArray[i].range) {
+              this.towerArray[i].target = g.mobsManager.mobArray[j];
+            }
           }
-        }
 
-        this.towerArray[i].updateAttack(delta);
+          this.towerArray[i].updateAttack(delta);
+        }
       }
     }
 }
@@ -59,17 +63,21 @@ export class Tower {
   static DEFAULT_RANGE = 2.5;
   static DEFAULT_COST = 5;
 
-    constructor(type, power, speed, range, cost) {
-        this.mesh = type ? TOWER_TYPES[type].mesh.clone() : undefined;
-        this.type = type ?? 'NORMAL';
+    constructor(type = 'NORMAL', power, speed, range, cost) {
+        this.mesh = TOWER_TYPES[type].mesh.clone();
+
+        this.type = type;
 
         this.power = power ?? TOWER_TYPES[this.type].power;
         this.speed = speed ?? TOWER_TYPES[this.type].speed;
         this.range = range ?? TOWER_TYPES[this.type].range;
         this.cost = cost ?? TOWER_TYPES[this.type].cost;
 
+        this.isBuilding = true;
+        this.building = 0; // between 0 and 1 - represent the build percentage
+
         this.target = undefined; // instance of Mob
-        this.elapsedTimeSinceLastAttack = 0;
+        this.elapsedTimeSinceLastAttack = 999;
     }
 
     getTargetDistance() {
@@ -77,6 +85,31 @@ export class Tower {
       const z = this.target.mesh.position.z - this.mesh.position.z;
       const distance = Math.sqrt(x*x + z*z);
       return distance;
+    }
+
+    updateBuilding(delta) {
+      this.building += delta / TOWER_TYPES[this.type].timeToBuild;
+
+      if(!this.wireframeMesh && this.isBuilding) {
+        this.mesh.material = TOWER_TYPES[this.type].mesh.material.clone();
+        this.mesh.material.transparent = true;
+        this.mesh.material.opacity = 0;
+        this.wireframeMesh = this.mesh.clone();
+        this.wireframeMesh.material = this.mesh.material.clone();
+        this.wireframeMesh.material.wireframe = true;
+        g.scene.add(this.wireframeMesh);
+      }
+
+      if(this.building >= 1) {
+        this.building = 1;
+        this.isBuilding = false;
+        g.scene.remove(this.wireframeMesh);
+        this.wireframeMesh = undefined;
+        this.mesh.material = TOWER_TYPES[this.type].mesh.material;
+      } else {
+        this.wireframeMesh.material.opacity = this.building;
+        this.mesh.material.opacity = this.building;
+      }
     }
 
     updateAttack(delta) {
