@@ -1,5 +1,7 @@
+import * as THREE from 'three';
 import g from './global.js';
 import { TOWER_TYPES } from './types.js';
+import { ORDERS } from './buildermanager.js';
 
 export class TowerManager {
     constructor() {
@@ -18,6 +20,9 @@ export class TowerManager {
 
         this.towerArray.push(tower);
         g.gameManager.game.updateMoney(-tower.cost);
+
+        g.builderManager.addOrder(ORDERS.BUILD, tower);
+
         g.towerManager.newTowerToCreate = undefined;
     }
 
@@ -88,27 +93,37 @@ export class Tower {
     }
 
     updateBuilding(delta) {
-      this.building += delta / TOWER_TYPES[this.type].timeToBuild;
-
       if(!this.wireframeMesh && this.isBuilding) {
+        //this.mesh.castShadow = false;
         this.mesh.material = TOWER_TYPES[this.type].mesh.material.clone();
         this.mesh.material.transparent = true;
         this.mesh.material.opacity = 0;
+        //this.mesh.material.side = THREE.DoubleSide;
+        //this.mesh.material.shadowSide = THREE.DoubleSide;
+        this.mesh.castShadow = false;
         this.wireframeMesh = this.mesh.clone();
         this.wireframeMesh.material = this.mesh.material.clone();
         this.wireframeMesh.material.wireframe = true;
         g.scene.add(this.wireframeMesh);
       }
 
+      if(!g.builderManager.builder.isCloseTo(this.mesh.position)) return;
+
+      this.building += delta / TOWER_TYPES[this.type].timeToBuild;
+
       if(this.building >= 1) {
         this.building = 1;
         this.isBuilding = false;
         g.scene.remove(this.wireframeMesh);
+        this.wireframeMesh.material.dispose();
         this.wireframeMesh = undefined;
         this.mesh.material = TOWER_TYPES[this.type].mesh.material;
+        this.mesh.castShadow = true;
+        g.builderManager.removeOrder(ORDERS.BUILD, this);
       } else {
         this.wireframeMesh.material.opacity = this.building;
         this.mesh.material.opacity = this.building;
+        this.wireframeMesh.castShadow = true;
       }
     }
 

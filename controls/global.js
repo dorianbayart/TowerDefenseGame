@@ -6,6 +6,7 @@ class Global {
 
     this.universeManager;
 
+    this.builderManager;
     this.gameManager;
     this.mazeManager;
     this.missilesManager;

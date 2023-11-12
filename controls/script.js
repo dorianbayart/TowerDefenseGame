@@ -4,6 +4,7 @@ import { MapControls } from 'map-controls';
 import { objectsMargin, mazeSize, COLOR, THREE_COLOR } from './constants.js';
 import { MISSILE_TYPES, PARTICULE_TYPES, TOWER_TYPES } from './types.js';
 import { btBoxShape, btVector, btQuaternion, btTransform, toDegrees, toRadians } from './helpers.js';
+import { Builder, BuilderManager } from './buildermanager.js';
 import { Game, GameManager } from './gamemanager.js';
 import { Missile, MissilesManager } from './missilesmanager.js';
 import { Particule, ParticulesManager } from './particlesmanager.js';
@@ -215,7 +216,14 @@ function init() {
     // TOWER_TYPES.ROCKET.rangeMesh.castShadow = true;
     TOWER_TYPES.ROCKET.rangeMesh.receiveShadow = true;
 
-    // CURSOR
+
+    // BUILDER MESH
+    const builderMaterial = new THREE.MeshLambertMaterial({ color: COLOR.SALMON });
+    const builderGeometry = new THREE.SphereGeometry(.20, 12, 12);
+    g.meshes.builderMesh = new THREE.Mesh(builderGeometry, builderMaterial);
+    g.meshes.builderMesh.castShadow = true;
+    g.meshes.builderMesh.receiveShadow = true;
+    g.meshes.builderMesh.position.y = g.meshes.wallMesh.geometry.parameters.height + TOWER_TYPES.NORMAL.mesh.geometry.parameters.height + 1;
 
 
 
@@ -272,6 +280,7 @@ function init() {
     g.mobsManager = new MobsManager();
     g.particulesManager = new ParticulesManager();
     g.towerManager = new TowerManager();
+    g.builderManager = new BuilderManager(g.scene);
 
     // ---------------- STARTING THE RENDER LOOP ----------------
     render();
@@ -293,9 +302,6 @@ const render = async () => {
     delta = g.gameManager.clock.getDelta();
     elapsed = g.gameManager.clock.elapsedTime;
 
-    // g.camera.position.x = cameraDistance * Math.sin(elapsed/25);
-    // g.camera.position.z = cameraDistance * Math.cos(elapsed/25);
-    // g.camera.lookAt(CAMERA_LOOKAT_VECTOR);
     controls.update(delta);
 
     directionalLight1.position.x = -((Math.cos(elapsed / 3) * (mazeSize * objectsMargin)) / 3);
@@ -305,6 +311,7 @@ const render = async () => {
     directionalLight2.position.z = -(Math.sin(elapsed / 3) * (mazeSize * objectsMargin)) / 3;
 
     g.gameManager.updateGameInfos();
+    g.builderManager.updateBuilder(delta, g.scene);
     g.missilesManager.updateMissilesPosition(delta, g.scene);
     g.particulesManager.updateParticules(delta, g.scene);
     g.mobsManager.updateMobsPosition(delta, g.scene);

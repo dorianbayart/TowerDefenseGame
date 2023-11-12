@@ -62,7 +62,7 @@ export class Gui {
           const checkTower = g.towerManager.getTowerAtPosition(this.cursor.position.x, this.cursor.position.z);
           const mazeMesh = g.mazeManager.maze.map[0][0].mesh;
 
-          if (checkTower === null) {
+          if (checkTower === null) { // new tower
             if(TOWER_TYPES[type].cost <= g.gameManager.game.money) {
               var newTower = new Tower(type);
               newTower.mesh.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2 + newTower.mesh.geometry.parameters.height/2, this.cursor.position.z);
@@ -74,7 +74,7 @@ export class Gui {
               this.infoTowerGui_close();
               this.createTowerGui_open();
             }
-          } else {
+          } else { // tower exists
               g.towerManager.selectedTower = checkTower;
               var rangeTower = TOWER_TYPES[checkTower.type].rangeMesh.clone();
               rangeTower.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2, this.cursor.position.z);

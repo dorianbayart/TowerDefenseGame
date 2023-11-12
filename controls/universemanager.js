@@ -108,6 +108,7 @@ export class UniverseManager {
       }
       mesh.userData.physicsBody.__destroy__();
       mesh.userData = null;
+      mesh.material.dispose();
       mesh = null;
     }
   }
