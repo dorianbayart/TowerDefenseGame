@@ -45,8 +45,14 @@ export class TowerManager {
     }
 
     updateTowers(delta) {
+      if(this.towerArray.length === 0) return;
+
       this.lastShuffling += delta;
-      if(this.lastShuffling > 3) this.towerArray = getShuffledArr(this.towerArray);
+      if(this.lastShuffling > 1) {
+        this.towerArray = getShuffledArr(this.towerArray);
+        console.log('shuffling !');
+        this.lastShuffling -= 1;
+      }
 
       for (var tower of this.towerArray) {
         if(tower.building < 1) {
