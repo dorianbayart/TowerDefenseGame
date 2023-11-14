@@ -63,10 +63,20 @@ Add shadows
 Huge update to use modules  
 Zoom in/out  
 Rotate the map  
+Add a builder mob + list of tasks to do (build towers)  
+It takes some time to build a tower  
 [Live here.](https://dorianbayart.github.io/three.js/controls/)  
 
-## 12. Towers can be updated (TODO)
+## 12. Energy (TODO)
 
+Add the _energy_ concept:
+- the builder produces energy
+- building a tower consume energy
+- launching a missile needs energy
+
+## 13. Towers can be updated (TODO)
+
+Choose the tower you want to build
 Add different tower types (+ missiles):
 - normal
 - rocket
@@ -74,13 +84,28 @@ Add different tower types (+ missiles):
 - speed bump
 - poison ?
 
-A tower can be updated (improve GUI)
+A tower can be updated (improve GUI)  
+Introduce tower experience
 
-## 13. Add predefined levels (TODO)
+Add _energy_ buildings (producer, capacitor/storage)  
+
+## 14. Add predefined levels (TODO)
 
 Create predefined levels (Beginner / Intermediate):
 - map
 - initial money
 - mob generation
 
-Select the level you want to play (display a preview)
+Select the level you want to play (display a preview)  
+
+## Ideas (TODO)
+
+- PWA
+- Improve paths with smooth angles
+- Rotate the towers
+- Rotate the mobs
+- Try to reduce polygons (group adjacent walls into one larger rectangular wall)
+- Overview of the map in a corner
+- Collision detection missiles / walls (higher difficulty mode)
+  
+
