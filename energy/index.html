@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Energy</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+        <link rel="stylesheet" href="style.css">
+
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "../public/three.module.min.js",
+                    "orbit-controls": "../public/OrbitControls.js",
+                    "map-controls": "../public/MapControls.js"
+                }
+            }
+        </script>
+
+        <script defer src="../public/pixi.min.js"></script>
+        <script defer src="../public/ammo.js"></script>
+
+        <script defer src="./script.js" type="module"></script>
+
+    </head>
+
+    <body>
+        <div id="benchmarking"></div>
+
+        <!-- CREATE MENU -->
+        <div id="createTowerDiv" class="popupdiv">
+            <h2 style="text-align : center;">Create Tower ?</h2>
+            <div style="display:flex;  align-items: center; justify-content: center;">
+                <button class="buttonYesNo buttonno" id="buttonno">No</button>
+                <div style="width : 5%"></div>
+                <button class="buttonYesNo buttonyes" id="buttonyes">Yes</button>
+            </div>
+        </div>
+
+        <!-- TOWER INFO MENU -->
+        <div id="TowerInfoDiv" class="popupdiv">
+            <h2 style="text-align : center;">Selected Tower Info</h2>
+            <p>Hit per second : <span id="speed">NULL</span> / Power : <span id="power">NULL</span> / Range : <span id="range">NULL</span></p>
+            </br>
+            <div style="display:flex;  align-items: center; justify-content: center;">
+                <button class="buttonYesNo buttonno" id="buttondelete">Delete Tower</button>
+                <div style="width : 5%"></div>
+                <button class="buttonYesNo buttonyes" id="buttonclose">Close</button>
+            </div>
+        </div>
+    </body>
+
+</html>

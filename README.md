@@ -67,12 +67,13 @@ Add a builder mob + list of tasks to do (build towers)
 It takes some time to build a tower  
 [Live here.](https://dorianbayart.github.io/three.js/controls/)  
 
-## 12. Energy (TODO)
+## 12. Energy (WIP)
 
 Add the _energy_ concept:
 - the builder produces energy
 - building a tower consume energy
 - launching a missile needs energy
+[Live here.](https://dorianbayart.github.io/three.js/energy/)  
 
 ## 13. Towers can be updated (TODO)
 
@@ -107,5 +108,3 @@ Select the level you want to play (display a preview)
 - Try to reduce polygons (group adjacent walls into one larger rectangular wall)
 - Overview of the map in a corner
 - Collision detection missiles / walls (higher difficulty mode)
-  
-
