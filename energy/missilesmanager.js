@@ -20,9 +20,6 @@ export class Missile {
 
         this.speed = speed;
         this.power = power;
-
-        //this.energyCost = MISSILE_TYPES[type].energyCost;
-        g.gameManager.game.energy -= MISSILE_TYPES[type].energyCost;
     }
 
     isAtTarget() {
@@ -107,7 +104,7 @@ export class MissilesManager {
               missilestodelete.push(this.missileArray[i]);
             }
           } else {
-            console.log('Target already dead')
+            /* Target already dead */
             missilestodelete.push(this.missileArray[i]);
           }
         }

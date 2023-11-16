@@ -23,12 +23,12 @@ export const MISSILE_TYPES = {
   NORMAL: {
     mesh: undefined,
     speed: 8, // m/s
-    energyCost: .4,
+    energyCost: .5,
   },
   ROCKET: {
     mesh: undefined,
     speed: 3, // m/s
-    energyCost: 1,
+    energyCost: 2,
   }
 };
 

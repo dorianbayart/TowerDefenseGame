@@ -93,10 +93,11 @@ export class Tower {
 
         this.isBuilding = false;
         this.building = 0; // between 0 and 1 - represent the build percentage
-        this.energyPerSec = g.builderManager.builder.energyPerSec; // energy needed during build
+        this.energyPerSec = this.cost / TOWER_TYPES[this.type].timeToBuild; // energy needed during build
 
         this.target = undefined; // instance of Mob
         this.elapsedTimeSinceLastAttack = 999;
+        this.energyPerSecDuringAttack = MISSILE_TYPES[this.type].energyCost / TOWER_TYPES[this.type].speed; // energy needed during build
     }
 
     getTargetDistance() {
@@ -148,12 +149,12 @@ export class Tower {
     updateAttack(delta) {
       this.elapsedTimeSinceLastAttack += delta;
 
-      if(!this.target || !this.target.isAlive() || this.getTargetDistance() > this.range) {
+      if(!this.target || !this.target.isAlive() || this.getTargetDistance() > this.range || this.energyPerSecDuringAttack > g.gameManager.game.energy) {
         this.target = undefined;
         return;
       }
 
-      if(this.elapsedTimeSinceLastAttack >= this.speed && MISSILE_TYPES[this.type].energyCost <= g.gameManager.game.energy) {
+      if(this.elapsedTimeSinceLastAttack >= this.speed) {
         // Launch a missile
         const missilePosition = {
           x: this.mesh.position.x,

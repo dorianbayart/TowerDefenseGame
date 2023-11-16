@@ -27,17 +27,18 @@ export class Game {
     updateEnergy(delta) {
       this.energyPerSec = 0;
       this.capacity = 0;
-
-      const towers = g.towerManager.towerArray.filter(tower => tower.isBuilding);
+      
+      /* Building towers */
+      let towers = g.towerManager.towerArray.filter(tower => tower.isBuilding);
       for (var tower of towers) {
         this.energyPerSec -= tower.energyPerSec;
       }
-
-      // const missiles = g.missilesManager.missileArray.filter(missile => missile.energyCost > 0);
-      // for (var missile of missiles) {
-      //   this.energyPerSec -= missile.energyCost / delta;
-      //   missile.energyCost -= delta;
-      // }
+      
+      /* Attacking towers */
+      towers = g.towerManager.towerArray.filter(tower => tower.target);
+      for (var tower of towers) {
+        this.energyPerSec -= tower.energyPerSecDuringAttack;
+      }
 
       this.energyPerSec += g.builderManager.builder.energyPerSec;
 
