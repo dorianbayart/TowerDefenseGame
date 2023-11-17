@@ -57,7 +57,7 @@ export class TowerManager {
       for (var tower of this.towerArray) {
         if(tower.building < 1) {
           tower.updateBuilding(delta);
-        } else {
+        } else if(Math.random() > 0.1) {
           for (var mob of g.mobsManager.mobArray) {
             const x = mob.mesh.position.x - tower.mesh.position.x;
             const z = mob.mesh.position.z - tower.mesh.position.z;
@@ -154,7 +154,7 @@ export class Tower {
         return;
       }
 
-      if(this.elapsedTimeSinceLastAttack >= this.speed) {
+      if(this.elapsedTimeSinceLastAttack >= this.speed && this.energyPerSecDuringAttack*this.speed <= g.gameManager.game.energy) {
         // Launch a missile
         const missilePosition = {
           x: this.mesh.position.x,

@@ -1,8 +1,19 @@
 class Global {
   constructor() {
+    this.renderer;
+    this.rendererPixi;
     this.scene;
+    this.scenePixi;
     this.camera;
     this.gui;
+    this.controls;
+
+    this.parameters = {
+      antialiasing: true,
+      quality: .75,
+      shadows: true,
+      shadowMapSize: 768,
+    }
 
     this.universeManager;
 

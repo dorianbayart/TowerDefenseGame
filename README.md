@@ -102,7 +102,7 @@ Add different tower types (+ missiles):
 - poison ?
 
 A tower can be updated (improve GUI)  
-Introduce tower experience
+Introduce tower experience  
 
 Add _energy_ buildings (producer, capacitor/storage)  
 
@@ -112,7 +112,7 @@ Add _energy_ buildings (producer, capacitor/storage)
 Create predefined levels (Beginner / Intermediate):
 - map
 - initial money
-- mob generation
+- mob generation  
 
 Select the level you want to play (display a preview)  
 
@@ -125,4 +125,4 @@ Select the level you want to play (display a preview)
 - Rotate the mobs
 - Try to reduce polygons (group adjacent walls into one larger rectangular wall)
 - Overview of the map in a corner
-- Collision detection missiles / walls (higher difficulty mode)
+- Collision detection missiles / walls (higher difficulty mode)  

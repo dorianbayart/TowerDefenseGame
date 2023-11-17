@@ -27,13 +27,13 @@ export class Game {
     updateEnergy(delta) {
       this.energyPerSec = 0;
       this.capacity = 0;
-      
+
       /* Building towers */
       let towers = g.towerManager.towerArray.filter(tower => tower.isBuilding);
       for (var tower of towers) {
         this.energyPerSec -= tower.energyPerSec;
       }
-      
+
       /* Attacking towers */
       towers = g.towerManager.towerArray.filter(tower => tower.target);
       for (var tower of towers) {
@@ -61,7 +61,7 @@ export class GameManager {
         this.clock = new THREE.Clock();
         this.timer = this.clock.elapsedTime;
         this.lastGameInfosTime = 0;
-        this.lastCreatedMobTime = -2;
+        this.lastCreatedMobTime = 2;
     }
 
     updateGame(delta) {
@@ -69,23 +69,10 @@ export class GameManager {
 
       const elapsed = this.clock.elapsedTime; // in seconds
 
-      /* Update Game Infos */
-      if(elapsed - this.timer > 1) {
-        this.updateGameInfos();
-        this.lastGameInfosTime = elapsed;
-      }
-
       /* Create a new Mob */
       if(elapsed - this.lastCreatedMobTime > 3/* || g.mobsManager?.mobArray.length === 0*/) {
         g.mobsManager.createMob(g.meshes.mobMesh, g.scene);
         this.lastCreatedMobTime = elapsed;
-      }
-    }
-
-    updateGameInfos() {
-      if(g.gui.gameInfosToDisplay) {
-        g.gui.gameInfosToDisplay.text = `Money: ${this.game.money} | Score: ${this.game.score} | Lives: ${this.game.lives}`;
-        g.gui.gameInfosToDisplay.text += `\nEnergy: ${this.game.energy.toFixed((this.game.energy > 10 || this.game.energy === this.game.capacity) ? 0 : 1)}/${this.game.capacity.toFixed(0)} | Production: ${this.game.energyPerSec >= 0 ? '+' : ''}${this.game.energyPerSec.toFixed(this.game.energyPerSec > 10 ? 0 : 2)}/s`;
       }
     }
 }
