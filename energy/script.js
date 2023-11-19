@@ -122,7 +122,7 @@ function init() {
 
     // MAZE MESH
     const mazeMaterial = new THREE.MeshLambertMaterial({
-        color: COLOR.GRAY,
+        color: COLOR.LIGHTERGRAY,
         reflectivity: 1,
         // shininess: 150
     });
@@ -132,7 +132,7 @@ function init() {
     g.meshes.wallMesh.receiveShadow = true;
 
     // MOB MESH
-    const mobMaterial = new THREE.MeshLambertMaterial({ color: COLOR.BLUE });
+    const mobMaterial = new THREE.MeshLambertMaterial({ color: COLOR.LIGHTERBLUE });
     const mobGeometry = new THREE.BoxGeometry(1 / 2, 1 / 2, 1 / 2);
     g.meshes.mobMesh = new THREE.Mesh(mobGeometry, mobMaterial);
     g.meshes.mobMesh.castShadow = true;
@@ -140,45 +140,49 @@ function init() {
     g.meshes.mobMesh.position.y = g.meshes.mobMesh.geometry.parameters.height / 2;
 
     // MISSILE MESH
-    const missileMaterial = new THREE.MeshLambertMaterial({ color: COLOR.INDIGO });
+    const missileMaterial_normal = new THREE.MeshLambertMaterial({ color: COLOR.LIGHTBROWN });
+    const missileMaterial_rocket = new THREE.MeshLambertMaterial({ color: COLOR.LIGHTERINDIGO });
     const missileGeometry_normal = new THREE.SphereGeometry(.12, Math.floor(8 * g.parameters.quality), Math.floor(8 * g.parameters.quality));
     const missileGeometry_rocket = new THREE.CylinderGeometry(.1, .12, .25, Math.floor(8 * g.parameters.quality), 1);
-    MISSILE_TYPES.NORMAL.mesh = new THREE.Mesh(missileGeometry_normal, missileMaterial);
+    MISSILE_TYPES.NORMAL.mesh = new THREE.Mesh(missileGeometry_normal, missileMaterial_normal);
     MISSILE_TYPES.NORMAL.mesh.castShadow = true;
     // MISSILE_TYPES.NORMAL.mesh.receiveShadow = true;
-    MISSILE_TYPES.ROCKET.mesh = new THREE.Mesh(missileGeometry_rocket, missileMaterial);
+    MISSILE_TYPES.ROCKET.mesh = new THREE.Mesh(missileGeometry_rocket, missileMaterial_rocket);
     MISSILE_TYPES.ROCKET.mesh.castShadow = true;
     // MISSILE_TYPES.ROCKET.mesh.receiveShadow = true;
 
 
-    const particuleMaterial = new THREE.MeshLambertMaterial({ color: COLOR.INDIGO });
+    const particuleMaterial_normal = new THREE.MeshLambertMaterial({ color: COLOR.LIGHTBROWN });
+    const particuleMaterial_rocket = new THREE.MeshLambertMaterial({ color: COLOR.LIGHTERINDIGO });
     const particuleGeometry_normal = new THREE.BoxGeometry(PARTICULE_TYPES.NORMAL.size, PARTICULE_TYPES.NORMAL.size, PARTICULE_TYPES.NORMAL.size);
     const particuleGeometry_rocket = new THREE.BoxGeometry(PARTICULE_TYPES.ROCKET.size, PARTICULE_TYPES.ROCKET.size, PARTICULE_TYPES.ROCKET.size);
-    PARTICULE_TYPES.NORMAL.mesh = new THREE.Mesh(particuleGeometry_normal, particuleMaterial);
+    PARTICULE_TYPES.NORMAL.mesh = new THREE.Mesh(particuleGeometry_normal, particuleMaterial_normal);
     PARTICULE_TYPES.NORMAL.mesh.castShadow = true;
     // PARTICULE_TYPES.NORMAL.mesh.receiveShadow = true;
-    PARTICULE_TYPES.ROCKET.mesh = new THREE.Mesh(particuleGeometry_rocket, particuleMaterial);
+    PARTICULE_TYPES.ROCKET.mesh = new THREE.Mesh(particuleGeometry_rocket, particuleMaterial_rocket);
     PARTICULE_TYPES.ROCKET.mesh.castShadow = true;
     // PARTICULE_TYPES.ROCKET.mesh.receiveShadow = true;
 
     // TOWER MESH
-    const towerMaterial = new THREE.MeshLambertMaterial({ color: COLOR.BROWN });
+    const towerMaterial_normal = new THREE.MeshLambertMaterial({ color: COLOR.LIGHTERBROWN });
+    const towerMaterial_rocket = new THREE.MeshLambertMaterial({ color: COLOR.INDIGO });
     const towerGeometry_normal = new THREE.BoxGeometry(.5, .75, .5);
     const towerGeometry_rocket = new THREE.CylinderGeometry(.2, .3, .75, Math.floor(12 * g.parameters.quality), 1);
-    TOWER_TYPES.NORMAL.mesh = new THREE.Mesh(towerGeometry_normal, towerMaterial);
+    TOWER_TYPES.NORMAL.mesh = new THREE.Mesh(towerGeometry_normal, towerMaterial_normal);
     TOWER_TYPES.NORMAL.mesh.castShadow = true;
     TOWER_TYPES.NORMAL.mesh.receiveShadow = true;
-    TOWER_TYPES.ROCKET.mesh = new THREE.Mesh(towerGeometry_rocket, towerMaterial);
+    TOWER_TYPES.ROCKET.mesh = new THREE.Mesh(towerGeometry_rocket, towerMaterial_rocket);
     TOWER_TYPES.ROCKET.mesh.castShadow = true;
     TOWER_TYPES.ROCKET.mesh.receiveShadow = true;
 
     // RANGE TOWER MESH
-    const rangeMaterial = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0.5, color: COLOR.BROWN });
+    const rangeMaterial_normal = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0.5, color: COLOR.LIGHTBROWN });
+    const rangeMaterial_rocket = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0.5, color: COLOR.LIGHTERINDIGO });
     const rangeGeometry_normal = new THREE.CylinderGeometry( TOWER_TYPES.NORMAL.range, TOWER_TYPES.NORMAL.range, 0.05, Math.floor(24 * g.parameters.quality), 1 );
     const rangeGeometry_rocket = new THREE.CylinderGeometry( TOWER_TYPES.ROCKET.range, TOWER_TYPES.ROCKET.range, 0.05, Math.floor(24 * g.parameters.quality), 1 );
-    TOWER_TYPES.NORMAL.rangeMesh = new THREE.Mesh(rangeGeometry_normal, rangeMaterial);
+    TOWER_TYPES.NORMAL.rangeMesh = new THREE.Mesh(rangeGeometry_normal, rangeMaterial_normal);
     TOWER_TYPES.NORMAL.rangeMesh.receiveShadow = true;
-    TOWER_TYPES.ROCKET.rangeMesh = new THREE.Mesh(rangeGeometry_rocket, rangeMaterial);
+    TOWER_TYPES.ROCKET.rangeMesh = new THREE.Mesh(rangeGeometry_rocket, rangeMaterial_rocket);
     TOWER_TYPES.ROCKET.rangeMesh.receiveShadow = true;
 
 
@@ -299,11 +303,12 @@ const render = async () => {
 const onResize = () => {
     g.renderer.setPixelRatio(window.devicePixelRatio /** g.parameters.quality*/);
     g.renderer.setSize(window.innerWidth, window.innerHeight);
+    g.rendererPixi.resize(window.innerWidth, window.innerHeight);
     g.camera.fov = getFov();
     g.camera.aspect = window.innerWidth / window.innerHeight;
     g.camera.updateProjectionMatrix();
 
-    g.gui.debugStats.position.set(5, window.innerHeight - 2.4*g.gui.textStyle.fontSize - 5);
+    g.gui.onResize();
 };
 
 const getFov = () => {

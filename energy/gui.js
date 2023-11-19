@@ -42,7 +42,7 @@ var deltaSize = 5 / refreshDelay;
 
 var latest = 0;
 
-var hpToDisplay;
+var hpToDisplay = 0;
 
 export class Gui {
   constructor() {
@@ -51,6 +51,9 @@ export class Gui {
     this.mouse = new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
 
+    this.moneyLogo;
+    this.scoreLogo;
+    this.livesLogo;
     this.money;
     this.score;
     this.lives;
@@ -91,9 +94,9 @@ export class Gui {
         deltas = deltas.slice(-deltaSize);
         fps = Math.round(deltas.length / deltas.reduce((a, b) => a + b));
 
-        this.money.text = `Money: ${g.gameManager.game.money}`;
-        this.score.text = `Score: ${g.gameManager.game.score}`;
-        this.lives.text = `Lives: ${g.gameManager.game.lives}`;
+        this.money.text = g.gameManager.game.money;
+        this.score.text = g.gameManager.game.score;
+        this.lives.text = g.gameManager.game.lives;
         this.energyPerSec.text = `Energy: ${g.gameManager.game.energyPerSec >= 0 ? '+' : ''}${g.gameManager.game.energyPerSec.toFixed(g.gameManager.game.energyPerSec > 10 ? 0 : 2)}/s`;
 
         if (displayStats) {
@@ -165,25 +168,83 @@ export class Gui {
   }
 
   initTexts = () => {
+    /* MONEY */
+    this.moneyLogo = PIXI.Sprite.from('../public/icons/money-alt.svg');
+    this.moneyLogo.anchor.set(.5);
+    this.moneyLogo.width = 1.4*this.textStyle.fontSize;
+    this.moneyLogo.height = 1.4*this.textStyle.fontSize;
+    this.moneyLogo.tint = 0x00FF00;
+    g.scenePixi.addChild(this.moneyLogo);
+
     this.money = new PIXI.Text('', this.textStyle);
-    this.money.position.set(5, 2);
     g.scenePixi.addChild(this.money);
 
+    /* SCORE */
+    this.scoreLogo = PIXI.Sprite.from('../public/icons/trophy.svg');
+    this.scoreLogo.anchor.set(.5);
+    this.scoreLogo.width = 1.2*this.textStyle.fontSize;
+    this.scoreLogo.height = 1.2*this.textStyle.fontSize;
+    this.scoreLogo.tint = 0x00FF00;
+    g.scenePixi.addChild(this.scoreLogo);
+
     this.score = new PIXI.Text('', this.textStyle);
-    this.score.position.set(5, 1.1*this.textStyle.fontSize + 2);
     g.scenePixi.addChild(this.score);
 
+    /* LIVES */
+    this.livesLogo = PIXI.Sprite.from('../public/icons/heart-shield.svg');
+    this.livesLogo.anchor.set(.5);
+    this.livesLogo.width = 1.4*this.textStyle.fontSize;
+    this.livesLogo.height = 1.4*this.textStyle.fontSize;
+    this.livesLogo.tint = 0x00FF00;
+    g.scenePixi.addChild(this.livesLogo);
+
     this.lives = new PIXI.Text('', this.textStyle);
-    this.lives.position.set(5, 1.1*this.textStyle.fontSize*2 + 2);
     g.scenePixi.addChild(this.lives);
 
+    /* ENERGY */
     this.energyPerSec = new PIXI.Text('', this.textStyle);
-    this.energyPerSec.position.set(window.innerWidth - energyBarParameters.width - 5, energyBarParameters.height + 2);
     g.scenePixi.addChild(this.energyPerSec);
 
+    /* DEBUG STATS */
     this.debugStats = new PIXI.Text('', this.textStyle);
-    this.debugStats.position.set(5, window.innerHeight - 2.4*this.textStyle.fontSize - 5);
     g.scenePixi.addChild(this.debugStats);
+
+    this.onResize();
+  }
+
+  onResize = () => {
+    if(window.innerWidth < 500 && window.innerWidth < window.innerHeight) { // Portrait
+      const logoSize = this.moneyLogo.width;
+      this.moneyLogo.x = logoSize/2 + 5;
+      this.moneyLogo.y = logoSize/2 + 3;
+      this.money.position.set(5 + this.moneyLogo.width + 4, 2);
+
+      this.scoreLogo.x = logoSize/2 + 5;
+      this.scoreLogo.y = logoSize/2 + 1.5*this.textStyle.fontSize + 3;
+      this.score.position.set(5 + logoSize + 4, 1.5*this.textStyle.fontSize + 2);
+
+      this.livesLogo.x = logoSize/2 + 5;
+      this.livesLogo.y = logoSize/2 + 2*1.5*this.textStyle.fontSize + 3;
+      this.lives.position.set(5 + logoSize + 4, 2*1.5*this.textStyle.fontSize + 2);
+    } else { // Landscape
+      this.moneyLogo.x = this.moneyLogo.width/2 + 5;
+      this.moneyLogo.y = this.moneyLogo.height/2 + 3;
+      this.money.position.set(5 + this.moneyLogo.width + 4, 2);
+
+      this.scoreLogo.x = this.scoreLogo.width/2 + 105;
+      this.scoreLogo.y = this.scoreLogo.height/2 + 3;
+      this.score.position.set(105 + this.scoreLogo.width + 4, 2);
+
+      this.livesLogo.x = this.livesLogo.width/2 + 205;
+      this.livesLogo.y = this.livesLogo.height/2 + 2;
+      this.lives.position.set(205 + this.livesLogo.width + 4, 2);
+    }
+
+    this.progressBar.bg.position.x = window.innerWidth - energyBarParameters.width - 5;
+    this.progressBar.fill.position.x = window.innerWidth - energyBarParameters.width - 5;
+    this.energyPerSec.position.set(window.innerWidth - energyBarParameters.width - 5, energyBarParameters.height + 2);
+
+    this.debugStats.position.set(5, window.innerHeight - 2.4*this.textStyle.fontSize - 5);
   }
 
   createTowerGui_open = () => {
