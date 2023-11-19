@@ -81,13 +81,13 @@ export class MissilesManager {
         g.scene.add(missile.mesh);
     }
 
-    deleteMissiles(mobstodelete_array) {
-        for (var i = 0; i < mobstodelete_array.length; i++) {
-            const index = this.missileArray.indexOf(mobstodelete_array[i]);
+    deleteMissiles(missilestodelete_array) {
+        for (var i = 0; i < missilestodelete_array.length; i++) {
+            const index = this.missileArray.indexOf(missilestodelete_array[i]);
             if (index > -1) {
                 this.missileArray.splice(index, 1);
             }
-            g.scene.remove(mobstodelete_array[i].mesh);
+            g.scene.remove(missilestodelete_array[i].mesh);
         }
     }
 
