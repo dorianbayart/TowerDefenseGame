@@ -10,9 +10,9 @@ class Global {
 
     this.parameters = {
       antialiasing: true,
-      quality: .75,
+      quality: 1,
       shadows: true,
-      shadowMapSize: 768,
+      shadowMapSize: 512,
     }
 
     this.universeManager;
