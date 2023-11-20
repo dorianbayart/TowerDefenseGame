@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export const mazeSize = 15;
+export const mazeSize = 10;
 export const objectsMargin = 1;
 
 export const COLOR = {

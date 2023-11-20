@@ -13,12 +13,11 @@ const energyBarParameters = {
     height: 12,
     radius: 4,
     border: 1,
-    animate: false,
-    vertical: false
+    animate: false
 };
 
 const defaultTextStyle = {
-  dropShadow: true,
+  dropShadow: false,
   dropShadowAlpha: 0.8,
   dropShadowBlur: 4,
   dropShadowDistance: 1,
@@ -57,6 +56,8 @@ export class Gui {
     this.money;
     this.score;
     this.lives;
+    this.topBar;
+    this.bottomBar;
     this.energyPerSec;
     this.debugStats;
 
@@ -73,8 +74,9 @@ export class Gui {
     this.textStyle = new PIXI.TextStyle(defaultTextStyle);
 
     this.initCursor();
-    this.initEnergyBar(energyBarParameters);
     this.initTexts();
+    this.initEnergyBar(energyBarParameters);
+    this.initEvents();
   }
 
   update = (delta) => {
@@ -168,6 +170,10 @@ export class Gui {
   }
 
   initTexts = () => {
+    /* Top Bar */
+    this.topBar = new PIXI.Graphics();
+    g.scenePixi.addChild(this.topBar);
+
     /* MONEY */
     this.moneyLogo = PIXI.Sprite.from('../public/icons/money-alt.svg');
     this.moneyLogo.anchor.set(.5);
@@ -215,6 +221,11 @@ export class Gui {
   onResize = () => {
     if(window.innerWidth < 500 && window.innerWidth < window.innerHeight) { // Portrait
       const logoSize = this.moneyLogo.width;
+      this.topBar.beginFill(COLOR.STEEL, .85);
+      this.topBar.drawRect(0, 0, window.innerWidth, 3*1.5*this.textStyle.fontSize + 10);
+      this.topBar.drawRect(0, window.innerHeight - 2.4*this.textStyle.fontSize - 5, window.innerWidth, window.innerHeight);
+      this.topBar.endFill();
+
       this.moneyLogo.x = logoSize/2 + 5;
       this.moneyLogo.y = logoSize/2 + 3;
       this.money.position.set(5 + this.moneyLogo.width + 4, 2);
@@ -227,24 +238,38 @@ export class Gui {
       this.livesLogo.y = logoSize/2 + 2*1.5*this.textStyle.fontSize + 3;
       this.lives.position.set(5 + logoSize + 4, 2*1.5*this.textStyle.fontSize + 2);
     } else { // Landscape
+      this.topBar.beginFill(COLOR.STEEL, .85);
+      this.topBar.drawRect(0, 0, window.innerWidth, energyBarParameters.height + 1.4*this.textStyle.fontSize + 5);
+      this.topBar.drawRect(0, window.innerHeight - 2.4*this.textStyle.fontSize - 6, window.innerWidth, window.innerHeight);
+      this.topBar.endFill();
+
       this.moneyLogo.x = this.moneyLogo.width/2 + 5;
-      this.moneyLogo.y = this.moneyLogo.height/2 + 3;
-      this.money.position.set(5 + this.moneyLogo.width + 4, 2);
+      this.moneyLogo.y = this.moneyLogo.height/2 + 8;
+      this.money.position.set(5 + this.moneyLogo.width + 4, 7);
 
       this.scoreLogo.x = this.scoreLogo.width/2 + 105;
-      this.scoreLogo.y = this.scoreLogo.height/2 + 3;
-      this.score.position.set(105 + this.scoreLogo.width + 4, 2);
+      this.scoreLogo.y = this.scoreLogo.height/2 + 8;
+      this.score.position.set(105 + this.scoreLogo.width + 4, 7);
 
       this.livesLogo.x = this.livesLogo.width/2 + 205;
-      this.livesLogo.y = this.livesLogo.height/2 + 2;
-      this.lives.position.set(205 + this.livesLogo.width + 4, 2);
+      this.livesLogo.y = this.livesLogo.height/2 + 7;
+      this.lives.position.set(205 + this.livesLogo.width + 4, 7);
     }
 
-    this.progressBar.bg.position.x = window.innerWidth - energyBarParameters.width - 5;
-    this.progressBar.fill.position.x = window.innerWidth - energyBarParameters.width - 5;
+    if(this.progressBar?.bg?.position && this.progressBar?.fill?.position) {
+      this.progressBar.bg.position.x = window.innerWidth - energyBarParameters.width - 5;
+      this.progressBar.fill.position.x = window.innerWidth - energyBarParameters.width - 5;
+    }
     this.energyPerSec.position.set(window.innerWidth - energyBarParameters.width - 5, energyBarParameters.height + 2);
 
     this.debugStats.position.set(5, window.innerHeight - 2.4*this.textStyle.fontSize - 5);
+  }
+
+  initEvents = () => {
+    g.scenePixi.eventMode = 'static';
+    g.scenePixi.addEventListener('pointermove', (e) => {
+      //console.log(e.global)
+    });
   }
 
   createTowerGui_open = () => {

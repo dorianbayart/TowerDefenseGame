@@ -4,7 +4,7 @@ export const TOWER_TYPES = {
     rangeMesh: undefined,
     speed: 1,
     power: 1,
-    range: 2.5,
+    range: 2,
     cost: 5,
     timeToBuild: 3,
   },
@@ -13,7 +13,7 @@ export const TOWER_TYPES = {
     rangeMesh: undefined,
     speed: 2.5,
     power: 2.5,
-    range: 4,
+    range: 3.5,
     cost: 10,
     timeToBuild: 5,
   }

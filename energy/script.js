@@ -77,7 +77,7 @@ function init() {
 
     g.controls = new MapControls( g.camera, g.renderer.domElement );
     g.controls.target.set( 0, 0, 0 );
-    g.controls.zoomSpeed = 0.75;
+    g.controls.zoomSpeed = 0.25;
     g.controls.minDistance = 4;
     g.controls.maxDistance = 20;
     g.controls.enableDamping = true;
