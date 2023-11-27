@@ -52,10 +52,8 @@ initMainMenuEvents()
 function init() {
   cameraDistance = 12;
 
-  console.log(document.getElementById('canvasGame'))
   const canvas = document.createElement('canvas');
   canvas.id = 'canvasGame';
-  console.log(canvas)
   document.body.appendChild(canvas);
 
   // ---------------- RENDERER ----------------
