@@ -24,6 +24,12 @@ export class UniverseManager {
       this.physicsUniverse.setGravity(btVector(0, -9.81, 0));
   }
 
+  destroy = () => {
+    while (this.rigidBodyList.length > 0) {
+      this.deleteFromUniverse(this.rigidBodyList[0]);
+    }
+  }
+
   updatePhysicsUniverse = (deltaTime) => {
       this.physicsUniverse.stepSimulation( deltaTime, 10 );
       let Graphics_Obj, Physics_Obj, motionState, new_pos, new_qua;
@@ -99,14 +105,17 @@ export class UniverseManager {
     const index = this.rigidBodyList.indexOf(mesh);
     if(index > -1) {
       this.rigidBodyList.splice(index, 1);
-      this.physicsUniverse.removeRigidBody(mesh.userData.physicsBody);
-      if(mesh.userData.physicsBody.getMotionState()) {
+
+      if(mesh.userData?.physicsBody?.getMotionState()) {
         mesh.userData.physicsBody.getMotionState().__destroy__();
       }
-      if(mesh.userData.physicsBody.getCollisionShape()) {
+      if(mesh.userData?.physicsBody?.getCollisionShape()) {
         //mesh.userData.physicsBody.getCollisionShape().__destroy__();
       }
-      mesh.userData.physicsBody.__destroy__();
+      if(mesh.userData?.physicsBody) {
+        this.physicsUniverse.removeRigidBody(mesh.userData.physicsBody);
+        mesh.userData.physicsBody.__destroy__();
+      }
       mesh.userData = null;
       mesh.material.dispose();
       mesh = null;

@@ -373,4 +373,63 @@ export class Gui {
       }
   };
 
+  gameOverDisplay = () => {
+    const text = new PIXI.Text('Game Over !', new PIXI.TextStyle({
+      dropShadow: true,
+      dropShadowAlpha: 0.8,
+      dropShadowBlur: 4,
+      dropShadowDistance: 1,
+      fontFamily: "\"Lucida Console\", Monaco, monospace",
+      fontSize: 40,
+      fontVariant: "small-caps",
+      fill: COLOR.LIGHTERRED,
+      lineJoin: 'bevel',
+      strokeThickness: 4,
+      align: 'left',
+    }));
+    text.anchor.set(0.5);
+    text.x = window.innerWidth / 2;
+    text.y = window.innerHeight / 2;
+    g.scenePixi.addChild(text);
+  }
+
+}
+
+export const buttonyes = (e) => {
+  e.stopPropagation();
+  g.towerManager.addTower()
+
+  var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
+  g.scene.remove(tmpRangeTower);
+  g.towerManager.rangeTowerToDisplay = undefined;
+  g.gui.createTowerGui_close();
+}
+
+export const buttonno = (e) => {
+  e.stopPropagation();
+  g.towerManager.newTowerToCreate = undefined;
+  var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
+  g.scene.remove(tmpRangeTower);
+  g.towerManager.rangeTowerToDisplay = undefined;
+  g.gui.createTowerGui_close();
+}
+
+export const buttondelete = (e) => {
+  e.stopPropagation();
+  g.towerManager.deleteTower(g.towerManager.selectedTower);
+  g.scene.remove(g.towerManager.selectedTower.mesh);
+  g.gui.infoTowerGui_close();
+  g.towerManager.selectedTower = undefined;
+  var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
+  g.scene.remove(tmpRangeTower);
+  g.towerManager.rangeTowerToDisplay = undefined;
+}
+
+export const buttonclose = (e) => {
+  e.stopPropagation();
+  g.gui.infoTowerGui_close();
+  g.towerManager.selectedTower = undefined;
+  var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
+  g.scene.remove(tmpRangeTower);
+  g.towerManager.rangeTowerToDisplay = undefined;
 }

@@ -1,4 +1,6 @@
 class Global {
+  ammo; // AmmoJs instance
+
   constructor() {
     this.renderer;
     this.rendererPixi;
@@ -12,7 +14,7 @@ class Global {
       antialiasing: true,
       quality: 1,
       shadows: true,
-      shadowMapSize: 512,
+      shadowMapSize: 768,
     }
 
     this.universeManager;

@@ -12,6 +12,10 @@ export class Game {
         this.capacity = 0;
     }
 
+    isGameOver() {
+      return !(this.lives > 0);
+    }
+
     updateMoney(money) {
       this.money += money;
     }
@@ -62,6 +66,7 @@ export class GameManager {
         this.timer = this.clock.elapsedTime;
         this.lastGameInfosTime = 0;
         this.lastCreatedMobTime = 2;
+        this.gameOverDisplayed = false;
     }
 
     updateGame(delta) {
@@ -74,5 +79,38 @@ export class GameManager {
         g.mobsManager.createMob(g.meshes.mobMesh, g.scene);
         this.lastCreatedMobTime = elapsed;
       }
+
+      if(this.game.isGameOver()) {
+        if(!this.gameOverDisplayed) {
+          this.gameOverDisplayed = true;
+          g.gui.gameOverDisplay();
+          setTimeout(destroyCanvas, 3000);
+        }
+      } else {
+        g.builderManager.updateBuilder(delta, g.scene);
+        g.missilesManager.updateMissilesPosition(delta, g.scene);
+        g.mobsManager.updateMobsPosition(delta, g.scene);
+        g.towerManager.updateTowers(delta, g.scene);
+      }
+
+      g.particulesManager.updateParticules(delta, g.scene);
+      g.universeManager.updatePhysicsUniverse(delta);
     }
+}
+
+const destroyCanvas = () => {
+  g.universeManager.destroy();
+
+  g.renderer = null;
+  g.rendererPixi = null;
+  g.scene = null;
+  g.scenePixi = null;
+  g.gui = null;
+  g.meshes = {};
+  g.clickableObjs = new Array();
+  g.gameManager = null;
+
+  // Remove Canvas from DOM + Display Menu
+  document.getElementById('canvasGame').remove();
+  document.getElementById('mainMenu').classList.remove('displayNone', true);
 }
