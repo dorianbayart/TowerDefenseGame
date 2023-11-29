@@ -1,0 +1,29 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  opacity: 1;
+  transition: all 125ms ease-in-out;
+  cursor: crosshair;
+}
+
+.displayNone {
+  display: none !important;
+}
+
+.hide {
+  opacity: 0 !important;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+  cursor: crosshair;
+  font-family: "Lucida Sans", sans-serif;
+  background-color: #222;
+  color: #222;
+  transition: all 750ms ease-in-out;
+}

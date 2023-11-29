@@ -82,7 +82,7 @@ It takes some time to build a tower
 [Live here.](https://dorianbayart.github.io/three.js/controls/)  
 
 ---
-## 12. Energy (WIP)
+## 12. Energy
 
 Add the _energy_ concept:
 - the builder produces energy
@@ -91,7 +91,7 @@ Add the _energy_ concept:
 [Live here.](https://dorianbayart.github.io/three.js/energy/)  
 
 ---
-## 13. Towers can be updated (TODO)
+## 13. Upgrade towers
 
 Choose the tower you want to build
 Add different tower types (+ missiles):
@@ -101,10 +101,11 @@ Add different tower types (+ missiles):
 - speed bump
 - poison ?
 
-A tower can be updated (improve GUI)  
+A tower can be upgraded (improve GUI)  
 Introduce tower experience  
 
 Add _energy_ buildings (producer, capacitor/storage)  
+[Live here.](https://dorianbayart.github.io/three.js/upgrade/)  
 
 ---
 ## 14. Add predefined levels (TODO)

@@ -13,6 +13,7 @@ import { Tower, TowerManager } from './towermanager.js';
 import { Cell, Maze, MazeManager } from './mazemanager.js';
 import { UniverseManager } from './universemanager.js';
 import { Gui, buttonyes, buttonno, buttondelete, buttonclose } from './gui.js';
+import { initMainMenuEvents, initGameButtonsEvents } from './events.js';
 
 import g from './global.js';
 
@@ -24,41 +25,31 @@ var directionalLight2;
 
 let cameraDistance = 12;
 
-const initMainMenuEvents = () => {
-  document.getElementById('mainMenu').classList.remove('displayNone', true);
 
-  document.getElementById('startGame').addEventListener('click', () => {
-    document.getElementById('mainMenu').classList.add('displayNone', true);
-
-    // ------ Ammo.js Init ------
-    if(g.ammo) {
-      ammoStart();
-    } else {
-      g.ammo = Ammo();
-      g.ammo.then( ammoStart );
-    }
-  })
-
-  document.getElementById('options').addEventListener('click', () => {
-    console.log('options clicked')
-  })
-
-}
 
 
 initMainMenuEvents()
 
+export const ammoStart = () => {
+  // Init Universe
+  if(!g.universeManager) g.universeManager = new UniverseManager();
 
-function init() {
+  // Init
+  init();
+}
+
+const init = () => {
   cameraDistance = 12;
 
   const canvas = document.createElement('canvas');
   canvas.id = 'canvasGame';
   document.body.appendChild(canvas);
 
+  initGameButtonsEvents();
+
   // ---------------- RENDERER ----------------
   g.renderer = new THREE.WebGLRenderer({ antialias: g.parameters.antialiasing, canvas: canvas});
-  g.renderer.setPixelRatio(window.devicePixelRatio /** g.parameters.quality*/);
+  g.renderer.setPixelRatio(window.devicePixelRatio);
   g.renderer.setSize(window.innerWidth, window.innerHeight, false);
   g.renderer.shadowMap.enabled = g.parameters.shadows
   g.renderer.shadowMap.type = THREE.PCFSoftShadowMap
@@ -73,7 +64,7 @@ function init() {
     autoDensity: true,
     antialias: g.parameters.antialiasing,
     autoResize: true,
-    resolution: window.devicePixelRatio /** g.parameters.quality*/,
+    resolution: window.devicePixelRatio,
   });
 
 
@@ -120,8 +111,8 @@ function init() {
   directionalLight1 = new THREE.PointLight(0xffffff, 10 * mazeSize);
   directionalLight1.position.y = 5;
   directionalLight1.castShadow = true;
-  directionalLight1.shadow.mapSize.width = g.parameters.shadowMapSize * g.parameters.quality;
-  directionalLight1.shadow.mapSize.height = g.parameters.shadowMapSize * g.parameters.quality;
+  directionalLight1.shadow.mapSize.width = g.parameters.shadowMapSize;
+  directionalLight1.shadow.mapSize.height = g.parameters.shadowMapSize;
   directionalLight1.shadow.camera.near = 1;
   directionalLight1.shadow.camera.far = 40;
   directionalLight1.shadow.normalBias = 0.01;
@@ -129,8 +120,8 @@ function init() {
   directionalLight2 = new THREE.PointLight(0xffffff, 10 * mazeSize);
   directionalLight2.position.y = 5;
   directionalLight2.castShadow = true;
-  directionalLight2.shadow.mapSize.width = g.parameters.shadowMapSize * g.parameters.quality;
-  directionalLight2.shadow.mapSize.height = g.parameters.shadowMapSize * g.parameters.quality;
+  directionalLight2.shadow.mapSize.width = g.parameters.shadowMapSize;
+  directionalLight2.shadow.mapSize.height = g.parameters.shadowMapSize;
   directionalLight2.shadow.camera.near = 1;
   directionalLight2.shadow.camera.far = 40;
   directionalLight2.shadow.normalBias = 0.01;
@@ -169,8 +160,8 @@ function init() {
   // MISSILE MESH
   const missileMaterial_normal = new THREE.MeshLambertMaterial({ color: COLOR.LIGHTBROWN });
   const missileMaterial_rocket = new THREE.MeshLambertMaterial({ color: COLOR.LIGHTERINDIGO });
-  const missileGeometry_normal = new THREE.SphereGeometry(.12, Math.floor(8 * g.parameters.quality), Math.floor(8 * g.parameters.quality));
-  const missileGeometry_rocket = new THREE.CylinderGeometry(.1, .12, .25, Math.floor(8 * g.parameters.quality), 1);
+  const missileGeometry_normal = new THREE.SphereGeometry(.12, Math.floor(12 * g.parameters.quality), Math.floor(12 * g.parameters.quality));
+  const missileGeometry_rocket = new THREE.CylinderGeometry(.1, .12, .25, Math.floor(12 * g.parameters.quality), 1);
   MISSILE_TYPES.NORMAL.mesh = new THREE.Mesh(missileGeometry_normal, missileMaterial_normal);
   MISSILE_TYPES.NORMAL.mesh.castShadow = true;
   // MISSILE_TYPES.NORMAL.mesh.receiveShadow = true;
@@ -194,7 +185,7 @@ function init() {
   const towerMaterial_normal = new THREE.MeshLambertMaterial({ color: COLOR.LIGHTERBROWN });
   const towerMaterial_rocket = new THREE.MeshLambertMaterial({ color: COLOR.INDIGO });
   const towerGeometry_normal = new THREE.BoxGeometry(.5, .75, .5);
-  const towerGeometry_rocket = new THREE.CylinderGeometry(.2, .3, .75, Math.floor(12 * g.parameters.quality), 1);
+  const towerGeometry_rocket = new THREE.CylinderGeometry(.2, .3, .75, Math.floor(16 * g.parameters.quality), 1);
   TOWER_TYPES.NORMAL.mesh = new THREE.Mesh(towerGeometry_normal, towerMaterial_normal);
   TOWER_TYPES.NORMAL.mesh.castShadow = true;
   TOWER_TYPES.NORMAL.mesh.receiveShadow = true;
@@ -215,7 +206,7 @@ function init() {
 
   // BUILDER MESH
   const builderMaterial = new THREE.MeshLambertMaterial({ color: COLOR.GREEN });
-  const builderGeometry = new THREE.SphereGeometry(.20, Math.floor(12 * g.parameters.quality), Math.floor(12 * g.parameters.quality));
+  const builderGeometry = new THREE.SphereGeometry(.20, Math.floor(16 * g.parameters.quality), Math.floor(16 * g.parameters.quality));
   g.meshes.builderMesh = new THREE.Mesh(builderGeometry, builderMaterial);
   g.meshes.builderMesh.castShadow = true;
   g.meshes.builderMesh.receiveShadow = true;
@@ -259,13 +250,7 @@ function init() {
   g.gui.debug.initialRigidBodyNumber = g.universeManager.rigidBodyList.length;
 }
 
-const ammoStart = () => {
-  // Init Universe
-  if(!g.universeManager) g.universeManager = new UniverseManager();
 
-  // Init
-  init();
-}
 
 const render = async () => {
   if(!g.gameManager) return
@@ -300,7 +285,7 @@ const render = async () => {
 
 const onResize = () => {
   if(g.renderer) {
-    g.renderer.setPixelRatio(window.devicePixelRatio /** g.parameters.quality*/);
+    g.renderer.setPixelRatio(window.devicePixelRatio);
     g.renderer.setSize(window.innerWidth, window.innerHeight);
   }
   if(g.rendererPixi) {
