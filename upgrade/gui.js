@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import g from './global.js';
 import { COLOR, THREE_COLOR } from './constants.js';
 import { TOWER_TYPES } from './types.js';
+import { toggleElementVisibility } from './events.js';
 import { Tower } from './towermanager.js';
 
 const energyBarParameters = {
@@ -49,6 +50,8 @@ export class Gui {
     this.cursorValid = false;
     this.mouse = new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
+
+    this.buildType;
 
     this.moneyLogo;
     this.scoreLogo;
@@ -166,7 +169,6 @@ export class Gui {
     this.cursor = new THREE.Mesh(cursorGeometry, cursorMaterial);
     // this.cursor.castShadow = true;
     this.cursor.receiveShadow = true;
-    g.scene.add(this.cursor);
   }
 
   initTexts = () => {
@@ -265,12 +267,6 @@ export class Gui {
     this.debugStats.position.set(5, window.innerHeight - 2.4*this.textStyle.fontSize - 5);
   }
 
-  // initEvents = () => {
-  //   g.scenePixi.eventMode = 'static';
-  //   g.scenePixi.addEventListener('pointermove', (e) => {
-  //     //console.log(e.global)
-  //   });
-  // }
 
   createTowerGui_open = () => {
       document.getElementById('createTowerDiv').style.display = 'block';
@@ -292,34 +288,24 @@ export class Gui {
   };
 
   onMouseUp = (event) => {
-      this.cursor.material.emissive.g = 0;
-      this.cursor.material.color = THREE_COLOR.GREEN;
-      g.towerManager.newTowerToCreate = undefined;
       g.towerManager.selectedTower = undefined;
-
-      const type = Object.keys(TOWER_TYPES)[Math.round(Math.random())];
-
-      if(g.towerManager.rangeTowerToDisplay) {
-        var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
-        g.scene.remove(tmpRangeTower);
-        g.towerManager.rangeTowerToDisplay = undefined;
-      }
+      buttonclose();
 
       if (this.cursorValid) {
           const checkTower = g.towerManager.getTowerAtPosition(this.cursor.position.x, this.cursor.position.z);
           const mazeMesh = g.mazeManager.maze.map[0][0].mesh;
 
           if (checkTower === null) { // new tower
-            if(TOWER_TYPES[type].cost <= g.gameManager.game.money) {
-              var newTower = new Tower(type);
-              newTower.mesh.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2 + newTower.mesh.geometry.parameters.height/2, this.cursor.position.z);
-              g.towerManager.newTowerToCreate = newTower;
-              var rangeTower = TOWER_TYPES[type].rangeMesh.clone();
-              rangeTower.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2, this.cursor.position.z);
-              g.towerManager.rangeTowerToDisplay = rangeTower;
-              g.scene.add(rangeTower);
-              this.infoTowerGui_close();
-              this.createTowerGui_open();
+            if(g.gui.buildType && TOWER_TYPES[g.gui.buildType].cost <= g.gameManager.game.money) {
+              g.towerManager.addTower()
+
+              var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
+              if(tmpRangeTower) g.scene.remove(tmpRangeTower);
+              g.towerManager.rangeTowerToDisplay = undefined;
+
+              hideGameBuildOptions();
+              g.scene.remove(g.gui.cursor);
+              g.gui.buildType = undefined;
             }
           } else { // tower exists
               g.towerManager.selectedTower = checkTower;
@@ -327,28 +313,19 @@ export class Gui {
               rangeTower.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2, this.cursor.position.z);
               g.towerManager.rangeTowerToDisplay = rangeTower;
               g.scene.add(rangeTower);
-              this.createTowerGui_close();
               this.infoTowerGui_open(checkTower.speed, checkTower.power, checkTower.range);
+
+              g.scene.remove(g.gui.cursor);
+              g.gui.buildType = undefined;
+              g.towerManager.newTowerToCreate = undefined;
+              this.cursor.material.opacity = 0;
+              this.cursorValid = false;
           }
       } else {
-          this.createTowerGui_close();
-          this.infoTowerGui_close();
-      }
-  };
-
-  onMouseDown = (event) => {
-      event.preventDefault();
-      this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-      this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-      this.raycaster.setFromCamera(this.mouse, g.camera);
-      var intersects = this.raycaster.intersectObjects(g.clickableObjs);
-
-      if (intersects.length > 0) {
-          this.cursor.material.color = THREE_COLOR.RED;
-          this.cursorValid = true;
-      } else {
-          this.cursorValid = false;
+          g.scene.remove(g.gui.cursor);
+          hideGameBuildOptions();
+          g.gui.buildType = undefined;
+          g.towerManager.newTowerToCreate = undefined;
       }
   };
 
@@ -361,15 +338,59 @@ export class Gui {
       var intersects = this.raycaster.intersectObjects(g.clickableObjs);
 
       if (intersects.length > 0) {
-          var selectedBloc = intersects[0].object;
-          this.cursor.position.set(
-              selectedBloc.position.x,
-              selectedBloc.position.y + selectedBloc.geometry.parameters.height / 2 + this.cursor.geometry.parameters.height / 2,
-              selectedBloc.position.z
-          );
-          this.cursor.material.opacity = 0.5;
+        var selectedBloc = intersects[0].object;
+        this.cursor.position.set(
+            selectedBloc.position.x,
+            selectedBloc.position.y + selectedBloc.geometry.parameters.height / 2 + this.cursor.geometry.parameters.height / 2,
+            selectedBloc.position.z
+        );
+        this.cursor.material.opacity = 0.5;
+        this.cursorValid = true;
       } else {
-          this.cursor.material.opacity = 0;
+        this.cursor.material.opacity = 0;
+        this.cursorValid = false;
+      }
+
+      const checkTower = g.towerManager.getTowerAtPosition(this.cursor.position.x, this.cursor.position.z);
+      const mazeMesh = g.mazeManager.maze.map[0][0].mesh;
+
+      if (this.cursorValid && g.gui.buildType) {
+          this.cursor.material.color = THREE_COLOR.GREEN;
+
+          if (checkTower === null) {
+            if(g.towerManager.newTowerToCreate) {
+              // move tower to create
+              g.towerManager.newTowerToCreate.mesh.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2 + g.towerManager.newTowerToCreate.mesh.geometry.parameters.height/2, this.cursor.position.z);
+            } else {
+              var newTower = new Tower(g.gui.buildType);
+              newTower.mesh.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2 + newTower.mesh.geometry.parameters.height/2, this.cursor.position.z);
+              g.towerManager.newTowerToCreate = newTower;
+            }
+            if(g.towerManager.rangeTowerToDisplay) {
+              g.towerManager.rangeTowerToDisplay.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2, this.cursor.position.z);
+            } else {
+              var rangeTower = TOWER_TYPES[g.gui.buildType].rangeMesh.clone();
+              rangeTower.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2, this.cursor.position.z);
+              g.towerManager.rangeTowerToDisplay = rangeTower;
+              g.scene.add(rangeTower);
+            }
+          } else {
+            this.cursor.material.color = THREE_COLOR.RED;
+            var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
+            if(tmpRangeTower) g.scene.remove(tmpRangeTower);
+            g.towerManager.rangeTowerToDisplay = undefined;
+          }
+      } else if (this.cursorValid && checkTower && !g.gui.buildType && !g.towerManager.selectedTower) {
+        var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
+        if(tmpRangeTower) g.scene.remove(tmpRangeTower);
+        var rangeTower = TOWER_TYPES[checkTower.type].rangeMesh.clone();
+        rangeTower.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2, this.cursor.position.z);
+        g.towerManager.rangeTowerToDisplay = rangeTower;
+        g.scene.add(rangeTower);
+      } else if(!g.towerManager.selectedTower && !g.gui.buildType && (!checkTower || !this.cursorValid)) {
+        var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
+        if(tmpRangeTower) g.scene.remove(tmpRangeTower);
+        g.towerManager.rangeTowerToDisplay = undefined;
       }
   };
 
@@ -391,45 +412,45 @@ export class Gui {
     text.x = window.innerWidth / 2;
     text.y = window.innerHeight / 2;
     g.scenePixi.addChild(text);
+
+    buttonclose();
+    buttonno();
   }
 
 }
 
-export const buttonyes = (e) => {
-  e.stopPropagation();
-  g.towerManager.addTower()
-
-  var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
-  g.scene.remove(tmpRangeTower);
-  g.towerManager.rangeTowerToDisplay = undefined;
-  g.gui.createTowerGui_close();
-}
 
 export const buttonno = (e) => {
-  e.stopPropagation();
+  if(e) e.stopPropagation();
   g.towerManager.newTowerToCreate = undefined;
   var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
-  g.scene.remove(tmpRangeTower);
+  if(tmpRangeTower) g.scene.remove(tmpRangeTower);
   g.towerManager.rangeTowerToDisplay = undefined;
-  g.gui.createTowerGui_close();
 }
 
 export const buttondelete = (e) => {
-  e.stopPropagation();
+  if(e) e.stopPropagation();
   g.towerManager.deleteTower(g.towerManager.selectedTower);
   g.scene.remove(g.towerManager.selectedTower.mesh);
   g.gui.infoTowerGui_close();
   g.towerManager.selectedTower = undefined;
   var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
-  g.scene.remove(tmpRangeTower);
+  if(tmpRangeTower) g.scene.remove(tmpRangeTower);
   g.towerManager.rangeTowerToDisplay = undefined;
 }
 
 export const buttonclose = (e) => {
-  e.stopPropagation();
+  if(e) e.stopPropagation();
   g.gui.infoTowerGui_close();
   g.towerManager.selectedTower = undefined;
   var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
-  g.scene.remove(tmpRangeTower);
+  if(tmpRangeTower) g.scene.remove(tmpRangeTower);
   g.towerManager.rangeTowerToDisplay = undefined;
+}
+
+export const hideGameBuildOptions = () => {
+  toggleElementVisibility(
+    [document.getElementById('gameBuildOptions')],
+    []
+  )
 }

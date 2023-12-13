@@ -27,6 +27,34 @@ button#gameBuildButton:hover img {
   filter: invert(1);
 }
 
+ul#gameBuildOptions {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  right: 48px;
+  bottom: 48px;
+  z-index: 1000;
+  border-radius: 6px;
+  border: 4px limegreen solid;
+  padding: calc(1rem - 4px);
+  background-color: #17202a;
+  opacity: 0.75;
+  color: ghostwhite;
+  font-size: 24px;
+  list-style: none;
+}
+
+ul#gameBuildOptions li {
+  margin: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  outline: 2px transparent solid;
+}
+
+ul#gameBuildOptions li:hover {
+  outline-color: cornflowerblue;
+}
+
 /* UI */
 .buttonYesNo {
   width: 40%;
@@ -56,7 +84,6 @@ button#gameBuildButton:hover img {
   padding: 25px;
   width: 90%;
   color: white;
-  font-family: roboto-font, sans-serif;
   background-color: black;
   border-radius: 6px;
 }

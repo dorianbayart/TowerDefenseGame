@@ -22,7 +22,8 @@ body {
   overflow: hidden;
   touch-action: none;
   cursor: crosshair;
-  font-family: "Lucida Sans", sans-serif;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
   background-color: #222;
   color: #222;
   transition: all 750ms ease-in-out;

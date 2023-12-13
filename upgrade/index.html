@@ -43,15 +43,21 @@
 
       <button id="gameBuildButton"><img src="../public/icons/cargo-crane.svg" height="64" alt="Build Button Icon" /></button>
 
+      <ul id="gameBuildOptions" class="">
+        <li class="button" id="normalTowerButton">Normal<span id="normalTowerValue"></span></li>
+        <li class="button" id="rocketTowerButton">Rocket<span id="rocketTowerValue"></span></li>
+        <li class="button back" id="gameBuildOptions-back"><img src="../public/icons/back.svg" height="24" alt="Back Button Icon"/>Cancel</li>
+      </ul>
+
         <!-- CREATE MENU -->
-        <div id="createTowerDiv" class="popupdiv">
+        <!--<div id="createTowerDiv" class="popupdiv">
             <h2 style="text-align : center;">Create Tower ?</h2>
             <div style="display:flex;  align-items: center; justify-content: center;">
                 <button class="buttonYesNo buttonno" id="buttonno">No</button>
                 <div style="width : 5%"></div>
                 <button class="buttonYesNo buttonyes" id="buttonyes">Yes</button>
             </div>
-        </div>
+        </div>-->
 
         <!-- TOWER INFO MENU -->
         <div id="TowerInfoDiv" class="popupdiv">
@@ -66,4 +72,5 @@
         </div>
     </body>
 
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700&display=swap" rel="stylesheet">
 </html>

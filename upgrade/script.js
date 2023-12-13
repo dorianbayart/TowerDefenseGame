@@ -12,8 +12,8 @@ import { Mob, MobsManager } from './mobsmanager.js';
 import { Tower, TowerManager } from './towermanager.js';
 import { Cell, Maze, MazeManager } from './mazemanager.js';
 import { UniverseManager } from './universemanager.js';
-import { Gui, buttonyes, buttonno, buttondelete, buttonclose } from './gui.js';
-import { initMainMenuEvents, initGameButtonsEvents } from './events.js';
+import { Gui, buttonno, buttondelete, buttonclose } from './gui.js';
+import { displayGameButtons, initMainMenuEvents, initGameButtonsEvents } from './events.js';
 
 import g from './global.js';
 
@@ -29,6 +29,7 @@ let cameraDistance = 12;
 
 
 initMainMenuEvents()
+initGameButtonsEvents()
 
 export const ammoStart = () => {
   // Init Universe
@@ -45,7 +46,7 @@ const init = () => {
   canvas.id = 'canvasGame';
   document.body.appendChild(canvas);
 
-  initGameButtonsEvents();
+  displayGameButtons()
 
   // ---------------- RENDERER ----------------
   g.renderer = new THREE.WebGLRenderer({ antialias: g.parameters.antialiasing, canvas: canvas});
@@ -184,8 +185,8 @@ const init = () => {
   // TOWER MESH
   const towerMaterial_normal = new THREE.MeshLambertMaterial({ color: COLOR.LIGHTERBROWN });
   const towerMaterial_rocket = new THREE.MeshLambertMaterial({ color: COLOR.INDIGO });
-  const towerGeometry_normal = new THREE.BoxGeometry(.5, .75, .5);
-  const towerGeometry_rocket = new THREE.CylinderGeometry(.2, .3, .75, Math.floor(16 * g.parameters.quality), 1);
+  const towerGeometry_normal = new THREE.BoxGeometry(.4, .65, .4);
+  const towerGeometry_rocket = new THREE.CylinderGeometry(.15, .25, .65, Math.floor(16 * g.parameters.quality), 1);
   TOWER_TYPES.NORMAL.mesh = new THREE.Mesh(towerGeometry_normal, towerMaterial_normal);
   TOWER_TYPES.NORMAL.mesh.castShadow = true;
   TOWER_TYPES.NORMAL.mesh.receiveShadow = true;
@@ -215,16 +216,15 @@ const init = () => {
 
 
   // ---------------- EVENTS ----------------
-  g.renderer.domElement.addEventListener('pointerdown', g.gui.onMouseDown, false);
   g.renderer.domElement.addEventListener('pointerup', g.gui.onMouseUp, false);
   document.removeEventListener('pointermove', g.gui.onMouseMove, false);
   document.addEventListener('pointermove', g.gui.onMouseMove, false);
   window.removeEventListener('resize', onResize);
   window.addEventListener('resize', onResize);
-  document.getElementById('buttonyes').removeEventListener('click', buttonyes);
-  document.getElementById('buttonyes').addEventListener('click', buttonyes);
-  document.getElementById('buttonno').removeEventListener('click', buttonno);
-  document.getElementById('buttonno').addEventListener('click', buttonno);
+  // document.getElementById('buttonyes').removeEventListener('click', buttonyes);
+  // document.getElementById('buttonyes').addEventListener('click', buttonyes);
+  // document.getElementById('buttonno').removeEventListener('click', buttonno);
+  // document.getElementById('buttonno').addEventListener('click', buttonno);
   document.getElementById('buttondelete').removeEventListener('click', buttondelete);
   document.getElementById('buttondelete').addEventListener('click', buttondelete);
   document.getElementById('buttonclose').removeEventListener('click', buttonclose);
