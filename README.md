@@ -11,43 +11,43 @@ __Note__: Each chapter is based on the code of the previous chapter.
 ## 01. Hello World - Cube
 
 Draw and rotate a simple cube.  
-[Live here.](https://dorianbayart.github.io/three.js/hello-world-cube/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/hello-world-cube/)  
 
 ---
 ## 02. Wave of Spheres
 
 Animate a grid of spheres.  
-[Live here.](https://dorianbayart.github.io/three.js/wave-of-spheres/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/wave-of-spheres/)  
 
 ---
 ## 03. Lights
 
 Lihts and reflection on objects.  
-[Live here.](https://dorianbayart.github.io/three.js/lights/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/lights/)  
 
 ---
 ## 04. Camera
 
 Camera moves around the scene.  
-[Live here.](https://dorianbayart.github.io/three.js/camera/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/camera/)  
 
 ---
 ## 05. Maze
 
 A maze generator.  
-[Live here.](https://dorianbayart.github.io/three.js/maze/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/maze/)  
 
 ---
 ## 06. Mouse Events
 
 Detects mouse events to do action on the maze.  
-[Live here.](https://dorianbayart.github.io/three.js/mouse-events/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/mouse-events/)  
 
 ---
 ## 07. Mobs
 
 Mobs are coming !  
-[Live here.](https://dorianbayart.github.io/three.js/mobs/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/mobs/)  
 
 ---
 ## 08. Towers
@@ -55,13 +55,13 @@ Mobs are coming !
 Build towers on the map.  
 Display text with Pixi.js library (directly on the canvas)  
 Add a bit of 'gameplay': money + score + remaining lives  
-[Live here.](https://dorianbayart.github.io/three.js/towers/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/towers/)  
 
 ---
 ## 09. Missiles
 
 Missiles are flying through the map !  
-[Live here.](https://dorianbayart.github.io/three.js/missiles/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/missiles/)  
 
 ---
 ## 10. Particules (Ammo.js)
@@ -69,7 +69,7 @@ Missiles are flying through the map !
 Add particules effect on missile explosion.  
 Add physics (Ammo.js)  
 Add shadows  
-[Live here.](https://dorianbayart.github.io/three.js/particules/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/particules/)  
 
 ---
 ## 11. Rotate the map with mouse (OrbitControls)
@@ -79,7 +79,7 @@ Zoom in/out
 Rotate the map  
 Add a builder mob + list of tasks to do (build towers)  
 It takes some time to build a tower  
-[Live here.](https://dorianbayart.github.io/three.js/controls/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/controls/)  
 
 ---
 ## 12. Energy
@@ -88,7 +88,7 @@ Add the _energy_ concept:
 - the builder produces energy
 - building a tower consumes energy
 - towers in 'attack mode' are consuming energy  
-[Live here.](https://dorianbayart.github.io/three.js/energy/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/energy/)  
 
 ---
 ## 13. Upgrade towers
@@ -105,7 +105,7 @@ A tower can be upgraded (improve GUI)
 Introduce tower experience  
 
 Add _energy_ buildings (producer, capacitor/storage)  
-[Live here.](https://dorianbayart.github.io/three.js/upgrade/)  
+[Live here.](https://dorianbayart.github.io/TowerDefenseGame/upgrade/)  
 
 ---
 ## 14. Add predefined levels (TODO)
