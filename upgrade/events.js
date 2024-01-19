@@ -129,27 +129,39 @@ export const initMainMenuEvents = () => {
 
 export const initGameButtonsEvents = () => {
   document.getElementById('gameBuildButton').addEventListener('click', () => {
+    const gameBuildOptions = document.getElementById('gameBuildOptions')
+    gameBuildOptions.innerHTML = null
+    g.gameManager.game.towerTypes.forEach((type, i) => {
+      const li = document.createElement('li')
+      li.onclick = function() {
+        console.log(type)
+        hideGameBuildOptions()
+        g.gui.buildType = type
+        g.scene.add(g.gui.cursor)
+      }
+      li.classList.add('button')
+      li.innerHTML = type.charAt(0) + type.slice(1).toLowerCase()
+      gameBuildOptions.appendChild(li)
+    })
+    const liBack = document.createElement('li')
+    liBack.onclick = function() {
+      console.log('cancel')
+      hideGameBuildOptions()
+    }
+    liBack.classList.add('button', 'back')
+    const imgBack = document.createElement('img')
+    imgBack.src = '../public/icons/back.svg'
+    imgBack.height = 24
+    imgBack.alt = 'Back Button Icon'
+    liBack.appendChild(imgBack)
+    liBack.innerHTML += 'Cancel'
+    gameBuildOptions.appendChild(liBack)
+
     toggleElementVisibility(
       [],
       [document.getElementById('gameBuildOptions')],
       true
     )
     buttonclose()
-  })
-
-  document.getElementById('normalTowerButton').addEventListener('click', () => {
-    hideGameBuildOptions()
-    g.gui.buildType = 'NORMAL'
-    g.scene.add(g.gui.cursor)
-  })
-
-  document.getElementById('rocketTowerButton').addEventListener('click', () => {
-    hideGameBuildOptions()
-    g.gui.buildType = 'ROCKET'
-    g.scene.add(g.gui.cursor)
-  })
-
-  document.getElementById('gameBuildOptions-back').addEventListener('click', () => {
-    hideGameBuildOptions()
   })
 }

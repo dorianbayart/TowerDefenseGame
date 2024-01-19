@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import g from './global.js';
-import { MISSILE_TYPES } from './types.js';
+import { MISSILE_TYPES, TOWER_TYPES } from './types.js';
 import { displayHomeMenu } from './events.js';
 
 export class Game {
@@ -11,6 +11,7 @@ export class Game {
         this.energyPerSec = 0;
         this.energy = 1;
         this.capacity = 0;
+        this.towerTypes = Object.keys(TOWER_TYPES);
     }
 
     isGameOver() {
@@ -46,8 +47,6 @@ export class Game {
       }
 
       this.energyPerSec += g.builderManager.builder.energyPerSec;
-
-
       this.capacity += g.builderManager.builder.capacity;
 
       this.energy += this.energyPerSec * delta;

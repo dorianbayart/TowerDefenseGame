@@ -52,7 +52,7 @@ export class Missile {
         this.mesh.position.y += vector.y * factor;
         this.mesh.position.z += vector.z * factor;
 
-        if(this.type === 'ROCKET') {
+        if(['ROCKET', 'LASER'].includes(this.type)) {
           btVector.set(vector.x, vector.y, vector.z);
           this.mesh.quaternion.setFromUnitVectors(
             this.mesh.up.normalize(),

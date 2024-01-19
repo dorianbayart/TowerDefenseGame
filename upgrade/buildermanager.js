@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import g from './global.js';
 
 export const ORDERS = {
-  BUILD: 'build'
+  BUILD: 'build',
+  UPGRADE: 'upgrade'
 }
 
 export class Order {
@@ -72,6 +73,7 @@ export class BuilderManager {
 
       switch (type) {
         case ORDERS.BUILD:
+        case ORDERS.UPGRADE:
           const index = this.builder.todoList.findIndex(order => order.type === type && order.param === param)
           if(index > -1) this.builder.todoList.splice(index, 1);
           break;
@@ -86,6 +88,10 @@ export class BuilderManager {
 
       switch (order.type) {
         case ORDERS.BUILD:
+          order.position = order.param.mesh.position;
+          this.builder.updatePosition(delta);
+          break;
+        case ORDERS.UPGRADE:
           order.position = order.param.mesh.position;
           this.builder.updatePosition(delta);
           break;

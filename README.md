@@ -99,6 +99,7 @@ Add different tower types (+ missiles):
 - rocket
 - laser
 - speed bump
+- machine gun
 - poison ?
 
 A tower can be upgraded (improve GUI)  

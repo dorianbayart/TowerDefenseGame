@@ -56,6 +56,8 @@ export class TowerManager {
       for (var tower of this.towerArray) {
         if(tower.building < 1) {
           tower.updateBuilding(delta);
+        } else if(tower.upgrading < 1) {
+          tower.upgradeBuilding(delta);
         } else if(Math.random() > 0.1) {
           for (var mob of g.mobsManager.mobArray) {
             const x = mob.mesh.position.x - tower.mesh.position.x;
@@ -91,7 +93,9 @@ export class Tower {
         this.cost = cost ?? TOWER_TYPES[this.type].cost;
 
         this.isBuilding = false;
+        this.isUpgrading = false;
         this.building = 0; // between 0 and 1 - represent the build percentage
+        this.upgrading = 1; // between 0 and 1 - represent the build percentage
         this.energyPerSec = this.cost / TOWER_TYPES[this.type].timeToBuild; // energy needed during build
 
         this.target = undefined; // instance of Mob
@@ -145,6 +149,29 @@ export class Tower {
       }
     }
 
+    upgradeBuilding(delta) {
+      if(this.upgrading === 0) {
+        this.mesh.material.transparent = true;
+        this.mesh.material.opacity = 0;
+      }
+
+      if(!g.builderManager.builder.isCloseTo(this.mesh.position) || g.gameManager.game.energy < delta*this.energyPerSec) {
+        this.isUpgrading = false;
+        return;
+      }
+
+      this.upgrading += delta / TOWER_TYPES[this.type].timeToBuild;
+
+      if(this.upgrading >= 1) {
+        this.upgrading = 1;
+        this.isUpgrading = false;
+        g.builderManager.removeOrder(ORDERS.UPGRADE, this);
+      } else {
+        this.isUpgrading = true;
+        this.mesh.material.opacity = this.building;
+      }
+    }
+
     updateAttack(delta) {
       this.elapsedTimeSinceLastAttack += delta;
 
@@ -157,7 +184,7 @@ export class Tower {
         // Launch a missile
         const missilePosition = {
           x: this.mesh.position.x,
-          y: this.mesh.position.y + this.mesh.geometry.parameters.height / 2,
+          y: this.mesh.position.y + this.mesh.geometry.parameters.height / 2 - (this.type === 'LASER' ? MISSILE_TYPES.LASER.mesh.geometry.parameters.height/2 : 0),
           z: this.mesh.position.z
         };
         g.missilesManager.createMissile(this.type, missilePosition, this.target, this.power);

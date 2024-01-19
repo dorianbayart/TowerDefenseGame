@@ -13,7 +13,7 @@ class Global {
     this.parameters = {
       antialiasing: true,
       quality: 1,
-      shadows: true,
+      shadows: false,
       shadowMapSize: 1024,
     }
 

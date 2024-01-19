@@ -29,7 +29,7 @@ button#gameBuildButton:hover img {
 
 ul#gameBuildOptions {
   position: absolute;
-  width: 480px;
+  width: 420px;
   height: 480px;
   right: 48px;
   bottom: 48px;
@@ -40,7 +40,7 @@ ul#gameBuildOptions {
   background-color: #17202a;
   opacity: 0.75;
   color: ghostwhite;
-  font-size: 24px;
+  font-size: 20px;
   list-style: none;
 }
 
@@ -49,10 +49,16 @@ ul#gameBuildOptions li {
   padding: 16px;
   border-radius: 8px;
   outline: 2px transparent solid;
+  display: flex;
+  align-items: center;
 }
 
 ul#gameBuildOptions li:hover {
   outline-color: cornflowerblue;
+}
+
+ul#gameBuildOptions li.back img {
+  filter: invert(1);
 }
 
 /* UI */
