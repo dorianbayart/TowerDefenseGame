@@ -79,6 +79,9 @@ export const initMainMenuEvents = () => {
         document.getElementById('shadowsQualityValue').innerHTML = 'High'
         break
     }
+    if(!g.parameters.shadows) {
+      document.getElementById('shadowsQualityButton').classList.add('disabled')
+    }
   })
   document.getElementById('antialiasingButton').addEventListener('click', () => {
     g.parameters.antialiasing = !g.parameters.antialiasing
