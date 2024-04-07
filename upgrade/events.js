@@ -1,5 +1,7 @@
 import { ammoStart } from './script.js'
 import { hideGameBuildOptions, buttonclose } from './gui.js';
+import { towerTypeToLabel } from './helpers.js';
+import { TOWER_TYPES } from './types.js';
 
 import g from './global.js'
 
@@ -137,13 +139,23 @@ export const initGameButtonsEvents = () => {
     g.gameManager.game.towerTypes.forEach((type, i) => {
       const li = document.createElement('li')
       li.onclick = function() {
-        console.log(type)
         hideGameBuildOptions()
         g.gui.buildType = type
         g.scene.add(g.gui.cursor)
       }
       li.classList.add('button')
-      li.innerHTML = type.charAt(0) + type.slice(1).toLowerCase()
+      li.innerHTML = null
+      const spanLabel = document.createElement('span')
+      spanLabel.innerHTML = towerTypeToLabel(type)
+      spanLabel.classList.add('label')
+      li.appendChild(spanLabel)
+      const spanCost = document.createElement('span')
+      spanCost.innerHTML = TOWER_TYPES[type].cost
+      spanCost.classList.add('cost')
+      const imgMoney = document.createElement('img')
+      imgMoney.src = '../public/icons/money-alt.svg'
+      spanCost.appendChild(imgMoney)
+      li.appendChild(spanCost)
       gameBuildOptions.appendChild(li)
     })
     const liBack = document.createElement('li')

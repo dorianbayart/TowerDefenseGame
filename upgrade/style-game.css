@@ -61,7 +61,42 @@ ul#gameBuildOptions li.back img {
   filter: invert(1);
 }
 
+ul#gameBuildOptions li .label {
+  flex-grow: 1;
+}
+
+ul#gameBuildOptions li .cost {
+  display: flex;
+  align-items: center;
+}
+
+ul#gameBuildOptions li .cost img {
+  height: 24px;
+  margin-left: 4px;
+}
+
 /* UI */
+#towerInfoDiv h2 {
+  text-align: center;
+  font-weight: normal;
+  margin-bottom: 0.8rem;
+}
+
+#towerInfoDiv .description {
+  font-weight: lighter;
+  margin: 1rem;
+}
+
+#towerInfoDiv .buttons-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#towerInfoDiv .buttons-container .separator {
+  width: 5%;
+}
+
 .buttonYesNo {
   width: 40%;
   height: 48px;
@@ -84,11 +119,11 @@ ul#gameBuildOptions li.back img {
   display: none;
   opacity: 0.7;
   position: absolute;
-  left: 5%;
-  bottom: 5%;
+  left: 10%;
+  bottom: 7%;
   box-sizing: border-box;
-  padding: 25px;
-  width: 90%;
+  padding: 20px;
+  width: 80%;
   color: white;
   background-color: black;
   border-radius: 6px;

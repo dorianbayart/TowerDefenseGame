@@ -77,16 +77,18 @@ export class TowerManager {
 }
 
 export class Tower {
+  static DEFAULT_LEVEL = 1;
   static DEFAULT_POWER = 1;
   static DEFAULT_SPEED = 1;
   static DEFAULT_RANGE = 2.5;
   static DEFAULT_COST = 5;
 
-    constructor(type = 'NORMAL', power, speed, range, cost) {
+    constructor(type = 'NORMAL', level, power, speed, range, cost) {
         this.mesh = TOWER_TYPES[type].mesh.clone();
 
         this.type = type;
 
+        this.level = level ?? Tower.DEFAULT_LEVEL;
         this.power = power ?? TOWER_TYPES[this.type].power;
         this.speed = speed ?? TOWER_TYPES[this.type].speed;
         this.range = range ?? TOWER_TYPES[this.type].range;

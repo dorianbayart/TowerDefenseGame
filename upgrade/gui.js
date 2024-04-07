@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import g from './global.js';
+import { towerTypeToLabel } from './helpers.js';
 import { COLOR, THREE_COLOR } from './constants.js';
 import { TOWER_TYPES } from './types.js';
 import { toggleElementVisibility } from './events.js';
@@ -274,14 +275,16 @@ export class Gui {
   createTowerGui_close = () => {
       document.getElementById('createTowerDiv').style.display = 'none';
   };
-  infoTowerGui_open = (speed, power, range) => {
+  infoTowerGui_open = (type, level, speed, power, range) => {
+      document.getElementById('towerInfo').innerHTML = `${towerTypeToLabel(type)} - Level ${level}`;
       document.getElementById('speed').innerHTML = Math.round(1/speed * 10) / 10;
       document.getElementById('power').innerHTML = power;
       document.getElementById('range').innerHTML = range;
-      document.getElementById('TowerInfoDiv').style.display = 'block';
+      document.getElementById('towerInfoDiv').style.display = 'block';
   };
   infoTowerGui_close = () => {
-      document.getElementById('TowerInfoDiv').style.display = 'none';
+      document.getElementById('towerInfoDiv').style.display = 'none';
+      document.getElementById('towerInfo').innerHTML = 'NULL';
       document.getElementById('speed').innerHTML = 'NULL';
       document.getElementById('power').innerHTML = 'NULL';
       document.getElementById('range').innerHTML = 'NULL';
@@ -313,7 +316,7 @@ export class Gui {
               rangeTower.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2, this.cursor.position.z);
               g.towerManager.rangeTowerToDisplay = rangeTower;
               g.scene.add(rangeTower);
-              this.infoTowerGui_open(checkTower.speed, checkTower.power, checkTower.range);
+              this.infoTowerGui_open(checkTower.type, checkTower.level, checkTower.speed, checkTower.power, checkTower.range);
 
               g.scene.remove(g.gui.cursor);
               g.gui.buildType = undefined;
@@ -354,7 +357,7 @@ export class Gui {
       const checkTower = g.towerManager.getTowerAtPosition(this.cursor.position.x, this.cursor.position.z);
       const mazeMesh = g.mazeManager.maze.map[0][0].mesh;
 
-      if (this.cursorValid && g.gui.buildType) {
+      if (this.cursorValid && g.gui?.buildType) {
           this.cursor.material.color = THREE_COLOR.GREEN;
 
           if (checkTower === null) {
@@ -380,14 +383,14 @@ export class Gui {
             if(tmpRangeTower) g.scene.remove(tmpRangeTower);
             g.towerManager.rangeTowerToDisplay = undefined;
           }
-      } else if (this.cursorValid && checkTower && !g.gui.buildType && !g.towerManager.selectedTower) {
+      } else if (this.cursorValid && checkTower && g.gui && !g.gui.buildType && !g.towerManager.selectedTower) {
         var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
         if(tmpRangeTower) g.scene.remove(tmpRangeTower);
         var rangeTower = TOWER_TYPES[checkTower.type].rangeMesh.clone();
         rangeTower.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2, this.cursor.position.z);
         g.towerManager.rangeTowerToDisplay = rangeTower;
         g.scene.add(rangeTower);
-      } else if(!g.towerManager.selectedTower && !g.gui.buildType && (!checkTower || !this.cursorValid)) {
+      } else if(!g.towerManager.selectedTower && g.gui && !g.gui.buildType && (!checkTower || !this.cursorValid)) {
         var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
         if(tmpRangeTower) g.scene.remove(tmpRangeTower);
         g.towerManager.rangeTowerToDisplay = undefined;
