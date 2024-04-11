@@ -7,6 +7,7 @@ export const TOWER_TYPES = {
     range: 2,
     cost: 5,
     timeToBuild: 3,
+    iconUrl: '../public/icons/fire-ray.svg'
   },
   MACHINE_GUN: {
     mesh: undefined,
@@ -16,6 +17,7 @@ export const TOWER_TYPES = {
     range: 2.5,
     cost: 8,
     timeToBuild: 3,
+    iconUrl: '../public/icons/cannon-ball.svg'
   },
   ROCKET: {
     mesh: undefined,
@@ -25,6 +27,7 @@ export const TOWER_TYPES = {
     range: 3.5,
     cost: 10,
     timeToBuild: 5,
+    iconUrl: '../public/icons/rocket.svg'
   },
   LASER: {
     mesh: undefined,
@@ -34,6 +37,7 @@ export const TOWER_TYPES = {
     range: 3,
     cost: 15,
     timeToBuild: 8,
+    iconUrl: '../public/icons/laser-blast.svg'
   }
 }
 

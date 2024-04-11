@@ -1,6 +1,6 @@
 import g from './global.js';
 import { cellUUID } from './mazemanager.js';
-import { objectsMargin } from './constants.js';
+import { objectsMargin, DIFFICULTY } from './constants.js';
 
 class mapPosition {
     constructor(newx, newz) {
@@ -106,8 +106,28 @@ export class MobsManager {
         this.mobArray = new Array();
     }
 
+    getPowFromDifficulty(difficulty) {
+      switch (difficulty) {
+        case DIFFICULTY.INSANE:
+          return 1.65
+          break
+        case DIFFICULTY.HARD:
+          return 1.5
+          break
+        case DIFFICULTY.EASY:
+          return 1.3
+          break
+        case DIFFICULTY.SUPEREASY:
+          return 1.15
+          break
+        case DIFFICULTY.NORMAL:
+        default:
+          return 1.4
+      }
+    }
+
     createMob(basemesh) {
-        var tmpmob = new Mob(g.mazeManager.maze.exit, Math.floor(1 + Math.pow(g.gameManager.game.score, 1.4)/10));
+        var tmpmob = new Mob(g.mazeManager.maze.exit, Math.floor(1 + Math.pow(g.gameManager.game.score, this.getPowFromDifficulty(g.gameManager.game.difficulty))/10));
         tmpmob.mesh = basemesh.clone();
 
         tmpmob.mesh.scale.x = 1 / tmpmob.speed;

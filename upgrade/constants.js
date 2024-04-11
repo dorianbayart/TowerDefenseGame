@@ -3,6 +3,14 @@ import * as THREE from 'three';
 export const mazeSize = 8;
 export const objectsMargin = 1;
 
+export const DIFFICULTY = {
+  INSANE: 'insane',
+  HARD: 'hard',
+  NORMAL: 'normal',
+  EASY: 'easy',
+  SUPEREASY: 'super easy'
+}
+
 export const COLOR = {
   BLACK: '#17202a',
   BLUE: '#2874a6',

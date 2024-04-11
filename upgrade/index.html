@@ -61,12 +61,14 @@
 
         <!-- TOWER INFO MENU -->
         <div id="towerInfoDiv" class="popupdiv">
-            <h2 id="towerInfo">Name - Level</h2>
+            <h2 id="towerInfo"><img id="towerInfoIcon" src="" height="48" alt="Building Icon"/><span id="towerInfoSpan">Name - Level</span></h2>
             <p class="description">Hit per second : <span id="speed">NULL</span> / Power : <span id="power">NULL</span> / Range : <span id="range">NULL</span></p>
             <div class="buttons-container">
-                <button class="buttonYesNo buttonno" id="buttondelete">Delete Tower</button>
+                <button class="button delete" id="buttondelete"><img src="../public/icons/trash_light.svg" height="24" alt="Delete Button Icon"/></button>
                 <div class="separator"></div>
-                <button class="buttonYesNo buttonyes" id="buttonclose">Close</button>
+                <button class="button upgrade" id="buttonupgrade"><img src="../public/icons/upgrade.svg" class="img-upgrade" height="24" alt="Upgrade Button Icon"/>Upgrade<span id="upgradeCost">NULL</span></button>
+                <div class="separator"></div>
+                <button class="button close" id="buttonclose">Close</button>
             </div>
         </div>
     </body>

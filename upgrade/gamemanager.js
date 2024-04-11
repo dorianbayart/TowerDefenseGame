@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import g from './global.js';
+import { DIFFICULTY } from './constants.js';
 import { MISSILE_TYPES, TOWER_TYPES } from './types.js';
 import { displayHomeMenu } from './events.js';
 
@@ -12,6 +13,7 @@ export class Game {
         this.energy = 1;
         this.capacity = 0;
         this.towerTypes = Object.keys(TOWER_TYPES);
+        this.difficulty = DIFFICULTY.NORMAL;
     }
 
     isGameOver() {
@@ -34,8 +36,8 @@ export class Game {
       this.energyPerSec = 0;
       this.capacity = 0;
 
-      /* Building towers */
-      let towers = g.towerManager.towerArray.filter(tower => tower.isBuilding);
+      /* Building or upgrading towers */
+      let towers = g.towerManager.towerArray.filter(tower => tower.isBuilding || tower.isUpgrading);
       for (var tower of towers) {
         this.energyPerSec -= tower.energyPerSec;
       }
@@ -75,7 +77,7 @@ export class GameManager {
       const elapsed = this.clock.elapsedTime; // in seconds
 
       /* Create a new Mob */
-      if(elapsed - this.lastCreatedMobTime > 3/* || g.mobsManager?.mobArray.length === 0*/) {
+      if(elapsed - this.lastCreatedMobTime > 5 || g.mobsManager?.mobArray.length === 0 && this.clock.elapsedTime > 5) {
         g.mobsManager.createMob(g.meshes.mobMesh, g.scene);
         this.lastCreatedMobTime = elapsed;
       }

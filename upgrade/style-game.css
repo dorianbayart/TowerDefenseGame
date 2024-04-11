@@ -11,7 +11,7 @@ button#gameBuildButton {
   right: 48px;
   bottom: 48px;
   z-index: 1000;
-  border-radius: 50%;
+  border-radius: 999px;
   border: 4px limegreen solid;
   padding: calc(1rem - 4px);
   background-color: limegreen;
@@ -76,10 +76,16 @@ ul#gameBuildOptions li .cost img {
 }
 
 /* UI */
-#towerInfoDiv h2 {
-  text-align: center;
+#towerInfoDiv h2#towerInfo {
+  display: inline-flex;
+  align-items: center;
   font-weight: normal;
-  margin-bottom: 0.8rem;
+}
+
+#towerInfoDiv h2#towerInfo img {
+  display: flex;
+  align-items: center;
+  margin-right: 1.5rem;
 }
 
 #towerInfoDiv .description {
@@ -97,20 +103,39 @@ ul#gameBuildOptions li .cost img {
   width: 5%;
 }
 
-.buttonYesNo {
-  width: 40%;
-  height: 48px;
-  font-size: 1.5em;
-  border-radius: 6px;
+#towerInfoDiv .buttons-container .button {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 100;
+  padding: 0.75rem;
+  border-radius: 999px;
   border: none;
 }
 
-.buttonyes {
+#towerInfoDiv .buttons-container .button.upgrade {
   background-color: #16a085;
   color: white;
 }
 
-.buttonno {
+#towerInfoDiv .buttons-container .button.upgrade img.img-upgrade {
+  margin-right: 0.5rem;
+}
+
+#towerInfoDiv .buttons-container .button.upgrade #upgradeCost {
+  display: inline-flex;
+  align-items: center;
+}
+
+#towerInfoDiv .buttons-container .button.upgrade #upgradeCost img {
+  margin: 0 6px 0 18px;
+}
+
+#towerInfoDiv .buttons-container .button.delete {
+  background-color: #c0392b;
+  color: white;
+}
+
+#towerInfoDiv .buttons-container .button.close {
   background-color: #c0392b;
   color: white;
 }

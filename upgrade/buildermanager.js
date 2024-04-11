@@ -23,8 +23,8 @@ export class Builder {
         this.radiusAction = 1; // m
         this.speed = 1.75; // m/s
 
-        this.energyPerSec = 10; // energy product
-        this.capacity = 100; // e = energy
+        this.energyPerSec = 1; // energy product
+        this.capacity = 25; // e = energy
 
         this.todoList = new Array();
     }

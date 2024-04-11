@@ -12,7 +12,7 @@ import { Mob, MobsManager } from './mobsmanager.js';
 import { Tower, TowerManager } from './towermanager.js';
 import { Cell, Maze, MazeManager } from './mazemanager.js';
 import { UniverseManager } from './universemanager.js';
-import { Gui, buttonno, buttondelete, buttonclose } from './gui.js';
+import { Gui, buttonclose, buttondelete, buttonno, buttonupgrade } from './gui.js';
 import { displayGameButtons, initMainMenuEvents, initGameButtonsEvents } from './events.js';
 
 import g from './global.js';
@@ -256,6 +256,8 @@ const init = () => {
   // document.getElementById('buttonno').addEventListener('click', buttonno);
   document.getElementById('buttondelete').removeEventListener('click', buttondelete);
   document.getElementById('buttondelete').addEventListener('click', buttondelete);
+  document.getElementById('buttonupgrade').removeEventListener('click', buttonupgrade);
+  document.getElementById('buttonupgrade').addEventListener('click', buttonupgrade);
   document.getElementById('buttonclose').removeEventListener('click', buttonclose);
   document.getElementById('buttonclose').addEventListener('click', buttonclose);
 

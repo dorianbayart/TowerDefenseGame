@@ -28,6 +28,14 @@ export class TowerManager {
         g.towerManager.newTowerToCreate = undefined;
     }
 
+    upgradeSelectedTower() {
+      if(this.selectedTower && this.selectedTower.getUpgradeCost() > g.gameManager.game.money) return
+
+      g.gameManager.game.updateMoney(-this.selectedTower.getUpgradeCost())
+      g.builderManager.addOrder(ORDERS.UPGRADE, this.selectedTower)
+      this.selectedTower.upgrade()
+    }
+
     deleteTower(towerObj) {
         const index = this.towerArray.indexOf(towerObj);
         if (index > -1) {
@@ -85,6 +93,7 @@ export class Tower {
 
     constructor(type = 'NORMAL', level, power, speed, range, cost) {
         this.mesh = TOWER_TYPES[type].mesh.clone();
+        this.rangeMesh = TOWER_TYPES[type].rangeMesh.clone();
 
         this.type = type;
 
@@ -112,14 +121,27 @@ export class Tower {
       return distance;
     }
 
+    getUpgradeCost() {
+      return Math.floor(Math.pow(this.cost, 1.5))
+    }
+
+    upgrade() {
+      this.upgrading = 0
+      this.cost = this.getUpgradeCost()
+      this.power = Math.round(this.power * 4 * 100) / 100
+      this.speed = Math.round(this.speed * .9 * 100) / 100
+      this.range = Math.round((this.range + this.range/8) * 100) / 100
+      this.energyPerSecDuringAttack *= 1.5
+      this.level ++
+
+      this.rangeMesh.geometry = new THREE.CylinderGeometry( this.range, this.range, 0.05, Math.floor(24 * g.parameters.quality), 1 )
+    }
+
     updateBuilding(delta) {
       if(!this.wireframeMesh && this.building === 0) {
-        //this.mesh.castShadow = false;
         this.mesh.material = TOWER_TYPES[this.type].mesh.material.clone();
         this.mesh.material.transparent = true;
         this.mesh.material.opacity = 0;
-        //this.mesh.material.side = THREE.DoubleSide;
-        //this.mesh.material.shadowSide = THREE.DoubleSide;
         this.mesh.castShadow = false;
         this.wireframeMesh = this.mesh.clone();
         this.wireframeMesh.material = this.mesh.material.clone();
@@ -152,9 +174,15 @@ export class Tower {
     }
 
     upgradeBuilding(delta) {
-      if(this.upgrading === 0) {
+      if(!this.wireframeMesh && this.upgrading === 0) {
+        this.mesh.material = this.mesh.material.clone();
         this.mesh.material.transparent = true;
         this.mesh.material.opacity = 0;
+        this.mesh.castShadow = false;
+        this.wireframeMesh = this.mesh.clone();
+        this.wireframeMesh.material = this.mesh.material.clone();
+        this.wireframeMesh.material.wireframe = true;
+        g.scene.add(this.wireframeMesh);
       }
 
       if(!g.builderManager.builder.isCloseTo(this.mesh.position) || g.gameManager.game.energy < delta*this.energyPerSec) {
@@ -167,10 +195,17 @@ export class Tower {
       if(this.upgrading >= 1) {
         this.upgrading = 1;
         this.isUpgrading = false;
+        g.scene.remove(this.wireframeMesh);
+        this.wireframeMesh.material.dispose();
+        this.wireframeMesh = undefined;
+        this.mesh.material = TOWER_TYPES[this.type].mesh.material;
+        this.mesh.castShadow = true;
         g.builderManager.removeOrder(ORDERS.UPGRADE, this);
       } else {
         this.isUpgrading = true;
+        this.wireframeMesh.material.opacity = this.building;
         this.mesh.material.opacity = this.building;
+        this.wireframeMesh.castShadow = true;
       }
     }
 

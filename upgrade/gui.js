@@ -1,10 +1,10 @@
-import * as THREE from 'three';
-import g from './global.js';
-import { towerTypeToLabel } from './helpers.js';
-import { COLOR, THREE_COLOR } from './constants.js';
-import { TOWER_TYPES } from './types.js';
-import { toggleElementVisibility } from './events.js';
-import { Tower } from './towermanager.js';
+import * as THREE from 'three'
+import g from './global.js'
+import { towerTypeToLabel } from './helpers.js'
+import { COLOR, THREE_COLOR } from './constants.js'
+import { TOWER_TYPES } from './types.js'
+import { toggleElementVisibility } from './events.js'
+import { Tower } from './towermanager.js'
 
 const energyBarParameters = {
     fillColor: 'lightgreen',
@@ -275,19 +275,27 @@ export class Gui {
   createTowerGui_close = () => {
       document.getElementById('createTowerDiv').style.display = 'none';
   };
-  infoTowerGui_open = (type, level, speed, power, range) => {
-      document.getElementById('towerInfo').innerHTML = `${towerTypeToLabel(type)} - Level ${level}`;
+  infoTowerGui_open = (type, level, speed, power, range, cost) => {
+      document.getElementById('towerInfoSpan').innerHTML = `${towerTypeToLabel(type)} - Level ${level}`;
+      document.getElementById('towerInfoIcon').src = TOWER_TYPES[type].iconUrl
       document.getElementById('speed').innerHTML = Math.round(1/speed * 10) / 10;
       document.getElementById('power').innerHTML = power;
       document.getElementById('range').innerHTML = range;
+      document.getElementById('upgradeCost').innerHTML = ''
+      const img = document.createElement('img')
+      img.src = '../public/icons/money-alt.svg'
+      img.height = 18
+      img.alt = 'Money Icon'
+      document.getElementById('upgradeCost').appendChild(img)
+      document.getElementById('upgradeCost').innerHTML += cost
       document.getElementById('towerInfoDiv').style.display = 'block';
   };
   infoTowerGui_close = () => {
       document.getElementById('towerInfoDiv').style.display = 'none';
-      document.getElementById('towerInfo').innerHTML = 'NULL';
-      document.getElementById('speed').innerHTML = 'NULL';
-      document.getElementById('power').innerHTML = 'NULL';
-      document.getElementById('range').innerHTML = 'NULL';
+      //document.getElementById('towerInfo').innerHTML = 'NULL';
+      //document.getElementById('speed').innerHTML = 'NULL';
+      //document.getElementById('power').innerHTML = 'NULL';
+      //document.getElementById('range').innerHTML = 'NULL';
   };
 
   onMouseUp = (event) => {
@@ -312,11 +320,11 @@ export class Gui {
             }
           } else { // tower exists
               g.towerManager.selectedTower = checkTower;
-              var rangeTower = TOWER_TYPES[checkTower.type].rangeMesh.clone();
+              var rangeTower = g.towerManager.selectedTower.rangeMesh;
               rangeTower.position.set(this.cursor.position.x, mazeMesh.position.y + mazeMesh.geometry.parameters.height/2, this.cursor.position.z);
               g.towerManager.rangeTowerToDisplay = rangeTower;
               g.scene.add(rangeTower);
-              this.infoTowerGui_open(checkTower.type, checkTower.level, checkTower.speed, checkTower.power, checkTower.range);
+              this.infoTowerGui_open(checkTower.type, checkTower.level, checkTower.speed, checkTower.power, checkTower.range, checkTower.getUpgradeCost());
 
               g.scene.remove(g.gui.cursor);
               g.gui.buildType = undefined;
@@ -416,8 +424,7 @@ export class Gui {
     text.y = window.innerHeight / 2;
     g.scenePixi.addChild(text);
 
-    buttonclose();
-    buttonno();
+    hideGameBuildOptions()
   }
 
 }
@@ -433,13 +440,34 @@ export const buttonno = (e) => {
 
 export const buttondelete = (e) => {
   if(e) e.stopPropagation();
-  g.towerManager.deleteTower(g.towerManager.selectedTower);
-  g.scene.remove(g.towerManager.selectedTower.mesh);
+  if(g.towerManager.selectedTower) {
+    g.towerManager.deleteTower(g.towerManager.selectedTower);
+    g.scene.remove(g.towerManager.selectedTower.mesh);
+  }
   g.gui.infoTowerGui_close();
   g.towerManager.selectedTower = undefined;
   var tmpRangeTower = g.towerManager.rangeTowerToDisplay;
   if(tmpRangeTower) g.scene.remove(tmpRangeTower);
   g.towerManager.rangeTowerToDisplay = undefined;
+}
+
+export const buttonupgrade = (e) => {
+  if(e) e.stopPropagation()
+
+  const rangeTowerPosition = g.towerManager.rangeTowerToDisplay.position
+  g.towerManager.rangeTowerToDisplay
+  g.scene.remove(g.towerManager.rangeTowerToDisplay)
+  g.towerManager.rangeTowerToDisplay = undefined
+
+  g.towerManager.upgradeSelectedTower()
+
+  const rangeTower = g.towerManager.selectedTower.rangeMesh.clone()
+  rangeTower.position.set(rangeTowerPosition.x, rangeTowerPosition.y, rangeTowerPosition.z)
+  g.towerManager.rangeTowerToDisplay = rangeTower
+  g.scene.add(rangeTower)
+
+  g.gui.infoTowerGui_close()
+  g.gui.infoTowerGui_open(g.towerManager.selectedTower.type, g.towerManager.selectedTower.level, g.towerManager.selectedTower.speed, g.towerManager.selectedTower.power, g.towerManager.selectedTower.range, g.towerManager.selectedTower.getUpgradeCost());
 }
 
 export const buttonclose = (e) => {
@@ -452,6 +480,8 @@ export const buttonclose = (e) => {
 }
 
 export const hideGameBuildOptions = () => {
+  buttonclose()
+  buttonno()
   toggleElementVisibility(
     [document.getElementById('gameBuildOptions')],
     []
