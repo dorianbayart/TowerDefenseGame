@@ -76,9 +76,9 @@ class MobsManager {
         var tmpmob = new Mob(exit);
         tmpmob.mesh = basemesh.clone();
 
-        tmpmob.mesh.scale.x = 1 / tmpmob.speed;
-        tmpmob.mesh.scale.y = 1 / tmpmob.speed;
-        tmpmob.mesh.scale.z = 1 / tmpmob.speed;
+        tmpmob.mesh.scale.x = 3 / tmpmob.speed;
+        tmpmob.mesh.scale.y = 3 / tmpmob.speed;
+        tmpmob.mesh.scale.z = 3 / tmpmob.speed;
 
         tmpmob.mesh.position.x =
             tmpmob.currentCell.x * objectsMargin - (mazeSize.width * objectsMargin) / 2 + polygonSize / 2;
