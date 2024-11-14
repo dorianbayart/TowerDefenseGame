@@ -7,9 +7,9 @@ class mapPosition {
 
 class Mob {
     constructor(cell) {
-        let speed = 1;
-        if (Math.random() > 0.85) speed += 0.5;
-        if (Math.random() > 0.85) speed += 1;
+        let speed = 4;
+        if (Math.random() > 0.85) speed += 1.5;
+        if (Math.random() > 0.85) speed += 2.5;
 
         this.mesh = undefined;
         this.hp = 10;
